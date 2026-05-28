@@ -38,7 +38,7 @@ export function Button(props: ButtonProps) {
   const cls = cn(
     "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight",
     "transition-colors duration-200",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
     variantMap[variant],
     sizeMap[size],
     className,

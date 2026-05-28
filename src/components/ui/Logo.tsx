@@ -110,9 +110,9 @@ export function Logo({ className, label, ...rest }: LogoProps) {
         </mask>
       </defs>
       <path mask={`url(#${maskId})`} fill="currentColor" d={BOWL_PATH} />
-      <path fill="var(--color-accent)" d={ORANGE_PATH} />
-      <path fill="var(--color-accent-hover)" d={DEEP_ORANGE_PATH} />
-      <path fill="var(--color-accent-hover)" d={DEEP_ORANGE_NICK_PATH} />
+      <path fill="currentColor" d={ORANGE_PATH} />
+      <path fill="currentColor" d={DEEP_ORANGE_PATH} />
+      <path fill="currentColor" d={DEEP_ORANGE_NICK_PATH} />
     </svg>
   );
 }

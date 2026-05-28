@@ -36,12 +36,12 @@ export function CompanyRow({ name, description, tag, href, isFirst }: CompanyRow
         className="pointer-events-none absolute inset-0 -z-10 hidden opacity-0 transition-opacity duration-300 group-hover/row:opacity-100 md:block"
         style={{
           background:
-            "radial-gradient(420px circle at var(--cursor-x, 50%) var(--cursor-y, 50%), color-mix(in oklab, var(--color-accent) 9%, transparent), transparent 65%)",
+            "radial-gradient(420px circle at var(--cursor-x, 50%) var(--cursor-y, 50%), color-mix(in oklab, var(--color-ink) 5%, transparent), transparent 65%)",
         }}
       />
       <NextLink
         href={href}
-        className="block transition-colors duration-300 hover:bg-ink/[3%] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+        className="block transition-colors duration-300 hover:bg-ink/[3%] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink"
       >
         <div className="grid grid-cols-1 gap-6 px-2 py-10 md:grid-cols-12 md:items-end md:gap-8 md:py-14 lg:py-16">
           <div className="md:col-span-8">

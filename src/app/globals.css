@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/*
+ * Register the `dark:` variant so utilities like `dark:bg-foo` apply when
+ * `.dark` is present on (or above) the element. The `:where()` keeps
+ * specificity flat.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Map next/font CSS variables into Tailwind's theme so `font-serif` / `font-sans` resolve to the loaded faces. */
 @theme inline {
   --font-serif: var(--font-serif);
@@ -8,13 +15,8 @@
 
 @theme {
   /*
-   * Palette is derived directly from the Qeet logomark.
-   *   Brand orange #F26D0E — the "i" descender (accent)
-   *   Deep orange  #D85301 — shadow on the descender (accent hover / second tier)
-   *   Black        #0A0A0A — the bowl (ink)
-   *   Off-white    #FCFCFC — the bowl on dark surfaces (canvas / inverse ink)
-   * Muted neutrals are derived from the logo black so the gray ramp stays
-   * coherent with the brand instead of pulling in unrelated hues.
+   * A strictly monochrome palette. Surfaces, ink, and rules only — no brand
+   * accent. Emphasis comes from typography, scale, and whitespace, not color.
    */
 
   /* Surfaces */
@@ -32,11 +34,7 @@
   --color-rule: #e5e5e5;
   --color-rule-strong: #c8c8c8;
 
-  /* Accent — brand orange from the logo */
-  --color-accent: #f26d0e;
-  --color-accent-hover: #d85301;
-
-  /* Functional (form state only — not brand colors, used sparingly) */
+  /* Functional (form state only — used sparingly) */
   --color-success: #2f6b3e;
   --color-warning: #8b5a1c;
   --color-error: #8b2f2f;
@@ -50,6 +48,37 @@
   --text-body-s--line-height: 1.5rem;
   --text-caption: 0.8125rem;
   --text-caption--line-height: 1.25rem;
+}
+
+/*
+ * Dark mode overrides the design tokens at runtime. Because every Tailwind
+ * color utility resolves through `var(--color-…)`, redefining the variables
+ * under `.dark` repaints the entire surface without recompiling utilities.
+ *
+ * Inverse-tone sections (the Closing CTA) become a slightly-elevated dark
+ * surface rather than flipping to light — preserves the dark aesthetic
+ * while keeping the section visually distinct from the canvas.
+ */
+.dark {
+  --color-canvas: #0a0a0a;
+  --color-surface: #141414;
+  --color-inverse: #181818;
+
+  --color-ink: #fcfcfc;
+  --color-ink-muted: #b5b5b5;
+  --color-ink-subtle: #7a7a7a;
+  --color-ink-inverse: #fcfcfc;
+
+  --color-rule: #262626;
+  --color-rule-strong: #3d3d3d;
+
+  --color-error: #f08585;
+
+  color-scheme: dark;
+}
+
+:root {
+  color-scheme: light;
 }
 
 @layer base {

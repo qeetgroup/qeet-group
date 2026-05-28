@@ -22,6 +22,12 @@ export type PostFrontmatter = {
   author?: string;
 };
 
+export type LegalFrontmatter = {
+  title: string;
+  lastUpdated: string;
+  description: string;
+};
+
 export type LoadedCompany = {
   slug: string;
   data: CompanyFrontmatter;
@@ -31,6 +37,12 @@ export type LoadedCompany = {
 export type LoadedPost = {
   slug: string;
   data: PostFrontmatter;
+  content: string;
+};
+
+export type LoadedLegal = {
+  slug: string;
+  data: LegalFrontmatter;
   content: string;
 };
 
@@ -98,4 +110,13 @@ export async function listPosts(): Promise<LoadedPost[]> {
       data: { ...item.data, date: normalizeDate(item.data.date) },
     }))
     .sort((a, b) => b.data.date.localeCompare(a.data.date));
+}
+
+export async function loadLegal(slug: string): Promise<LoadedLegal | null> {
+  const item = await readMdx<LegalFrontmatter>("legal", slug);
+  if (!item) return null;
+  return {
+    ...item,
+    data: { ...item.data, lastUpdated: normalizeDate(item.data.lastUpdated) },
+  };
 }

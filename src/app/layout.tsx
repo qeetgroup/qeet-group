@@ -39,6 +39,14 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+ * Sets the initial theme class on <html> before any paint, so users who chose
+ * dark (or whose OS prefers dark) don't get a flash of the default light theme
+ * on first render. Runs synchronously, before React hydrates. The localStorage
+ * key is the same one ThemeToggle writes to.
+ */
+const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,7 +54,10 @@ export default function RootLayout({
 }>) {
   const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} h-full`}>
+    <html lang="en" className={`${serif.variable} ${sans.variable} h-full`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="flex min-h-full flex-col bg-canvas text-ink">
         <a
           href="#main"

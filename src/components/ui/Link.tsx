@@ -68,7 +68,7 @@ export function Link({
 
   const baseClass = cn(
     "group/link inline-flex items-baseline gap-1.5 rounded-sm text-current",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
     className,
   );
 

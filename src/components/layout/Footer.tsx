@@ -1,7 +1,6 @@
 import NextLink from "next/link";
 import { Container } from "./Container";
 import { Eyebrow } from "../ui/Eyebrow";
-import { Logo } from "../ui/Logo";
 
 type FooterLink = { href: string; label: string };
 type FooterColumn = { heading: string; items: FooterLink[] };
@@ -58,10 +57,9 @@ export function Footer() {
             <NextLink
               href="/"
               aria-label="Qeet Group home"
-              className="inline-flex items-center gap-3 text-ink"
+              className="font-serif text-[2.25rem] leading-none text-ink"
             >
-              <Logo className="h-10 w-10" />
-              <span className="font-serif text-[2.25rem] leading-none">Qeet</span>
+              Qeet
             </NextLink>
             <p className="mt-5 max-w-sm text-body-s text-ink-muted">
               A multi-company holding built on a single philosophy: that meaningful progress

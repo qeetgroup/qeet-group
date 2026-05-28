@@ -5,7 +5,7 @@ import { FadeRise } from "../motion/FadeRise";
 
 const companies = [
   {
-    name: "Qeetid",
+    name: "Qeet ID",
     description:
       "A developer-first authentication and authorization platform built for teams that want enterprise depth without the enterprise complexity.",
     tag: "Identity & Access",

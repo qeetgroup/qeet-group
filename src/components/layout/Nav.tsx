@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { Logo } from "@/components/ui/Logo";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -52,12 +52,9 @@ export function Nav() {
         <NextLink
           href="/"
           aria-label="Qeet Group home"
-          className="group/brand inline-flex items-center gap-2.5 text-ink"
+          className="font-serif text-[1.625rem] leading-none tracking-tight text-ink md:text-[1.75rem]"
         >
-          <Logo className="h-7 w-7 md:h-8 md:w-8" />
-          <span className="font-serif text-[1.625rem] leading-none tracking-tight md:text-[1.75rem]">
-            Qeet
-          </span>
+          Qeet Group
         </NextLink>
 
         <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
@@ -76,16 +73,19 @@ export function Nav() {
               </NextLink>
             );
           })}
+          <ThemeToggle className="ml-2" />
         </nav>
 
-        <button
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          className="-mr-2 inline-flex items-center justify-center p-2 text-ink md:hidden"
-          onClick={() => setOpen((v) => !v)}
-        >
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            className="-mr-2 inline-flex items-center justify-center p-2 text-ink"
+            onClick={() => setOpen((v) => !v)}
+          >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             {open ? (
               <path
@@ -102,6 +102,7 @@ export function Nav() {
             )}
           </svg>
         </button>
+        </div>
       </div>
 
       {open && (
