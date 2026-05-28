@@ -4,6 +4,7 @@ import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
 import { Link } from "@/components/ui/Link";
+import { SocialIcons } from "@/components/ui/SocialIcons";
 import { FadeRise } from "@/components/motion/FadeRise";
 
 export const metadata: Metadata = {
@@ -134,6 +135,27 @@ export default function PressPage() {
           </Link>
           .
         </p>
+      </Section>
+
+      {/* Follow Qeet Group */}
+      <Section className="border-t border-rule">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+          <FadeRise className="md:col-span-4">
+            <Eyebrow>Follow Qeet Group</Eyebrow>
+          </FadeRise>
+          <FadeRise className="md:col-span-8 lg:col-span-7">
+            <p className="text-body-l text-ink">
+              Official accounts where the Group is active.
+            </p>
+            <p className="mt-5 max-w-[34rem] text-body text-ink-muted">
+              These are the only accounts that speak for Qeet Group. Anything
+              else using the brand mark is not us.
+            </p>
+            <div className="mt-8">
+              <SocialIcons size="md" />
+            </div>
+          </FadeRise>
+        </div>
       </Section>
 
       {/* Press contact */}

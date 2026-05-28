@@ -4,6 +4,8 @@
  * Render with <JsonLd> from "@/components/seo/JsonLd".
  */
 
+import { SOCIAL_PLATFORMS } from "./social";
+
 export const SITE_ORIGIN = "https://qeet.in";
 
 type WithContext<T> = { "@context": "https://schema.org" } & T;
@@ -19,7 +21,7 @@ export function organizationSchema() {
     description:
       "A multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
     foundingDate: "2026",
-    sameAs: ["https://twitter.com/qeetgroup"],
+    sameAs: SOCIAL_PLATFORMS.map((p) => p.url),
     contactPoint: [
       {
         "@type": "ContactPoint",

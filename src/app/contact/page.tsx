@@ -6,6 +6,7 @@ import { Lede } from "@/components/ui/Lede";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { TrackedMailto } from "@/components/ui/TrackedMailto";
+import { SocialIcons } from "@/components/ui/SocialIcons";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -78,6 +79,27 @@ export default function ContactPage() {
               </div>
             </FadeRise>
           ))}
+        </div>
+      </Section>
+
+      {/* Or find us elsewhere */}
+      <Section className="border-t border-rule">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+          <FadeRise className="md:col-span-4">
+            <Eyebrow>Or find us elsewhere</Eyebrow>
+          </FadeRise>
+          <FadeRise className="md:col-span-8 lg:col-span-7">
+            <p className="text-body-l text-ink">
+              We&rsquo;re also on the platforms below.
+            </p>
+            <p className="mt-5 max-w-[28rem] text-body text-ink-muted">
+              Email is the fastest way to reach us. Social is where we share
+              shorter notes and respond when we can.
+            </p>
+            <div className="mt-8">
+              <SocialIcons size="md" />
+            </div>
+          </FadeRise>
         </div>
       </Section>
 

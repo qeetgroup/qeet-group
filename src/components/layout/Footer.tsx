@@ -2,6 +2,7 @@ import NextLink from "next/link";
 import { Container } from "./Container";
 import { Eyebrow } from "../ui/Eyebrow";
 import { NewsletterForm } from "../forms/NewsletterForm";
+import { SocialIcons } from "../ui/SocialIcons";
 import { isExternalHref } from "@/lib/utils";
 
 type FooterLink = { href: string; label: string };
@@ -88,6 +89,10 @@ export function Footer() {
               </div>
             ))}
           </div>
+        </div>
+        <div className="flex flex-col gap-4 border-t border-rule py-6 md:flex-row md:items-center md:justify-between">
+          <Eyebrow>Follow</Eyebrow>
+          <SocialIcons />
         </div>
         <div className="flex flex-col gap-4 border-t border-rule py-8 text-body-s text-ink-subtle md:flex-row md:items-center md:justify-between">
           <p>© {year} Qeet Group. All rights reserved.</p>
