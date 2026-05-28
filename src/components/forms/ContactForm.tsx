@@ -1,13 +1,17 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { submitContact, type ContactFormState } from "@/app/contact/actions";
+import { Events, track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const initialState: ContactFormState = { status: "idle" };
 
 const TOPICS = ["Partnerships", "Press", "Hiring", "General", "Other"];
+
+const honeypotWrapCls =
+  "absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden opacity-0";
 
 const inputCls =
   "w-full appearance-none border-0 border-b border-rule-strong bg-transparent py-3 font-sans text-body text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none transition-colors duration-200 aria-[invalid=true]:border-error";
@@ -18,6 +22,11 @@ const fieldErrorCls = "mt-2 font-sans text-body-s text-error";
 
 export function ContactForm() {
   const [state, formAction] = useActionState(submitContact, initialState);
+  const [startedAt] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (state.status === "success") track(Events.ContactSubmit);
+  }, [state.status]);
 
   if (state.status === "success") {
     return (
@@ -40,6 +49,22 @@ export function ContactForm() {
 
   return (
     <form action={formAction} className="max-w-2xl" noValidate>
+      {/* Anti-spam: hidden honeypot + render timestamp. */}
+      <div className={honeypotWrapCls} aria-hidden="true">
+        <label htmlFor="website">
+          Website (leave blank)
+          <input
+            id="website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            defaultValue=""
+          />
+        </label>
+      </div>
+      <input type="hidden" name="started_at" value={startedAt} />
+
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10">
         <div>
           <label htmlFor="name" className={labelCls}>

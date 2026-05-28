@@ -3,6 +3,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
+import { Link } from "@/components/ui/Link";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Qeet Group is a multi-company holding built to start, support, and grow ventures that take long-term bets on questions worth answering.",
+  alternates: { canonical: "/about" },
 };
 
 const principles = [
@@ -131,7 +133,11 @@ export default function AboutPage() {
           </FadeRise>
           <FadeRise className="md:col-span-8 lg:col-span-7">
             <p className="text-body-l text-ink">
-              The team will be announced as it comes together.
+              The team will be announced as it comes together.{" "}
+              <Link href="/team" className="text-ink">
+                More on the team
+              </Link>
+              .
             </p>
             <p className="mt-5 text-body text-ink-muted">
               If you are a senior operator considering joining a young multi-company holding,

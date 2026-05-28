@@ -1,6 +1,6 @@
 import NextLink from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn, isExternalHref } from "@/lib/utils";
 
 type Variant = "solid" | "outline" | "ghost";
 type Size = "md" | "lg";
@@ -46,7 +46,7 @@ export function Button(props: ButtonProps) {
 
   if ("href" in props && props.href !== undefined) {
     const { href } = props;
-    const isExternal = /^(https?:|mailto:|tel:)/.test(href);
+    const isExternal = isExternalHref(href);
     if (isExternal) {
       return (
         <a

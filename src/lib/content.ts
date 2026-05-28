@@ -28,6 +28,13 @@ export type LegalFrontmatter = {
   description: string;
 };
 
+export type MemoFrontmatter = {
+  title: string;
+  date: string;
+  dek: string;
+  author?: string;
+};
+
 export type LoadedCompany = {
   slug: string;
   data: CompanyFrontmatter;
@@ -38,12 +45,26 @@ export type LoadedPost = {
   slug: string;
   data: PostFrontmatter;
   content: string;
+  /** Estimated reading time in whole minutes (220 wpm). Min 1. */
+  readingTime: number;
 };
+
+function computeReadingTime(content: string): number {
+  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 220));
+}
 
 export type LoadedLegal = {
   slug: string;
   data: LegalFrontmatter;
   content: string;
+};
+
+export type LoadedMemo = {
+  slug: string;
+  data: MemoFrontmatter;
+  content: string;
+  readingTime: number;
 };
 
 async function readMdx<T>(
@@ -99,6 +120,7 @@ export async function loadPost(slug: string): Promise<LoadedPost | null> {
   return {
     ...item,
     data: { ...item.data, date: normalizeDate(item.data.date) },
+    readingTime: computeReadingTime(item.content),
   };
 }
 
@@ -108,6 +130,7 @@ export async function listPosts(): Promise<LoadedPost[]> {
     .map((item) => ({
       ...item,
       data: { ...item.data, date: normalizeDate(item.data.date) },
+      readingTime: computeReadingTime(item.content),
     }))
     .sort((a, b) => b.data.date.localeCompare(a.data.date));
 }
@@ -119,4 +142,25 @@ export async function loadLegal(slug: string): Promise<LoadedLegal | null> {
     ...item,
     data: { ...item.data, lastUpdated: normalizeDate(item.data.lastUpdated) },
   };
+}
+
+export async function loadMemo(slug: string): Promise<LoadedMemo | null> {
+  const item = await readMdx<MemoFrontmatter>("memos", slug);
+  if (!item) return null;
+  return {
+    ...item,
+    data: { ...item.data, date: normalizeDate(item.data.date) },
+    readingTime: computeReadingTime(item.content),
+  };
+}
+
+export async function listMemos(): Promise<LoadedMemo[]> {
+  const items = await listMdx<MemoFrontmatter>("memos");
+  return items
+    .map((item) => ({
+      ...item,
+      data: { ...item.data, date: normalizeDate(item.data.date) },
+      readingTime: computeReadingTime(item.content),
+    }))
+    .sort((a, b) => b.data.date.localeCompare(a.data.date));
 }

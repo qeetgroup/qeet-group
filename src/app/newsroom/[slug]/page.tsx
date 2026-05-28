@@ -9,6 +9,8 @@ import { PostRow } from "@/components/ui/PostRow";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { listPosts, loadPost } from "@/lib/content";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { articleSchema, breadcrumbSchema } from "@/lib/structured-data";
 
 export const dynamicParams = false;
 
@@ -32,6 +34,7 @@ export async function generateMetadata({
   return {
     title: post.data.title.replace(/\.$/, ""),
     description: post.data.dek,
+    alternates: { canonical: `/newsroom/${slug}` },
   };
 }
 
@@ -54,7 +57,23 @@ export default async function PostPage({
 
   const { data, content } = post;
   const allPosts = await listPosts();
-  const morePosts = allPosts.filter((p) => p.slug !== slug).slice(0, 2);
+  const currentIndex = allPosts.findIndex((p) => p.slug === slug);
+  // Posts are returned newest-first; "newer" sits at a *lower* index than the
+  // current post, "older" at a higher index. Wrap both ends to null.
+  const newer = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+  const older =
+    currentIndex >= 0 && currentIndex < allPosts.length - 1
+      ? allPosts[currentIndex + 1]
+      : null;
+
+  // Prefer same-category posts; fall back to most-recent others.
+  const sameCategory = allPosts.filter(
+    (p) => p.slug !== slug && p.data.category === data.category,
+  );
+  const otherRecent = allPosts.filter(
+    (p) => p.slug !== slug && p.data.category !== data.category,
+  );
+  const morePosts = [...sameCategory, ...otherRecent].slice(0, 2);
 
   const shareUrl = `${SITE_ORIGIN}/newsroom/${slug}`;
   const shareTitle = encodeURIComponent(data.title);
@@ -62,6 +81,21 @@ export default async function PostPage({
 
   return (
     <>
+      <JsonLd
+        data={[
+          articleSchema({
+            slug,
+            title: data.title,
+            dek: data.dek,
+            date: data.date,
+            author: data.author,
+          }),
+          breadcrumbSchema([
+            { name: "Newsroom", path: "/newsroom" },
+            { name: data.title.replace(/\.$/, ""), path: `/newsroom/${slug}` },
+          ]),
+        ]}
+      />
       {/* Article header */}
       <section className="pb-12 pt-20 md:pb-16 md:pt-28 lg:pt-32">
         <Container>
@@ -127,6 +161,49 @@ export default async function PostPage({
           </div>
         </FadeRise>
       </Section>
+
+      {/* Prev / next */}
+      {(newer || older) && (
+        <Section className="border-t border-rule" padding="tight">
+          <FadeRise>
+            <nav
+              aria-label="Article navigation"
+              className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12"
+            >
+              {newer ? (
+                <Link
+                  href={`/newsroom/${newer.slug}`}
+                  className="group/prev block md:text-left"
+                >
+                  <span className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
+                    ← Newer
+                  </span>
+                  <span className="mt-3 block font-serif font-normal text-balance text-ink text-[1.5rem] leading-[1.18] md:text-[1.75rem] md:leading-[1.16]">
+                    {newer.data.title}
+                  </span>
+                </Link>
+              ) : (
+                <span />
+              )}
+              {older ? (
+                <Link
+                  href={`/newsroom/${older.slug}`}
+                  className="group/next block md:text-right"
+                >
+                  <span className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
+                    Older →
+                  </span>
+                  <span className="mt-3 block font-serif font-normal text-balance text-ink text-[1.5rem] leading-[1.18] md:text-[1.75rem] md:leading-[1.16]">
+                    {older.data.title}
+                  </span>
+                </Link>
+              ) : (
+                <span />
+              )}
+            </nav>
+          </FadeRise>
+        </Section>
+      )}
 
       {/* More from the newsroom */}
       {morePosts.length > 0 && (

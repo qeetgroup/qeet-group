@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Careers",
   description:
     "Joining Qeet Group means joining a portfolio of long-form bets. Roles open as the team comes together.",
+  alternates: { canonical: "/careers" },
 };
 
 const principles = [

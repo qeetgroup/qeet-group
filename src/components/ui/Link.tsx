@@ -1,6 +1,6 @@
 import NextLink from "next/link";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn, isExternalHref } from "@/lib/utils";
 
 type Variant = "default" | "arrow" | "external";
 
@@ -62,7 +62,7 @@ export function Link({
   underline = true,
   ...rest
 }: LinkProps) {
-  const isExternal = /^(https?:|mailto:|tel:)/.test(href);
+  const isExternal = isExternalHref(href);
   const resolvedVariant: Variant =
     variant === "default" && isExternal ? "external" : variant;
 

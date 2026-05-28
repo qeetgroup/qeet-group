@@ -1,6 +1,8 @@
 import NextLink from "next/link";
 import { Container } from "./Container";
 import { Eyebrow } from "../ui/Eyebrow";
+import { NewsletterForm } from "../forms/NewsletterForm";
+import { isExternalHref } from "@/lib/utils";
 
 type FooterLink = { href: string; label: string };
 type FooterColumn = { heading: string; items: FooterLink[] };
@@ -10,8 +12,10 @@ const columns: FooterColumn[] = [
     heading: "Group",
     items: [
       { href: "/about", label: "About" },
+      { href: "/team", label: "Team" },
       { href: "/companies", label: "Companies" },
       { href: "/newsroom", label: "Newsroom" },
+      { href: "/memos", label: "Memos" },
       { href: "/careers", label: "Careers" },
     ],
   },
@@ -23,14 +27,14 @@ const columns: FooterColumn[] = [
     heading: "Contact",
     items: [
       { href: "mailto:partnerships@qeet.in", label: "Partnerships" },
-      { href: "mailto:press@qeet.in", label: "Press" },
+      { href: "/press", label: "Press kit" },
       { href: "mailto:support@qeet.in", label: "General" },
     ],
   },
 ];
 
 function FooterLinkRow({ href, label }: FooterLink) {
-  const isExternal = /^(https?:|mailto:|tel:)/.test(href);
+  const isExternal = isExternalHref(href);
   const cls = "text-body-s text-ink-muted transition-colors duration-200 hover:text-ink";
   return (
     <li>
@@ -65,6 +69,10 @@ export function Footer() {
               A multi-company holding built on a single philosophy: that meaningful progress
               begins with the right question.
             </p>
+            <div className="mt-8">
+              <Eyebrow className="mb-3">Stay in touch</Eyebrow>
+              <NewsletterForm />
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 md:col-span-7 md:gap-8">
             {columns.map((col) => (

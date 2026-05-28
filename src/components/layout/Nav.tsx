@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/newsroom", label: "Newsroom" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
+  { href: "/search", label: "Search", mobileOnly: true },
 ];
 
 export function Nav() {
@@ -64,22 +65,34 @@ export function Nav() {
           </NextLink>
 
           <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">
-            {navLinks.map((l) => {
-              const active = pathname === l.href || pathname.startsWith(l.href + "/");
-              return (
-                <NextLink
-                  key={l.href}
-                  href={l.href}
-                  className={cn(
-                    "text-[0.9375rem] tracking-tight transition-colors duration-200",
-                    active ? "text-ink" : "text-ink-muted hover:text-ink",
-                  )}
-                >
-                  {l.label}
-                </NextLink>
-              );
-            })}
-            <ThemeToggle className="ml-2" />
+            {navLinks
+              .filter((l) => !l.mobileOnly)
+              .map((l) => {
+                const active = pathname === l.href || pathname.startsWith(l.href + "/");
+                return (
+                  <NextLink
+                    key={l.href}
+                    href={l.href}
+                    className={cn(
+                      "text-[0.9375rem] tracking-tight transition-colors duration-200",
+                      active ? "text-ink" : "text-ink-muted hover:text-ink",
+                    )}
+                  >
+                    {l.label}
+                  </NextLink>
+                );
+              })}
+            <NextLink
+              href="/search"
+              aria-label="Search"
+              className="ml-2 inline-flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink rounded-sm"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" />
+                <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </NextLink>
+            <ThemeToggle />
           </nav>
 
           <div className="flex items-center gap-1 lg:hidden">

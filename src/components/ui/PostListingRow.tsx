@@ -7,6 +7,7 @@ type PostListingRowProps = {
   title: string;
   dek: string;
   href: string;
+  readingTime?: number;
   isFirst?: boolean;
 };
 
@@ -24,6 +25,7 @@ export function PostListingRow({
   title,
   dek,
   href,
+  readingTime,
   isFirst,
 }: PostListingRowProps) {
   return (
@@ -42,6 +44,12 @@ export function PostListingRow({
             <time dateTime={date}>{formatDate(date)}</time>
             <span aria-hidden="true"> · </span>
             <span>{category}</span>
+            {readingTime ? (
+              <>
+                <span aria-hidden="true"> · </span>
+                <span>{readingTime} min read</span>
+              </>
+            ) : null}
           </p>
         </div>
         <div className="md:col-span-9 lg:col-span-9">

@@ -7,6 +7,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
 import { Link } from "@/components/ui/Link";
 import { MetaPair } from "@/components/ui/MetaPair";
+import { TrackedExternalLink } from "@/components/ui/TrackedExternalLink";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { listCompanies, loadCompany } from "@/lib/content";
@@ -31,6 +32,7 @@ export async function generateMetadata({
   return {
     title: company.data.name,
     description: company.data.description,
+    alternates: { canonical: `/companies/${slug}` },
   };
 }
 
@@ -80,9 +82,14 @@ export default async function CompanyPage({
               <div>
                 <Eyebrow>Site</Eyebrow>
                 <p className="mt-2 font-sans text-body text-ink">
-                  <Link href={data.externalUrl} className="text-ink">
+                  <TrackedExternalLink
+                    href={data.externalUrl}
+                    slug={slug}
+                    label="meta-strip"
+                    className="text-ink"
+                  >
                     {externalLabel}
-                  </Link>
+                  </TrackedExternalLink>
                 </p>
               </div>
             </div>
@@ -107,9 +114,14 @@ export default async function CompanyPage({
               The product, documentation, and pricing live at {externalLabel}.
             </p>
             <div className="mt-10 md:mt-12">
-              <Link href={data.externalUrl} className="text-body text-ink-inverse">
+              <TrackedExternalLink
+                href={data.externalUrl}
+                slug={slug}
+                label="closing-cta"
+                className="text-body text-ink-inverse"
+              >
                 Visit {externalLabel}
-              </Link>
+              </TrackedExternalLink>
             </div>
           </div>
         </FadeRise>

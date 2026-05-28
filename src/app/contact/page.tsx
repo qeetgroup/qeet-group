@@ -3,13 +3,14 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
-import { Link } from "@/components/ui/Link";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { TrackedMailto } from "@/components/ui/TrackedMailto";
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch with Qeet Group — partnerships, press, or general inquiries.",
+  alternates: { canonical: "/contact" },
 };
 
 const channels = [
@@ -66,9 +67,13 @@ export default function ContactPage() {
                 </h2>
                 <p className="mt-4 text-body text-ink-muted">{c.description}</p>
                 <div className="mt-5">
-                  <Link href={`mailto:${c.email}`} className="font-sans text-body text-ink">
+                  <TrackedMailto
+                    email={c.email}
+                    context="contact-channels"
+                    className="font-sans text-body text-ink"
+                  >
                     {c.email}
-                  </Link>
+                  </TrackedMailto>
                 </div>
               </div>
             </FadeRise>
