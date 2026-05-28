@@ -6,7 +6,11 @@ import { loadLegal } from "@/lib/content";
 export async function generateMetadata(): Promise<Metadata> {
   const doc = await loadLegal("privacy");
   if (!doc) return {};
-  return { title: doc.data.title, description: doc.data.description };
+  return {
+    title: doc.data.title,
+    description: doc.data.description,
+    alternates: { canonical: "/legal/privacy" },
+  };
 }
 
 export default async function PrivacyPage() {

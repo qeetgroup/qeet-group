@@ -6,11 +6,14 @@ import { Lede } from "@/components/ui/Lede";
 import { CompanyListingRow } from "@/components/ui/CompanyListingRow";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { listCompanies } from "@/lib/content";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { companiesListSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Companies",
   description:
     "Qeet Group ventures. Each is built for what it is. They share a philosophy, not a roadmap.",
+  alternates: { canonical: "/companies" },
 };
 
 export default async function CompaniesPage() {
@@ -18,6 +21,15 @@ export default async function CompaniesPage() {
 
   return (
     <>
+      <JsonLd
+        data={companiesListSchema(
+          companies.map((c) => ({
+            slug: c.slug,
+            name: c.data.name,
+            description: c.data.description,
+          })),
+        )}
+      />
       <section className="pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
         <Container>
           <FadeRise>

@@ -1,10 +1,9 @@
 "use server";
 
 import { Resend } from "resend";
+import { validateContactInput, type ContactFieldErrors } from "./validate";
 
-export type ContactFieldErrors = Partial<
-  Record<"name" | "email" | "topic" | "message" | "_global", string>
->;
+export type { ContactFieldErrors } from "./validate";
 
 export type ContactFormState = {
   status: "idle" | "success" | "error";
@@ -13,26 +12,29 @@ export type ContactFormState = {
   values?: { name: string; email: string; topic: string; message: string };
 };
 
-const TOPICS = ["Partnerships", "Press", "Hiring", "General", "Other"] as const;
-
 export async function submitContact(
   _prev: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
+  // Honeypot: a hidden field humans don't see. Bots fill every input they find.
+  const honeypot = ((formData.get("website") as string | null) ?? "").trim();
+  if (honeypot) return { status: "success" };
+
+  // Time-trap: form mounts a timestamp on render. Submissions under 3s are bots.
+  const startedAtRaw = ((formData.get("started_at") as string | null) ?? "").trim();
+  const startedAt = Number.parseInt(startedAtRaw, 10);
+  if (Number.isFinite(startedAt) && Date.now() - startedAt < 3000) {
+    return { status: "success" };
+  }
+  // TODO(rate-limit): add IP-based rate limiting via Vercel KV / Upstash once
+  // either is provisioned. Read x-forwarded-for in a route handler wrapper.
+
   const name = ((formData.get("name") as string | null) ?? "").trim();
   const email = ((formData.get("email") as string | null) ?? "").trim();
   const topic = ((formData.get("topic") as string | null) ?? "").trim();
   const message = ((formData.get("message") as string | null) ?? "").trim();
 
-  const errors: ContactFieldErrors = {};
-  if (!name) errors.name = "Please share your name.";
-  if (!email) errors.email = "Please share an email address.";
-  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
-    errors.email = "That doesn't look like a valid email.";
-  if (!topic || !TOPICS.includes(topic as (typeof TOPICS)[number]))
-    errors.topic = "Please choose a topic.";
-  if (!message || message.length < 10)
-    errors.message = "Please write at least a sentence.";
+  const errors = validateContactInput({ name, email, topic, message });
 
   if (Object.keys(errors).length > 0) {
     return {
@@ -55,8 +57,8 @@ export async function submitContact(
   try {
     const resend = new Resend(apiKey);
     await resend.emails.send({
-      from: process.env.CONTACT_FROM ?? "Qeet Group <hello@qeet.in>",
-      to: [process.env.CONTACT_TO ?? "hello@qeet.in"],
+      from: process.env.CONTACT_FROM ?? "Qeet Group <support@qeet.in>",
+      to: [process.env.CONTACT_TO ?? "support@qeet.in"],
       replyTo: email,
       subject: `[${topic}] Contact from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nTopic: ${topic}\n\n${message}\n`,
@@ -68,7 +70,7 @@ export async function submitContact(
       status: "error",
       errors: {
         _global:
-          "Something went wrong sending your message. Try again, or email hello@qeet.in directly.",
+          "Something went wrong sending your message. Try again, or email support@qeet.in directly.",
       },
       values: { name, email, topic, message },
     };

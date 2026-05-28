@@ -2,18 +2,14 @@ import { Section } from "../layout/Section";
 import { Eyebrow } from "../ui/Eyebrow";
 import { CompanyRow } from "../ui/CompanyRow";
 import { FadeRise } from "../motion/FadeRise";
+import { listCompanies } from "@/lib/content";
 
-const companies = [
-  {
-    name: "Qeet ID",
-    description:
-      "A developer-first authentication and authorization platform built for teams that want enterprise depth without the enterprise complexity.",
-    tag: "Identity & Access",
-    href: "/companies/qeetid",
-  },
-];
+const HOME_LIMIT = 3;
 
-export function Companies() {
+export async function Companies() {
+  const all = await listCompanies();
+  const featured = all.slice(0, HOME_LIMIT);
+
   return (
     <Section className="border-t border-rule">
       <FadeRise>
@@ -25,13 +21,26 @@ export function Companies() {
         </div>
       </FadeRise>
       <div className="mt-14 md:mt-20">
-        {companies.map((c, i) => (
-          <FadeRise key={c.name}>
-            <CompanyRow {...c} isFirst={i === 0} />
+        {featured.map((c, i) => (
+          <FadeRise key={c.slug}>
+            <CompanyRow
+              name={c.data.name}
+              description={c.data.description}
+              tag={c.data.sector}
+              href={`/companies/${c.slug}`}
+              isFirst={i === 0}
+            />
           </FadeRise>
         ))}
       </div>
-      <p className="mt-10 font-sans text-body-s text-ink-subtle">More to come.</p>
+      {all.length > HOME_LIMIT && (
+        <p className="mt-10 font-sans text-body-s text-ink-subtle">
+          And {all.length - HOME_LIMIT} more.
+        </p>
+      )}
+      {all.length <= HOME_LIMIT && (
+        <p className="mt-10 font-sans text-body-s text-ink-subtle">More to come.</p>
+      )}
     </Section>
   );
 }

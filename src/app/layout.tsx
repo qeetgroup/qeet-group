@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { organizationSchema, websiteSchema } from "@/lib/structured-data";
 
 const serif = Instrument_Serif({
   subsets: ["latin"],
@@ -27,6 +29,15 @@ export const metadata: Metadata = {
   description:
     "Qeet Group is a multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
   metadataBase: new URL("https://qeet.in"),
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": [
+        { url: "/newsroom/rss.xml", title: "Qeet Group — Newsroom" },
+      ],
+    },
+  },
+  manifest: "/manifest.webmanifest",
   openGraph: {
     type: "website",
     siteName: "Qeet Group",
@@ -37,6 +48,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@qeetgroup",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FCFCFC" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A0A0A" },
+  ],
+  colorScheme: "light dark",
 };
 
 /*
@@ -57,11 +76,12 @@ export default function RootLayout({
     <html lang="en" className={`${serif.variable} ${sans.variable} h-full`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <JsonLd data={[organizationSchema(), websiteSchema()]} />
       </head>
       <body className="flex min-h-full flex-col bg-canvas text-ink">
         <a
           href="#main"
-          className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-50 focus-visible:rounded-sm focus-visible:bg-ink focus-visible:px-3 focus-visible:py-2 focus-visible:text-body-s focus-visible:text-ink-inverse"
+          className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-50 focus-visible:rounded-sm focus-visible:bg-ink focus-visible:px-3 focus-visible:py-2 focus-visible:text-body-s focus-visible:text-canvas"
         >
           Skip to content
         </a>

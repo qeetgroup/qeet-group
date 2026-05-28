@@ -3,13 +3,15 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
-import { PostListingRow } from "@/components/ui/PostListingRow";
+import { Link } from "@/components/ui/Link";
 import { FadeRise } from "@/components/motion/FadeRise";
+import { NewsroomList } from "@/components/sections/NewsroomList";
 import { listPosts } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Newsroom",
   description: "Announcements and milestones from Qeet Group and its ventures.",
+  alternates: { canonical: "/newsroom" },
 };
 
 export default async function NewsroomPage() {
@@ -30,6 +32,11 @@ export default async function NewsroomPage() {
           <FadeRise delay={0.35} className="mt-10 max-w-xl md:mt-12">
             <Lede>Announcements and milestones from Qeet Group and its ventures.</Lede>
           </FadeRise>
+          <FadeRise delay={0.5} className="mt-8 md:mt-10">
+            <Link href="/newsroom/rss.xml" className="font-sans text-body-s text-ink-muted">
+              Subscribe via RSS
+            </Link>
+          </FadeRise>
         </Container>
       </section>
 
@@ -37,18 +44,16 @@ export default async function NewsroomPage() {
         {posts.length === 0 ? (
           <p className="font-sans text-body text-ink-muted">No posts yet.</p>
         ) : (
-          posts.map((post, i) => (
-            <FadeRise key={post.slug}>
-              <PostListingRow
-                date={post.data.date}
-                category={post.data.category}
-                title={post.data.title}
-                dek={post.data.dek}
-                href={`/newsroom/${post.slug}`}
-                isFirst={i === 0}
-              />
-            </FadeRise>
-          ))
+          <NewsroomList
+            posts={posts.map((p) => ({
+              slug: p.slug,
+              date: p.data.date,
+              category: p.data.category,
+              title: p.data.title,
+              dek: p.data.dek,
+              readingTime: p.readingTime,
+            }))}
+          />
         )}
       </Section>
     </>

@@ -13,3 +13,14 @@ export function cn(...inputs: ClassValue[]): string {
   inputs.forEach(walk);
   return out.join(" ");
 }
+
+const EXTERNAL_HREF_RE = /^(https?:|mailto:|tel:)/;
+
+/**
+ * True for any href Next.js shouldn't treat as an internal route — http(s)
+ * URLs, mailto:, and tel:. Centralised so link primitives (Link, Button,
+ * MDXLink, FooterLinkRow) stay in sync.
+ */
+export function isExternalHref(href: string): boolean {
+  return EXTERNAL_HREF_RE.test(href);
+}
