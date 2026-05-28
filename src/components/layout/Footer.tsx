@@ -22,7 +22,7 @@ const columns: FooterColumn[] = [
   },
   {
     heading: "Companies",
-    items: [{ href: "/companies/qeetid", label: "Qeet ID" }],
+    items: [{ href: "/companies/qeetid", label: "Qeetid" }],
   },
   {
     heading: "Contact",

@@ -18,22 +18,22 @@ const place = "Remote-first";
 
 const focusAreas: Array<{ title: string; body: string }> = [
   {
-    title: "Bringing Qeet ID to first customers.",
-    body: "Our first venture is in active development. The focus is shipping the depth of an enterprise auth platform without the operating complexity — and getting it into the hands of teams who care about that distinction.",
+    title: "Growing Qeetid past its first wave of teams.",
+    body: "Qeetid is in production and is being adopted by engineering teams across startups and enterprises. The focus this quarter is depth over breadth — better integrations, better defaults, better docs — and making sure the experience holds as adoption scales.",
+  },
+  {
+    title: "Scoping the second venture.",
+    body: "We are in the early framing of what the next Group venture should be. We are spending more time asking the question than answering it — which is the part we have always said matters most. There is no public timeline yet.",
   },
   {
     title: "Hiring the next operator.",
     body: "We're talking to senior operators who'd lead inside a Qeet Group venture. We aren't running an open process, but we're in the conversations. If that's you, write to careers@qeet.in.",
   },
-  {
-    title: "Writing the founding memo.",
-    body: "The first long-form note from the Group is being drafted. It will lay out the worldview behind the holding — what we mean by the right question, why patience is a structural commitment, and what we will not do.",
-  },
 ];
 
 const notRightNow: string[] = [
   "Raising LP capital.",
-  "Adding a second subsidiary before Qeet ID has its first paying customers.",
+  "Spinning up a second venture before the framing for it has earned its picking.",
   "Public events or conference appearances.",
 ];
 

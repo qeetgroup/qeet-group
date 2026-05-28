@@ -63,7 +63,7 @@ const groups: FaqGroup[] = [
       {
         question: "What sectors are you focused on?",
         answer:
-          "Sector is downstream of question. We back companies that begin from genuinely ambitious questions — across domains. The current focus is identity and access (Qeet ID); future ventures will be announced as they take shape.",
+          "Sector is downstream of question. We back companies that begin from genuinely ambitious questions — across domains. The current focus is identity and access (Qeetid); future ventures will be announced as they take shape.",
       },
       {
         question: "Do subsidiaries ever fail or get sold?",
