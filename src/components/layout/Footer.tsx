@@ -22,7 +22,7 @@ const columns: FooterColumn[] = [
   },
   {
     heading: "Companies",
-    items: [{ href: "/companies/qeetid", label: "Qeetid" }],
+    items: [{ href: "/companies/qeetid", label: "Qeet ID" }],
   },
   {
     heading: "Contact",
@@ -65,7 +65,7 @@ export function Footer() {
               aria-label="Qeet Group home"
               className="font-serif text-[2.25rem] leading-none text-ink"
             >
-              Qeet
+              Qeet ID
             </NextLink>
             <p className="mt-5 max-w-sm text-body-s text-ink-muted">
               A multi-company holding built on a single philosophy: that meaningful progress

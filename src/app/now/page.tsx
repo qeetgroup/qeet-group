@@ -18,8 +18,8 @@ const place = "Remote-first";
 
 const focusAreas: Array<{ title: string; body: string }> = [
   {
-    title: "Growing Qeetid past its first wave of teams.",
-    body: "Qeetid is in production and is being adopted by engineering teams across startups and enterprises. The focus this quarter is depth over breadth — better integrations, better defaults, better docs — and making sure the experience holds as adoption scales.",
+    title: "Growing Qeet ID past its first wave of teams.",
+    body: "Qeet ID is in production and is being adopted by engineering teams across startups and enterprises. The focus this quarter is depth over breadth — better integrations, better defaults, better docs — and making sure the experience holds as adoption scales.",
   },
   {
     title: "Scoping the second venture.",
