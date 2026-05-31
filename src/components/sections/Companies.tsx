@@ -16,7 +16,7 @@ export async function Companies() {
         <div className="max-w-3xl">
           <Eyebrow>Our Companies</Eyebrow>
           <h2 className="mt-6 font-sans font-medium text-balance tracking-[-0.02em] text-ink text-[2rem] leading-[1.15] md:mt-8 md:text-[2.25rem] md:leading-[1.18] lg:text-[2.5rem] lg:leading-[1.2]">
-            One philosophy. Many ventures.
+            One philosophy. Many companies.
           </h2>
         </div>
       </FadeRise>

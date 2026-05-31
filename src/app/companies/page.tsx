@@ -12,7 +12,7 @@ import { companiesListSchema } from "@/lib/structured-data";
 export const metadata: Metadata = {
   title: "Companies",
   description:
-    "Qeet Group ventures. Each is built for what it is. They share a philosophy, not a roadmap.",
+    "Qeet Group companies. Each is built for what it is. They share a philosophy, not a roadmap.",
   alternates: { canonical: "/companies" },
 };
 

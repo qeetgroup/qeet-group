@@ -18,7 +18,7 @@ const channels = [
   {
     label: "Partnerships",
     email: "partnerships@qeet.in",
-    description: "Working with one of our subsidiaries, or exploring a new venture together.",
+    description: "Working with one of our subsidiaries, or exploring a new company together.",
   },
   {
     label: "Press",

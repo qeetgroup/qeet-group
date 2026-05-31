@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Qeet Group is a multi-company holding built to start, support, and grow ventures that take long-term bets on questions worth answering.",
+    "Qeet Group is a multi-company holding built to start, support, and grow companies that take long-term bets on questions worth answering.",
   alternates: { canonical: "/about" },
 };
 
@@ -21,7 +21,7 @@ const principles = [
   },
   {
     title: "Build for compound returns.",
-    body: "We avoid work whose value peaks at launch. Every venture is structured to keep getting better — at its product, at its operating discipline, at its understanding of who it serves — for at least a decade. We optimize for the curve, not the spike.",
+    body: "We avoid work whose value peaks at launch. Every company is structured to keep getting better — at its product, at its operating discipline, at its understanding of who it serves — for at least a decade. We optimize for the curve, not the spike.",
   },
   {
     title: "Take quality personally.",
@@ -49,7 +49,7 @@ export default function AboutPage() {
           </FadeRise>
           <FadeRise delay={0.35} className="mt-10 max-w-2xl md:mt-12">
             <Lede>
-              Qeet Group is a multi-company holding built to start, support, and grow ventures
+              Qeet Group is a multi-company holding built to start, support, and grow companies
               that take long-term bets on questions worth answering. We are organized around
               the conviction that meaningful progress begins with the right question, asked
               early — and the patience to chase the answer for years.
@@ -67,7 +67,7 @@ export default function AboutPage() {
           <div className="md:col-span-8 lg:col-span-7">
             <FadeRise>
               <p className="text-body-l text-ink">
-                Most great ventures fail not because the execution was wrong, but because the
+                Most great companies fail not because the execution was wrong, but because the
                 original question was too small. We started Qeet Group to back the opposite —
                 companies that begin from genuinely ambitious questions and have the patience
                 to chase the answers across years, not quarters. That patience is a structural
@@ -76,10 +76,10 @@ export default function AboutPage() {
             </FadeRise>
             <FadeRise delay={0.1}>
               <p className="mt-7 text-body text-ink-muted">
-                A holding structure lets us treat each venture as a long campaign rather than a
+                A holding structure lets us treat each company as a long campaign rather than a
                 single product bet. Subsidiaries share a philosophy, a quality standard, and a
                 refusal to ship work the team cannot be proud of. They do not share a roadmap,
-                an org chart, or a thesis. Each venture is built for what it is.
+                an org chart, or a thesis. Each company is built for what it is.
               </p>
             </FadeRise>
             <FadeRise delay={0.2}>

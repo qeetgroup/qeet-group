@@ -46,12 +46,12 @@ export default function TeamPage() {
           <FadeRise className="md:col-span-8 lg:col-span-7">
             <p className="text-body-l text-ink">
               A small senior team that runs the holding company itself — not the
-              subsidiaries. Most of the operating work happens inside the ventures; the
+              subsidiaries. Most of the operating work happens inside the companies; the
               Group exists to set the philosophy, hold the quality bar, and back the
               operators we trust to build the long-form bets.
             </p>
             <p className="mt-6 text-body text-ink-muted">
-              Subsidiary leadership is announced from the ventures themselves. The team
+              Subsidiary leadership is announced from the companies themselves. The team
               on this page is the one supporting all of them.
             </p>
           </FadeRise>
@@ -75,7 +75,7 @@ export default function TeamPage() {
             </p>
             <p className="mt-5 max-w-[34rem] text-body text-ink-muted">
               Tell us briefly what you have shipped that you are proud of, and which
-              Qeet Group venture you would want to work inside.
+              Qeet Group company you would want to work inside.
             </p>
             <p className="mt-8 font-sans text-body-s text-ink-subtle">
               See also{" "}

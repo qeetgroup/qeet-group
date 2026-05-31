@@ -28,27 +28,27 @@ const groups: FaqGroup[] = [
       {
         question: "What is Qeet Group?",
         answer:
-          "A multi-company holding built to start, support, and grow ventures that take long-term bets on questions worth answering. Each subsidiary is operated independently. They share a philosophy, a quality standard, and a refusal to ship work the team cannot defend — they do not share a roadmap, a thesis, or an org chart.",
+          "A multi-company holding built to start, support, and grow companies that take long-term bets on questions worth answering. Each subsidiary is operated independently. They share a philosophy, a quality standard, and a refusal to ship work the team cannot defend — they do not share a roadmap, a thesis, or an org chart.",
       },
       {
         question: "How is the Group structured?",
         answer:
-          "As a holding company with operating subsidiaries. Each venture is its own company with its own team, its own product, and its own runway. The Group provides capital, a philosophy, a network, and a quality bar — and then gets out of the way.",
+          "As a holding company with operating subsidiaries. Each one is its own company with its own team, its own product, and its own runway. The Group provides capital, a philosophy, a network, and a quality bar — and then gets out of the way.",
       },
       {
         question: "Where is Qeet Group based?",
         answer:
-          "Remote-first. The Group's small operating team works distributed; individual ventures choose what makes sense for them.",
+          "Remote-first. The Group's small operating team works distributed; individual companies choose what makes sense for them.",
       },
     ],
   },
   {
-    heading: "Capital and ventures",
+    heading: "Capital and companies",
     items: [
       {
         question: "Are you accepting pitches or applications from founders?",
         answer:
-          "Not in an open, unsolicited way. The Group starts and operates its own ventures rather than running a fund. If you have a venture you'd want to build inside the Group, the right path is to write to partnerships@qeet.in and tell us what you'd build and why now.",
+          "Not in an open, unsolicited way. The Group starts and operates its own companies rather than running a fund. If you have a company you'd want to build inside the Group, the right path is to write to partnerships@qeet.in and tell us what you'd build and why now.",
       },
       {
         question: "Do you take outside LP capital?",
@@ -58,17 +58,17 @@ const groups: FaqGroup[] = [
       {
         question: "What stage do you back?",
         answer:
-          "We start ventures rather than fund them. The Group incubates and operates subsidiaries from inception. We do not lead seed or Series A rounds in external companies.",
+          "We start companies rather than fund them. The Group incubates and operates subsidiaries from inception. We do not lead seed or Series A rounds in external companies.",
       },
       {
         question: "What sectors are you focused on?",
         answer:
-          "Sector is downstream of question. We back companies that begin from genuinely ambitious questions — across domains. The current focus is identity and access (Qeet ID); future ventures will be announced as they take shape.",
+          "Sector is downstream of question. We back companies that begin from genuinely ambitious questions — across domains. The current focus is identity and access (Qeet ID); future companies will be announced as they take shape.",
       },
       {
         question: "Do subsidiaries ever fail or get sold?",
         answer:
-          "They might. The Group is structured to give ventures the patience to chase the right answer over years — but patience is not a guarantee. If a venture cannot reach the quality bar, we close it deliberately and write about why. If a sale is the right outcome for the people and the work, we'd consider it. Neither is the default.",
+          "They might. The Group is structured to give companies the patience to chase the right answer over years — but patience is not a guarantee. If a company cannot reach the quality bar, we close it deliberately and write about why. If a sale is the right outcome for the people and the work, we'd consider it. Neither is the default.",
       },
     ],
   },
@@ -78,7 +78,7 @@ const groups: FaqGroup[] = [
       {
         question: "What is Qeet ID?",
         answer:
-          "Qeet ID is the first venture inside the Group — a developer-first authentication and authorization platform. It puts sign-in, multi-factor, multi-tenant access control, machine-to-machine auth, signed webhooks, and a hash-chained audit log on a single identity graph. The product, documentation, and pricing live at id.qeet.in.",
+          "Qeet ID is the first company inside the Group — a developer-first authentication and authorization platform. It puts sign-in, multi-factor, multi-tenant access control, machine-to-machine auth, signed webhooks, and a hash-chained audit log on a single identity graph. The product, documentation, and pricing live at id.qeet.in.",
       },
       {
         question: "What can it do today, and what's coming?",
@@ -103,12 +103,12 @@ const groups: FaqGroup[] = [
       {
         question: "Are you hiring?",
         answer:
-          "Not actively, but we're always interested in senior operators considering joining a young multi-company holding. Write to careers@qeet.in with what you've shipped that you're proud of and which venture you'd want to work inside. See the Careers page for what we look for.",
+          "Not actively, but we're always interested in senior operators considering joining a young multi-company holding. Write to careers@qeet.in with what you've shipped that you're proud of and which company you'd want to work inside. See the Careers page for what we look for.",
       },
       {
         question: "How do partnerships work?",
         answer:
-          "Partnerships happen at the venture level, not the Group level — each subsidiary handles its own customer, channel, and integration partnerships. For Group-level discussions (corporate partnerships, co-investing alongside us in a venture, joint ventures), write to partnerships@qeet.in.",
+          "Partnerships happen at the company level, not the Group level — each subsidiary handles its own customer, channel, and integration partnerships. For Group-level discussions (corporate partnerships, co-investing alongside us in a company, or building something together), write to partnerships@qeet.in.",
       },
       {
         question: "How long do you take to respond?",
@@ -210,7 +210,7 @@ export default function FaqPage() {
               <Link href="mailto:partnerships@qeet.in" className="text-ink">
                 partnerships@qeet.in
               </Link>{" "}
-              for venture or commercial conversations.{" "}
+              for partnership or commercial conversations.{" "}
               <Link href="mailto:press@qeet.in" className="text-ink">
                 press@qeet.in
               </Link>{" "}

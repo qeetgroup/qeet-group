@@ -10,7 +10,7 @@ import { FadeRise } from "@/components/motion/FadeRise";
 export const metadata: Metadata = {
   title: "Press",
   description:
-    "Brand assets, fact sheet, and press contact for Qeet Group and its ventures.",
+    "Brand assets, fact sheet, and press contact for Qeet Group and its companies.",
   alternates: { canonical: "/press" },
 };
 
@@ -128,7 +128,7 @@ export default function PressPage() {
         </div>
         <p className="mt-12 max-w-[34rem] font-sans text-body-s text-ink-muted md:mt-16">
           Please don&rsquo;t alter the marks, recolor them, or pair them with messaging
-          that misrepresents the Group or its ventures. If you need a custom format or
+          that misrepresents the Group or its companies. If you need a custom format or
           have a question about usage, email{" "}
           <Link href="mailto:press@qeet.in" className="text-ink">
             press@qeet.in

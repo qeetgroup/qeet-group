@@ -22,18 +22,18 @@ const focusAreas: Array<{ title: string; body: string }> = [
     body: "Qeet ID is in production and is being adopted by engineering teams across startups and enterprises. The focus this quarter is depth over breadth — better integrations, better defaults, better docs — and making sure the experience holds as adoption scales.",
   },
   {
-    title: "Scoping the second venture.",
-    body: "We are in the early framing of what the next Group venture should be. We are spending more time asking the question than answering it — which is the part we have always said matters most. There is no public timeline yet.",
+    title: "Scoping the second company.",
+    body: "We are in the early framing of what the next Group company should be. We are spending more time asking the question than answering it — which is the part we have always said matters most. There is no public timeline yet.",
   },
   {
     title: "Hiring the next operator.",
-    body: "We're talking to senior operators who'd lead inside a Qeet Group venture. We aren't running an open process, but we're in the conversations. If that's you, write to careers@qeet.in.",
+    body: "We're talking to senior operators who'd lead inside a Qeet Group company. We aren't running an open process, but we're in the conversations. If that's you, write to careers@qeet.in.",
   },
 ];
 
 const notRightNow: string[] = [
   "Raising LP capital.",
-  "Spinning up a second venture before the framing for it has earned its picking.",
+  "Spinning up a second company before the framing for it has earned its picking.",
   "Public events or conference appearances.",
 ];
 

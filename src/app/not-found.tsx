@@ -15,7 +15,7 @@ const FALLBACK_ROUTES: Array<{ label: string; href: string; description: string 
   {
     label: "Companies",
     href: "/companies",
-    description: "Our ventures. One philosophy, many ventures.",
+    description: "One philosophy. Many companies.",
   },
   {
     label: "Contact",

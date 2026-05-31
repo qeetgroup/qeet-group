@@ -10,7 +10,7 @@ import { listPosts } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Newsroom",
-  description: "Announcements and milestones from Qeet Group and its ventures.",
+  description: "Announcements and milestones from Qeet Group and its companies.",
   alternates: { canonical: "/newsroom" },
 };
 
@@ -30,7 +30,7 @@ export default async function NewsroomPage() {
             </h1>
           </FadeRise>
           <FadeRise delay={0.35} className="mt-10 max-w-xl md:mt-12">
-            <Lede>Announcements and milestones from Qeet Group and its ventures.</Lede>
+            <Lede>Announcements and milestones from Qeet Group and its companies.</Lede>
           </FadeRise>
           <FadeRise delay={0.5} className="mt-8 md:mt-10">
             <Link href="/newsroom/rss.xml" className="font-sans text-body-s text-ink-muted">

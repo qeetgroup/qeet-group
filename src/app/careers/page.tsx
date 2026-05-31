@@ -104,7 +104,7 @@ export default function CareersPage() {
                 careers@qeet.in
               </Link>
               . Tell us briefly what you have shipped that you are proud of, and which Qeet
-              Group venture you would want to work inside.
+              Group company you would want to work inside.
             </p>
           </FadeRise>
         </div>

@@ -53,7 +53,7 @@ export const STATIC_PAGES: ReadonlyArray<Omit<SearchEntry, "haystack">> = [
   {
     type: "page",
     title: "Companies",
-    description: "Qeet Group ventures. One philosophy. Many ventures.",
+    description: "Qeet Group companies. One philosophy. Many companies.",
     url: "/companies",
   },
   {

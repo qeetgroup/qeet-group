@@ -41,7 +41,7 @@ export async function GET() {
     <title>Qeet Group — Newsroom</title>
     <link>${SITE_ORIGIN}/newsroom</link>
     <atom:link href="${SITE_ORIGIN}/newsroom/rss.xml" rel="self" type="application/rss+xml" />
-    <description>Announcements and milestones from Qeet Group and its ventures.</description>
+    <description>Announcements and milestones from Qeet Group and its companies.</description>
     <language>en-us</language>
     <lastBuildDate>${new Date(updated).toUTCString()}</lastBuildDate>${items}
   </channel>
