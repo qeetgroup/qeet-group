@@ -71,7 +71,7 @@ export function Footer() {
               aria-label="Qeet Group home"
               className="font-serif text-[2.25rem] leading-none text-ink"
             >
-              Qeet ID
+              Qeet Group
             </NextLink>
             <p className="mt-5 max-w-sm text-body-s text-ink-muted">
               A multi-company holding built on a single philosophy: that meaningful progress
