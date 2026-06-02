@@ -39,6 +39,17 @@ export const metadata: Metadata = {
     },
   },
   manifest: "/manifest.webmanifest",
+  // Declaring `icons` here disables Next's file-convention icon links, so all
+  // of them must be listed. The theme-adaptive SVG is what modern browsers use
+  // in the tab/bookmark bar (legible in light AND dark UI); the PNG from
+  // app/icon.tsx is the fixed-dark raster Google's search favicon falls back to.
+  icons: {
+    icon: [
+      { url: "/qeet-mark.svg", type: "image/svg+xml" },
+      { url: "/icon", type: "image/png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
+  },
   openGraph: {
     type: "website",
     siteName: "Qeet Group",
