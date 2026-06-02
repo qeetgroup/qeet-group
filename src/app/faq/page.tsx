@@ -83,12 +83,12 @@ const groups: FaqGroup[] = [
       {
         question: "What can it do today, and what's coming?",
         answer:
-          "Available now: email/password with stateful sessions and refresh-token rotation, passwordless magic links, email and phone one-time codes, TOTP multi-factor with recovery codes, multi-tenant RBAC with a permission-check API, API keys and OAuth client-credentials for machine-to-machine, OpenID Connect discovery/JWKS/userinfo, HMAC-signed webhooks with retries and a dead-letter queue, and a hash-chained audit log. On the roadmap: passkeys, social sign-in, SAML 2.0, SCIM 2.0, OAuth authorization-code flow, and asymmetric token signing. The company page lists what's live versus what's next.",
+          "Available now: email/password with stateful sessions and refresh-token rotation, passwordless magic links, email and phone one-time codes, TOTP multi-factor with recovery codes, WebAuthn passkeys, social sign-in (Google, GitHub, Microsoft, Apple), multi-tenant RBAC with a permission-check API, API keys and OAuth client-credentials for machine-to-machine, the OAuth authorization-code flow with PKCE, OpenID Connect (discovery/JWKS/userinfo), SAML 2.0 SSO, SCIM 2.0 provisioning, HMAC-signed webhooks with retries and a dead-letter queue, and a hash-chained audit log. On the roadmap: asymmetric RS256/ES256 token signing, first-party SDKs, and data-subject export. The company page lists what's live versus what's next.",
       },
       {
         question: "Does Qeet ID support enterprise SSO and directory provisioning?",
         answer:
-          "OpenID Connect is supported today, so standards-based clients integrate now. SAML 2.0 (service provider and identity provider) and SCIM 2.0 directory provisioning are on the roadmap as the platform hardens toward 1.0. If enterprise SSO timing matters for your evaluation, write to partnerships@qeet.in.",
+          "Yes — OpenID Connect, SAML 2.0 (service provider and identity provider), and SCIM 2.0 directory provisioning are all supported today, so standards-based clients and enterprise IdPs integrate now. If enterprise SSO timing matters for your evaluation, write to partnerships@qeet.in.",
       },
       {
         question: "How do I start, and is there a free tier?",

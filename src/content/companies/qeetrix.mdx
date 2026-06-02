@@ -5,6 +5,7 @@ sector: Design Systems
 stage: Early access
 founded: "2026"
 externalUrl: https://www.npmjs.com/org/qeetrix
+order: 2
 description: The design system behind Qeet Group. A token-driven foundation, a React component library built on shadcn and Base UI with Tailwind v4, and brand assets — published to npm and shared across every Qeet product so they look and feel like one family.
 ---
 
@@ -19,7 +20,7 @@ Everything flows from one place. Design tokens are authored once and generated i
 The packages running in production now, under the `@qeetrix` scope on npm:
 
 - **`@qeetrix/tokens`** — the foundation. Design tokens authored as W3C Design Tokens JSON and built with Style Dictionary into CSS custom properties and JSON. A three-tier architecture (primitive → semantic → component), first-class light and dark themes, and WCAG-AA contrast verified at build time.
-- **`@qeetrix/ui`** — the React component library. Thirty-six components built on shadcn/ui with the Base UI registry and Tailwind CSS v4 — from buttons, inputs, and dialogs to data tables, command palette, and charts. ESM, server-component-ready, and shipped with the Cal Sans type family.
+- **`@qeetrix/ui`** — the React component library. Forty-four components built on shadcn/ui with the Base UI registry and Tailwind CSS v4 — from buttons, inputs, and dialogs to data tables, command palette, charts, and identity-specific primitives like an OTP input and a copyable-secret field. ESM, server-component-ready, and shipped with the Cal Sans type family in three optical sizes.
 - **`@qeetrix/brand`** — the Qeet mark as theme-adaptive React components, plus a set of product icons.
 - **`@qeetrix/tsconfig` and `@qeetrix/eslint-config`** — the shared TypeScript and lint configs every Qeet package builds on.
 - **A living workshop** — a Storybook documenting every component alongside the colour, type, spacing, and radius foundations, driven by the live tokens.
@@ -32,11 +33,11 @@ The system is built so each of these slots in without breaking what consumers al
 - Final artwork for the custom product icon set
 - A cross-platform token export (JSON today, Flutter next) for mobile SDKs
 - Visual-regression testing and an expanding component library
-- First-class adoption across Qeet ID, with new Qeet products building on it from day one
+- New Qeet products building on it from day one, on the same foundation Qeet ID already ships on
 
 ## Who it serves
 
-Every team inside Qeet Group, starting with Qeet ID. The promise is consistency without coordination overhead — a product team installs Qeetrix and inherits the tokens, components, accessibility, and theming, instead of rebuilding them. The same foundation that keeps one product coherent keeps the whole group recognisable as Qeet.
+Every team inside Qeet Group, starting with Qeet ID — whose admin and web apps already build on `@qeetrix/ui` today. The promise is consistency without coordination overhead — a product team installs Qeetrix and inherits the tokens, components, accessibility, and theming, instead of rebuilding them. The same foundation that keeps one product coherent keeps the whole group recognisable as Qeet.
 
 ## How it is built
 

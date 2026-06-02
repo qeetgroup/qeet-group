@@ -1,0 +1,19 @@
+---
+title: "Passkeys, social sign-in, and enterprise SSO are live in Qeet ID."
+date: "2026-06-02"
+category: Product
+dek: The capabilities we put on the roadmap at launch — WebAuthn passkeys, social sign-in, SAML 2.0, and SCIM 2.0 — are now in production.
+author: Mareedu Saibabu
+---
+
+When Qeet ID went generally available, we said the roadmap led with the work enterprises ask for first: phishing-resistant sign-in, the social providers users already have, and the standards an IT team expects before they will plug in their directory. That work is done. Each of these landed on the same identity graph the rest of the platform already runs on — one place where policy is resolved, sessions are revoked, and every action is written to the hash-chained audit log.
+
+**Passkeys.** WebAuthn passkeys are live, so users can register a device and sign in without a password at all. Phishing-resistant by construction, and a first-class authenticator alongside TOTP rather than a bolt-on.
+
+**Social sign-in.** Google, GitHub, Microsoft, and Apple are wired over OAuth 2.0 and OpenID Connect. Accounts link to the same identity, so a user who starts with a password and later adds Google is still one record, not two.
+
+**Enterprise SSO and provisioning.** SAML 2.0 is supported as both service provider and identity provider, and SCIM 2.0 handles directory provisioning — so an enterprise can federate with their existing IdP and have user lifecycle flow in automatically, with deprovisioning that actually deprovisions.
+
+**Authorization Code with PKCE.** The OAuth 2.0 Authorization Code flow with PKCE and OIDC ID-token issuance is available, which is what most application integrations should be reaching for.
+
+What is still ahead is honest about where it is: asymmetric RS256/ES256 token signing with scheduled key rotation, the first-party SDKs, and machine-readable data-subject export to complement the erasure that already ships. The full list of what is live versus what is next stays current on the [Qeet ID company page](/companies/qeetid). The product, documentation, and changelog live at [id.qeet.in](https://id.qeet.in).

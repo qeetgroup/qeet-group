@@ -28,6 +28,8 @@ const columns: FooterColumn[] = [
       { href: "/companies/qeetrix", label: "Qeetrix" },
       { href: "/companies/qeet-logs", label: "Qeet Logs" },
       { href: "/companies/qeet-people", label: "Qeet People" },
+      { href: "/companies/qeet-notify", label: "Qeet Notify" },
+      { href: "/companies/qeet-pay", label: "Qeet Pay" },
     ],
   },
   {

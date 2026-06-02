@@ -1,0 +1,59 @@
+---
+name: Qeet Notify
+tagline: One API. Every notification channel.
+sector: Notification Infrastructure
+stage: Coming soon
+founded: "2026"
+externalUrl: https://notify.qeet.in
+order: 5
+description: Multi-channel transactional notifications from a single API — email, SMS, WhatsApp, push, and in-app — with India-first TRAI DLT and DPDP compliance, multi-tenant by construction, and native Qeet ID, qeet-logs, and Qeetrix integration.
+---
+
+## Overview
+
+Every product team eventually rebuilds the same notification plumbing: an email provider, an SMS gateway, a WhatsApp integration, a preference center, suppression lists, retry logic — and, in India, TRAI DLT registration and DPDP consent on top of all of it. Qeet Notify exists so that work is done once. A single API orchestrates email, SMS, WhatsApp, mobile and web push, and in-app notifications, with India-first compliance and multi-tenancy treated as architecture rather than configuration.
+
+It began as the shared notification layer for Qeet Group — every Qeet product needs one — and is built to serve any multi-tenant SaaS team facing the same problem. The existing options force a choice: Resend and Postmark are email-only; Knock and Novu are US/EU-centric; Braze and Customer.io are marketing-automation platforms, not transactional infrastructure. Qeet Notify is built for the gap between them.
+
+## What makes it different
+
+- **India-native compliance** — TRAI DLT managed registration (principal entity, sender ID, and per-template registration per telco), DPDP Act 2023 consent management, NDNC/DND registry scrubbing, promotional-timing enforcement, and RCS as a first-class channel. None of these are bolt-ons.
+- **Multi-tenant by construction** — `tenant_id` is a required, indexed field on every record. Every workflow, template, preference, suppression list, and analytics rollup is tenant-scoped at the database layer with row-level security, not in application code. Cross-tenant access is architecturally impossible.
+- **One run, every channel** — a single event trigger is one workflow run, whether it fans out to email, SMS, and WhatsApp or just one of them. Multi-channel stays affordable at startup scale instead of multiplying with every channel.
+- **Built on the Qeet platform** — subscriber identity federates from Qeet ID, every notification lifecycle event streams to qeet-logs as a tamper-evident audit record, and the dashboard and in-app inbox components are built on Qeetrix, so they theme-align with the host product automatically.
+
+## On the roadmap
+
+**Phase 1 — Foundation (Q3–Q4 2026)**
+
+The core: a single events API, a workflow engine (trigger, channel step, delay, condition branch), and the channels most teams send first.
+
+- Channels: email, SMS (India, TRAI DLT), WhatsApp, in-app, and outbound webhooks
+- Managed TRAI DLT onboarding wizard
+- Hosted and embeddable preference center
+- Go and TypeScript SDKs, and a `qn` CLI
+- Qeet ID subscriber sync and OIDC auth; qeet-logs notification audit trail
+- DPDP subscriber-erasure API and India data residency (ap-south-1)
+
+**Phase 2 — Breadth and India-native (Q1–Q2 2027)**
+
+- Mobile push (FCM + APNs), web push (VAPID), and React Native and Flutter SDKs
+- RCS for India with SMS fallback routing, and international SMS (Twilio, Plivo)
+- A visual drag-and-drop workflow editor, plus git-deployable YAML workflows
+- Digest and channel-fallback steps, a WYSIWYG email editor, and full i18n across 10 Indian languages
+- Python and Ruby SDKs, and an MCP server for AI coding agents
+
+**Phase 3 — Enterprise and AI (Q3–Q4 2027)**
+
+- AI send-time optimization, channel recommendation, and subject-line testing
+- A natural-language workflow builder
+- SAML 2.0, SCIM 2.0, HIPAA BAA, dedicated clusters, and custom SLAs
+- A white-label tenant portal and a self-hosted Helm chart; multi-region; SOC 2 Type II
+
+## Who it serves
+
+Engineering and platform teams at multi-tenant SaaS companies who are rebuilding notification infrastructure for every product — and especially those with India users, WhatsApp requirements, or TRAI DLT compliance obligations. Inside Qeet Group, Qeet Notify is the shared layer every product sends through; outside it, it is available to any team tired of stitching email, SMS, WhatsApp, and push together by hand.
+
+## Status
+
+Coming soon. Qeet Notify is currently in the requirements and design phase, with Phase 1 development targeting Q3–Q4 2026 alongside five design partners. Design partners get end-to-end managed TRAI DLT registration, white-glove migration from existing vendors, and locked pricing. If you run notifications at a multi-tenant SaaS company — particularly one with India users or WhatsApp requirements — reach out at [partnerships@qeet.in](mailto:partnerships@qeet.in).

@@ -12,6 +12,8 @@ export type CompanyFrontmatter = {
   founded: string;
   externalUrl: string;
   description: string;
+  /** Display order across the home page and listing. Lower sorts first. */
+  order?: number;
 };
 
 export type PostFrontmatter = {
@@ -111,8 +113,18 @@ function normalizeDate(value: unknown): string {
 export const loadCompany = (slug: string): Promise<LoadedCompany | null> =>
   readMdx<CompanyFrontmatter>("companies", slug);
 
-export const listCompanies = (): Promise<LoadedCompany[]> =>
-  listMdx<CompanyFrontmatter>("companies");
+export async function listCompanies(): Promise<LoadedCompany[]> {
+  const items = await listMdx<CompanyFrontmatter>("companies");
+  // Explicit `order` drives the home-page feature order and the listing.
+  // Companies without an order sort last, then alphabetically by name, so
+  // the flagship leads rather than whatever the filesystem happens to return.
+  return items.sort((a, b) => {
+    const ao = a.data.order ?? Number.MAX_SAFE_INTEGER;
+    const bo = b.data.order ?? Number.MAX_SAFE_INTEGER;
+    if (ao !== bo) return ao - bo;
+    return a.data.name.localeCompare(b.data.name);
+  });
+}
 
 export async function loadPost(slug: string): Promise<LoadedPost | null> {
   const item = await readMdx<PostFrontmatter>("newsroom", slug);

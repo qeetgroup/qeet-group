@@ -5,7 +5,8 @@ sector: Identity & Access
 stage: Generally available
 founded: "2026"
 externalUrl: https://id.qeet.in
-description: The auth platform engineers wish they'd had. Passwordless sign-in, MFA, multi-tenant RBAC, machine-to-machine, signed webhooks, and OpenID Connect — on a single, hash-chained, audit-ready identity graph.
+order: 1
+description: The auth platform engineers wish they'd had. Passkeys, social and SAML SSO, MFA, multi-tenant RBAC, machine-to-machine, SCIM, signed webhooks, and OpenID Connect — on a single, hash-chained, audit-ready identity graph.
 ---
 
 ## Overview
@@ -19,10 +20,14 @@ Everything sits on a single, multi-tenant identity graph, so policy decisions st
 The capabilities running in production now:
 
 - **Authentication** — email and password with stateful sessions and refresh-token rotation; passwordless magic links; email and phone one-time codes.
+- **Passkeys** — WebAuthn passkeys for phishing-resistant, passwordless sign-in.
+- **Social sign-in** — Google, GitHub, Microsoft, and Apple over OAuth 2.0 / OpenID Connect.
 - **Multi-factor** — TOTP authenticator apps with single-use recovery codes.
 - **Authorization** — multi-tenant role-based access control with a permission-check API, so every product and tenant resolves policy the same way.
 - **Machine-to-machine** — API keys and service accounts over the OAuth 2.0 client-credentials grant.
-- **OpenID Connect** — discovery, JWKS, dynamic client registration, and a userinfo endpoint, so standards-based clients integrate without bespoke glue.
+- **OAuth & OpenID Connect** — the Authorization Code flow with PKCE and ID-token issuance, alongside discovery, JWKS, dynamic client registration, and a userinfo endpoint, so standards-based clients integrate without bespoke glue.
+- **Enterprise SSO** — SAML 2.0 as both service provider and identity provider.
+- **Directory provisioning** — SCIM 2.0 for automated user lifecycle driven from your IdP.
 - **Events** — HMAC-signed webhooks with persisted delivery, exponential-backoff retries, and a dead-letter queue, fed by a transactional outbox.
 - **Audit** — a hash-chained, append-only audit log with an independent chain verifier. Tamper is detectable, not assumed away.
 
@@ -30,14 +35,11 @@ The capabilities running in production now:
 
 The platform is built so each of these slots into the same identity graph as it ships:
 
-- Passkeys (WebAuthn) for phishing-resistant sign-in
-- Social sign-in — Google, GitHub, Microsoft, Apple
-- OAuth 2.0 Authorization Code with PKCE and OIDC ID-token issuance
-- Enterprise SSO via SAML 2.0 (service provider and identity provider)
-- SCIM 2.0 directory provisioning
-- RS256 / ES256 token signing with scheduled key rotation
+- Asymmetric RS256 / ES256 token signing with scheduled key rotation
 - First-party SDKs — TypeScript, Go, Python, and more — over the standards-based API
+- Data-subject export to complement the in-platform erasure that ships today
 - Managed email and SMS delivery, and metered billing
+- SOC 2 attestation and a public trust center
 
 ## Who they serve
 
@@ -45,7 +47,7 @@ Developers building their first product. Startups adding their first compliance 
 
 ## Security and compliance
 
-Tenant isolation, revocable stateful sessions, and a hash-chained audit log are part of the platform, not an add-on. Qeet ID is built GDPR-aligned, with data-subject export and erasure handled inside the platform. SOC 2 and a public trust center are on the roadmap as the product hardens toward 1.0.
+Tenant isolation, revocable stateful sessions, and a hash-chained audit log are part of the platform, not an add-on. Qeet ID is built GDPR-aligned, with data-subject erasure handled inside the platform and machine-readable export on the roadmap. SOC 2 and a public trust center are on the roadmap as the product hardens toward 1.0.
 
 ## Status
 

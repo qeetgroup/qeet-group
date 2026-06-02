@@ -53,11 +53,12 @@ sector: Industry & Focus
 stage: In active development
 founded: "2027"
 externalUrl: https://two.qeet.in
+order: 5
 description: One-paragraph summary that appears in the listing and OG image.
 ---
 ```
 
-Each company gets a route at `/companies/<slug>` and a generated OG image. The home page surfaces the first three companies automatically.
+Each company gets a route at `/companies/<slug>` and a generated OG image. `order` (lower sorts first) drives both the listing and which companies the home page features — the home page surfaces the first three. Companies without an `order` sort last, then alphabetically.
 
 ### Newsroom posts (`src/content/newsroom/<slug>.mdx`)
 
