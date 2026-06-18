@@ -35,11 +35,6 @@ export function Hero() {
               </Magnetic>
             </div>
           </FadeRise>
-          <FadeRise delay={1.1} className="mt-9 md:mt-11">
-            <p className="font-sans text-body-s text-ink-subtle">
-              One identity platform · India-first · Built for the long term
-            </p>
-          </FadeRise>
         </div>
       </Container>
     </section>
