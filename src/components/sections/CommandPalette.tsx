@@ -174,7 +174,7 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKeyDown}
-            placeholder="Search pages, companies, newsroom, memos…"
+            placeholder="Search pages, products, newsroom, memos…"
             autoComplete="off"
             spellCheck={false}
             aria-label="Search"

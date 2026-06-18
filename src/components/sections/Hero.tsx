@@ -1,8 +1,10 @@
 import { Container } from "../layout/Container";
 import { Eyebrow } from "../ui/Eyebrow";
 import { Link } from "../ui/Link";
+import { Button } from "../ui/Button";
 import { FadeRise } from "../motion/FadeRise";
 import { WordReveal } from "../motion/WordReveal";
+import { Magnetic } from "../motion/Magnetic";
 
 export function Hero() {
   return (
@@ -22,9 +24,21 @@ export function Hero() {
             </p>
           </FadeRise>
           <FadeRise delay={0.95} className="mt-10 md:mt-14">
-            <Link href="#philosophy" variant="arrow" className="text-body text-ink">
-              Read our philosophy
-            </Link>
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+              <Button href="/products" size="lg" magnetic>
+                Explore products
+              </Button>
+              <Magnetic strength={0.4}>
+                <Link href="#philosophy" variant="arrow" className="text-body text-ink">
+                  Read our philosophy
+                </Link>
+              </Magnetic>
+            </div>
+          </FadeRise>
+          <FadeRise delay={1.1} className="mt-9 md:mt-11">
+            <p className="font-sans text-body-s text-ink-subtle">
+              Six products · one identity platform · India-first
+            </p>
           </FadeRise>
         </div>
       </Container>

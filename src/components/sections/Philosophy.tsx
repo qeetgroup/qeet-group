@@ -1,9 +1,7 @@
 import { Section } from "../layout/Section";
-import { Eyebrow } from "../ui/Eyebrow";
-import { PhilosophyBlock } from "../ui/PhilosophyBlock";
-import { FadeRise } from "../motion/FadeRise";
+import { PhilosophyPinned, type PhilosophyEntry } from "./PhilosophyPinned";
 
-const blocks = [
+const blocks: PhilosophyEntry[] = [
   {
     letter: "Q" as const,
     word: "Question",
@@ -33,16 +31,7 @@ const blocks = [
 export function Philosophy() {
   return (
     <Section id="philosophy">
-      <FadeRise>
-        <Eyebrow>The Philosophy</Eyebrow>
-      </FadeRise>
-      <div className="mt-12 md:mt-20">
-        {blocks.map((block, i) => (
-          <FadeRise key={block.word}>
-            <PhilosophyBlock {...block} isFirst={i === 0} />
-          </FadeRise>
-        ))}
-      </div>
+      <PhilosophyPinned blocks={blocks} />
     </Section>
   );
 }

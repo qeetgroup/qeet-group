@@ -13,9 +13,9 @@ const FALLBACK_ROUTES: Array<{ label: string; href: string; description: string 
     description: "Why we exist and how we work.",
   },
   {
-    label: "Companies",
-    href: "/companies",
-    description: "One philosophy. Many companies.",
+    label: "Products",
+    href: "/products",
+    description: "One philosophy. Many products.",
   },
   {
     label: "Contact",

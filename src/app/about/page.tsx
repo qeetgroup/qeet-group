@@ -4,7 +4,9 @@ import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
 import { Link } from "@/components/ui/Link";
+import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
+import { Spotlight } from "@/components/motion/Spotlight";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -37,7 +39,8 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section className="pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+      <section className="relative isolate overflow-hidden pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+        <PageAmbient />
         <Container>
           <FadeRise>
             <Eyebrow className="mb-10 md:mb-14">About Qeet Group</Eyebrow>
@@ -157,11 +160,16 @@ export default function AboutPage() {
       {/* Pull-quote */}
       <Section className="border-t border-rule">
         <FadeRise>
-          <figure>
-            <blockquote className="font-serif italic font-normal text-balance text-ink text-[2rem] leading-[1.2] md:text-[2.75rem] md:leading-[1.16] lg:text-[3.5rem] lg:leading-[1.12]">
-              &ldquo;The right question, asked early, makes most of what follows obvious.&rdquo;
-            </blockquote>
-          </figure>
+          <Spotlight
+            color="color-mix(in oklab, var(--color-brand) 12%, transparent)"
+            className="rounded-3xl"
+          >
+            <figure className="glass-panel rounded-3xl p-8 md:p-12 lg:p-16">
+              <blockquote className="font-serif italic font-normal text-balance text-ink text-[2rem] leading-[1.2] md:text-[2.75rem] md:leading-[1.16] lg:text-[3.5rem] lg:leading-[1.12]">
+                &ldquo;The right question, asked early, makes most of what follows obvious.&rdquo;
+              </blockquote>
+            </figure>
+          </Spotlight>
         </FadeRise>
       </Section>
     </>

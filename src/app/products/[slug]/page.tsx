@@ -8,17 +8,18 @@ import { Lede } from "@/components/ui/Lede";
 import { Link } from "@/components/ui/Link";
 import { MetaPair } from "@/components/ui/MetaPair";
 import { TrackedExternalLink } from "@/components/ui/TrackedExternalLink";
+import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
-import { listCompanies, loadCompany } from "@/lib/content";
+import { listProducts, loadProduct } from "@/lib/content";
 
 export const dynamicParams = false;
 
 type RouteParams = { slug: string };
 
 export async function generateStaticParams() {
-  const companies = await listCompanies();
-  return companies.map((c) => ({ slug: c.slug }));
+  const products = await listProducts();
+  return products.map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({
@@ -27,36 +28,37 @@ export async function generateMetadata({
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const company = await loadCompany(slug);
-  if (!company) return {};
+  const product = await loadProduct(slug);
+  if (!product) return {};
   return {
-    title: company.data.name,
-    description: company.data.description,
-    alternates: { canonical: `/companies/${slug}` },
+    title: product.data.name,
+    description: product.data.description,
+    alternates: { canonical: `/products/${slug}` },
   };
 }
 
-export default async function CompanyPage({
+export default async function ProductPage({
   params,
 }: {
   params: Promise<RouteParams>;
 }) {
   const { slug } = await params;
-  const company = await loadCompany(slug);
-  if (!company) notFound();
+  const product = await loadProduct(slug);
+  if (!product) notFound();
 
-  const { data, content } = company;
+  const { data, content } = product;
   const externalLabel = data.externalUrl.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 
   return (
     <>
       {/* Hero */}
-      <section className="pb-16 pt-20 md:pb-20 md:pt-28 lg:pt-32">
+      <section className="relative isolate overflow-hidden pb-16 pt-20 md:pb-20 md:pt-28 lg:pt-32">
+        <PageAmbient />
         <Container>
           <FadeRise>
-            <Link href="/companies" variant="arrow" className="text-body-s text-ink-muted">
+            <Link href="/products" variant="arrow" className="text-body-s text-ink-muted">
               <span className="inline-block rotate-180 mr-1" aria-hidden="true">→</span>
-              All companies
+              All products
             </Link>
           </FadeRise>
           <FadeRise delay={0.1} className="mt-10 md:mt-14">

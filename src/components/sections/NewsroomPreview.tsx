@@ -3,6 +3,7 @@ import { Eyebrow } from "../ui/Eyebrow";
 import { Link } from "../ui/Link";
 import { PostRow } from "../ui/PostRow";
 import { FadeRise } from "../motion/FadeRise";
+import { Spotlight } from "../motion/Spotlight";
 import { listPosts } from "@/lib/content";
 
 export async function NewsroomPreview() {
@@ -20,16 +21,23 @@ export async function NewsroomPreview() {
           </Link>
         </div>
       </FadeRise>
-      <div className="mt-12 grid grid-cols-1 gap-12 md:mt-16 md:grid-cols-3 md:gap-10 lg:gap-12">
+      <div className="mt-12 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-3 md:gap-6">
         {posts.map((post, i) => (
-          <FadeRise key={post.slug} delay={i * 0.06}>
-            <PostRow
-              date={post.data.date}
-              category={post.data.category}
-              title={post.data.title}
-              dek={post.data.dek}
-              href={`/newsroom/${post.slug}`}
-            />
+          <FadeRise key={post.slug} delay={i * 0.06} className="h-full">
+            <Spotlight
+              color="color-mix(in oklab, var(--color-brand) 12%, transparent)"
+              className="h-full rounded-3xl"
+            >
+              <div className="glass-panel h-full rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg md:p-8">
+                <PostRow
+                  date={post.data.date}
+                  category={post.data.category}
+                  title={post.data.title}
+                  dek={post.data.dek}
+                  href={`/newsroom/${post.slug}`}
+                />
+              </div>
+            </Spotlight>
           </FadeRise>
         ))}
       </div>

@@ -3,6 +3,7 @@ import { Container } from "./Container";
 import { Eyebrow } from "../ui/Eyebrow";
 import { NewsletterForm } from "../forms/NewsletterForm";
 import { SocialIcons } from "../ui/SocialIcons";
+import { FadeRise } from "../motion/FadeRise";
 import { isExternalHref } from "@/lib/utils";
 
 type FooterLink = { href: string; label: string };
@@ -15,21 +16,21 @@ const columns: FooterColumn[] = [
       { href: "/about", label: "About" },
       { href: "/team", label: "Team" },
       { href: "/now", label: "Now" },
-      { href: "/companies", label: "Companies" },
+      { href: "/products", label: "Products" },
       { href: "/newsroom", label: "Newsroom" },
       { href: "/memos", label: "Memos" },
       { href: "/careers", label: "Careers" },
     ],
   },
   {
-    heading: "Companies",
+    heading: "Products",
     items: [
-      { href: "/companies/qeetid", label: "Qeet ID" },
-      { href: "/companies/qeetrix", label: "Qeetrix" },
-      { href: "/companies/qeet-logs", label: "Qeet Logs" },
-      { href: "/companies/qeet-people", label: "Qeet People" },
-      { href: "/companies/qeet-notify", label: "Qeet Notify" },
-      { href: "/companies/qeet-pay", label: "Qeet Pay" },
+      { href: "/products/qeetid", label: "Qeet ID" },
+      { href: "/products/qeetrix", label: "Qeetrix" },
+      { href: "/products/qeet-logs", label: "Qeet Logs" },
+      { href: "/products/qeet-people", label: "Qeet People" },
+      { href: "/products/qeet-notify", label: "Qeet Notify" },
+      { href: "/products/qeet-pay", label: "Qeet Pay" },
     ],
   },
   {
@@ -64,14 +65,14 @@ function FooterLinkRow({ href, label }: FooterLink) {
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="border-t border-rule bg-canvas">
+    <footer className="relative border-t border-rule bg-canvas">
       <Container>
-        <div className="grid grid-cols-1 gap-10 py-16 md:grid-cols-12 md:gap-12 md:py-20">
+        <FadeRise className="grid grid-cols-1 gap-10 py-16 md:grid-cols-12 md:gap-12 md:py-20">
           <div className="md:col-span-5">
             <NextLink
               href="/"
               aria-label="Qeet Group home"
-              className="font-serif text-[2.25rem] leading-none text-ink"
+              className="font-sans text-[1.625rem] font-semibold leading-none tracking-[-0.03em] text-ink transition-colors duration-200 hover:text-brand"
             >
               Qeet Group
             </NextLink>
@@ -96,7 +97,8 @@ export function Footer() {
               </div>
             ))}
           </div>
-        </div>
+        </FadeRise>
+
         <div className="flex flex-col gap-4 border-t border-rule py-6 md:flex-row md:items-center md:justify-between">
           <Eyebrow>Follow</Eyebrow>
           <SocialIcons />
