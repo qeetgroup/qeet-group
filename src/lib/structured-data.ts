@@ -20,7 +20,17 @@ export function organizationSchema() {
     logo: `${SITE_ORIGIN}/qeet-logo-light.svg`,
     description:
       "A multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
+    slogan: "Question. Explore. Envision. Transform.",
     foundingDate: "2026",
+    areaServed: "IN",
+    knowsAbout: [
+      "Identity and access management",
+      "Design systems",
+      "Log management and observability",
+      "Human capital management",
+      "Notification infrastructure",
+      "Payments and billing",
+    ],
     sameAs: SOCIAL_PLATFORMS.map((p) => p.url),
     contactPoint: [
       {
@@ -105,6 +115,31 @@ export function productsListSchema(
       description: p.description,
     })),
   } as const;
+}
+
+export function productSchema(args: {
+  slug: string;
+  name: string;
+  description: string;
+  sector: string;
+  externalUrl: string;
+}): WithContext<Record<string, unknown>> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: args.name,
+    description: args.description,
+    applicationCategory: "BusinessApplication",
+    applicationSubCategory: args.sector,
+    operatingSystem: "Web",
+    url: args.externalUrl,
+    mainEntityOfPage: `${SITE_ORIGIN}/products/${args.slug}`,
+    publisher: {
+      "@type": "Organization",
+      name: "Qeet Group",
+      url: SITE_ORIGIN,
+    },
+  };
 }
 
 export function faqPageSchema(faqs: Array<{ question: string; answer: string }>) {

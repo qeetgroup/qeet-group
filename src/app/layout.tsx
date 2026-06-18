@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s — Qeet Group",
   },
   description:
-    "Qeet Group is a multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
+    "Qeet Group is a multi-company holding building India-first software products on one identity graph — identity, design systems, observability, people, notifications, and payments.",
   metadataBase: new URL("https://qeet.in"),
   alternates: {
     canonical: "/",

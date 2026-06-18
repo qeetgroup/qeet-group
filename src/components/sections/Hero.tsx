@@ -35,6 +35,7 @@ export function Hero() {
               </Magnetic>
             </div>
           </FadeRise>
+
         </div>
       </Container>
     </section>

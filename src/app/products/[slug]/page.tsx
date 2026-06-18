@@ -12,6 +12,8 @@ import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { PRODUCT_UI } from "@/components/product-ui/registry";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { productSchema, breadcrumbSchema } from "@/lib/structured-data";
 import { listProducts, loadProduct } from "@/lib/content";
 
 export const dynamicParams = false;
@@ -53,6 +55,22 @@ export default async function ProductPage({
 
   return (
     <>
+      <JsonLd
+        data={[
+          productSchema({
+            slug,
+            name: data.name,
+            description: data.description,
+            sector: data.sector,
+            externalUrl: data.externalUrl,
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Products", path: "/products" },
+            { name: data.name, path: `/products/${slug}` },
+          ]),
+        ]}
+      />
       {/* Hero */}
       <section className="relative isolate overflow-hidden pb-16 pt-20 md:pb-20 md:pt-28 lg:pt-32">
         <PageAmbient />

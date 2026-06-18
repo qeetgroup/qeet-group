@@ -8,12 +8,12 @@ import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { listProducts } from "@/lib/content";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { productsListSchema } from "@/lib/structured-data";
+import { productsListSchema, breadcrumbSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Products",
   description:
-    "Qeet Group products. Each is built for what it is. They share a philosophy, not a roadmap.",
+    "Explore Qeet Group's products — Qeet ID, Qeetrix, Qeet Logs, Qeet People, Qeet Notify, and Qeet Pay. Built India-first on one identity graph.",
   alternates: { canonical: "/products" },
 };
 
@@ -23,13 +23,19 @@ export default async function ProductsPage() {
   return (
     <>
       <JsonLd
-        data={productsListSchema(
-          products.map((c) => ({
-            slug: c.slug,
-            name: c.data.name,
-            description: c.data.description,
-          })),
-        )}
+        data={[
+          productsListSchema(
+            products.map((c) => ({
+              slug: c.slug,
+              name: c.data.name,
+              description: c.data.description,
+            })),
+          ),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Products", path: "/products" },
+          ]),
+        ]}
       />
       <section className="relative isolate overflow-hidden pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
         <PageAmbient />
