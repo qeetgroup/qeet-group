@@ -3,6 +3,7 @@ import { Eyebrow } from "../ui/Eyebrow";
 import { Link } from "../ui/Link";
 import { FadeRise } from "../motion/FadeRise";
 import { WordReveal } from "../motion/WordReveal";
+import { Magnetic } from "../motion/Magnetic";
 
 export function Hero() {
   return (
@@ -22,9 +23,11 @@ export function Hero() {
             </p>
           </FadeRise>
           <FadeRise delay={0.95} className="mt-10 md:mt-14">
-            <Link href="#philosophy" variant="arrow" className="text-body text-ink">
-              Read our philosophy
-            </Link>
+            <Magnetic strength={0.4}>
+              <Link href="#philosophy" variant="arrow" className="text-body text-ink">
+                Read our philosophy
+              </Link>
+            </Magnetic>
           </FadeRise>
         </div>
       </Container>

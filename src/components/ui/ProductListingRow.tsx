@@ -3,7 +3,7 @@ import { Link } from "./Link";
 import { MetaPair } from "./MetaPair";
 import { cn } from "@/lib/utils";
 
-type CompanyListingRowProps = {
+type ProductListingRowProps = {
   name: string;
   description: string;
   sector: string;
@@ -16,11 +16,11 @@ type CompanyListingRowProps = {
 };
 
 /**
- * Richer subsidiary row for /companies. Not a single clickable surface — has
+ * Richer product row for /products. Not a single clickable surface — has
  * two explicit links (external "Visit" and internal "Read more"), so the row
  * is a plain article rather than a wrapped anchor.
  */
-export function CompanyListingRow({
+export function ProductListingRow({
   name,
   description,
   sector,
@@ -29,7 +29,7 @@ export function CompanyListingRow({
   externalUrl,
   internalHref,
   isFirst,
-}: CompanyListingRowProps) {
+}: ProductListingRowProps) {
   const externalLabel = externalUrl.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
   return (
     <article

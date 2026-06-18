@@ -3,6 +3,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
+import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { listMemos } from "@/lib/content";
 
@@ -26,7 +27,8 @@ export default async function MemosPage() {
 
   return (
     <>
-      <section className="pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+      <section className="relative isolate overflow-hidden pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+        <PageAmbient />
         <Container>
           <FadeRise>
             <Eyebrow className="mb-10 md:mb-14">Memos</Eyebrow>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { EASE_OUT } from "@/lib/motion";
 
 type WordRevealProps = {
   text: string;
@@ -56,7 +57,7 @@ export function WordReveal({
               transition={{
                 duration,
                 delay: initialDelay + myIndex * staggerDelay,
-                ease: [0.16, 1, 0.3, 1],
+                ease: EASE_OUT,
               }}
             >
               {tok}

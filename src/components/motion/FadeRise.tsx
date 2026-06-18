@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
+import { EASE_OUT } from "@/lib/motion";
 
 type FadeRiseProps = {
   children: ReactNode;
@@ -39,7 +40,7 @@ export function FadeRise({
       initial={{ opacity: 0, y: distance }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      transition={{ duration, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration, delay, ease: EASE_OUT }}
     >
       {children}
     </motion.div>

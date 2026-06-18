@@ -38,11 +38,16 @@
   --color-rule: #e5e5e5;
   --color-rule-strong: #c8c8c8;
 
-  /* Brand accent — the only colour outside the monochrome stack. Lifted
-   * from the Qeet logo. Restraint is the brief: hover / focus / active
-   * only. Stays the same value in dark mode (the logo does too). */
+  /* Brand accent — the warm colour outside the monochrome stack, lifted from
+   * the Qeet logo. The site now leans bolder: brand orange is used
+   * expressively in the gradient mesh, glows, and hover fills (not only
+   * hover/focus/active), while ink/canvas still carry the bulk of the layout
+   * so it never becomes the dominant surface. Same value in dark mode. */
   --color-brand: #f26d0e;
   --color-brand-deep: #d85301;
+  /* Low-alpha brand tints for washes and hover fills. */
+  --color-brand-soft: color-mix(in oklab, var(--color-brand) 12%, transparent);
+  --color-brand-faint: color-mix(in oklab, var(--color-brand) 6%, transparent);
 
   /* Functional (form state only — used sparingly) */
   --color-success: #2f6b3e;
@@ -58,6 +63,41 @@
   --text-body-s--line-height: 1.5rem;
   --text-caption: 0.8125rem;
   --text-caption--line-height: 1.25rem;
+
+  /*
+   * Elevation. The editorial base is flat (hairline rules); these soft,
+   * low-alpha shadows are reserved for lifted surfaces — glass cards, hover
+   * states, the elevated nav. Tuned against light canvas; the `.dark` block
+   * redefines them (a near-black drop reads as nothing on a dark surface, so
+   * dark elevation leans on a faint top highlight + deeper drop).
+   */
+  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, var(--color-ink) 6%, transparent);
+  --shadow-md:
+    0 4px 16px -4px color-mix(in oklab, var(--color-ink) 12%, transparent),
+    0 2px 6px -2px color-mix(in oklab, var(--color-ink) 8%, transparent);
+  --shadow-lg:
+    0 18px 56px -12px color-mix(in oklab, var(--color-ink) 20%, transparent),
+    0 6px 16px -6px color-mix(in oklab, var(--color-ink) 10%, transparent);
+  /* Brand-tinted glow — the expressive accent for primary CTAs / featured
+   * cards. Same value in both themes (the brand colour doesn't flip). */
+  --shadow-glow: 0 10px 44px -10px color-mix(in oklab, var(--color-brand) 40%, transparent);
+
+  /*
+   * Glass surfaces. Translucent fills meant to sit over the gradient mesh /
+   * content, paired with `backdrop-blur-*` utilities. `glass` is the panel
+   * fill; `glass-border` is the hairline that gives the pane an edge.
+   */
+  --color-glass: color-mix(in oklab, var(--color-surface) 62%, transparent);
+  --color-glass-strong: color-mix(in oklab, var(--color-surface) 82%, transparent);
+  --color-glass-border: color-mix(in oklab, var(--color-ink) 8%, transparent);
+
+  /* The signature ease used throughout the motion system, exposed to CSS
+   * transitions/animations as `ease-out-expo`. Mirrors EASE_OUT in lib/motion. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Ambient hero blob drift. Disabled wholesale by the reduced-motion block. */
+  --animate-blob: blob-float 22s var(--ease-out-expo) infinite;
+  --animate-blob-slow: blob-float 32s var(--ease-out-expo) infinite;
 }
 
 /*
@@ -83,6 +123,21 @@
   --color-rule-strong: #3d3d3d;
 
   --color-error: #f08585;
+
+  /* Dark elevation: a black drop is invisible on a dark canvas, so depth comes
+   * from a deeper drop plus a faint top highlight that catches the light. */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-md:
+    0 4px 18px -4px rgb(0 0 0 / 0.6),
+    inset 0 1px 0 0 color-mix(in oklab, var(--color-ink) 6%, transparent);
+  --shadow-lg:
+    0 24px 64px -16px rgb(0 0 0 / 0.7),
+    inset 0 1px 0 0 color-mix(in oklab, var(--color-ink) 8%, transparent);
+
+  /* Glass reads as a lifted-dark pane rather than a frosted-white one. */
+  --color-glass: color-mix(in oklab, var(--color-surface) 56%, transparent);
+  --color-glass-strong: color-mix(in oklab, var(--color-surface) 80%, transparent);
+  --color-glass-border: color-mix(in oklab, var(--color-ink) 12%, transparent);
 
   color-scheme: dark;
 }
@@ -155,5 +210,99 @@
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none !important;
+  }
+}
+
+/*
+ * Bolder ambient surfaces. All decorative — the elements that carry these
+ * classes must be aria-hidden. The reduced-motion block above already freezes
+ * any animation, so the mesh degrades to a static wash for those users.
+ */
+@keyframes blob-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -6%, 0) scale(1.08);
+  }
+  66% {
+    transform: translate3d(-5%, 4%, 0) scale(0.94);
+  }
+}
+
+/* Drives the infinite <Marquee> track. The component renders two copies, so
+ * a -100% shift loops seamlessly. */
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@layer components {
+  /*
+   * Gradient mesh: warm brand + ink radial blobs over the canvas. Used as a
+   * static fallback layer; animated hero blobs are separate positioned
+   * elements (see Hero) that reuse the same colour vocabulary.
+   */
+  .bg-mesh {
+    background-image:
+      radial-gradient(
+        40rem 40rem at 12% -10%,
+        color-mix(in oklab, var(--color-brand) 16%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        34rem 34rem at 96% 6%,
+        color-mix(in oklab, var(--color-ink) 7%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        48rem 30rem at 50% 118%,
+        color-mix(in oklab, var(--color-brand-deep) 12%, transparent),
+        transparent 60%
+      );
+  }
+  .dark .bg-mesh {
+    background-image:
+      radial-gradient(
+        40rem 40rem at 12% -10%,
+        color-mix(in oklab, var(--color-brand) 24%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        34rem 34rem at 96% 6%,
+        color-mix(in oklab, var(--color-ink) 10%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        48rem 30rem at 50% 118%,
+        color-mix(in oklab, var(--color-brand-deep) 18%, transparent),
+        transparent 60%
+      );
+  }
+
+  /* Fine film grain (SVG fractal noise data-URI). Sits above the mesh at very
+   * low opacity to kill banding and add a tactile, premium texture. */
+  .bg-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+  }
+  .dark .bg-grain {
+    opacity: 0.06;
+  }
+
+  /* Reusable glass pane: translucent fill + hairline edge + blur + soft lift.
+   * Pair on a relatively/absolutely positioned element so the blur composites. */
+  .glass-panel {
+    background-color: var(--color-glass);
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: var(--shadow-md);
+  }
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass-panel {
+      background-color: var(--color-glass-strong);
+    }
   }
 }

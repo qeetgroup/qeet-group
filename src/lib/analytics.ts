@@ -27,7 +27,7 @@ export const Events = {
   ContactSubmit: "Contact: Submit",
   NewsletterSubscribe: "Newsletter: Subscribe",
   EmailClick: "Email: Click",
-  ExternalCompanyClick: "Company: External Click",
+  ExternalProductClick: "Product: External Click",
   PostOpen: "Post: Open",
   PressAssetDownload: "Press: Asset Download",
 } as const;

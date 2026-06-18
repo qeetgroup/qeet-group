@@ -5,7 +5,7 @@ import { Events, track } from "@/lib/analytics";
 
 /**
  * External link wrapper that records a Plausible event with a slug/label
- * pair so the dashboard can break clicks down by company.
+ * pair so the dashboard can break clicks down by product.
  */
 export function TrackedExternalLink({
   href,
@@ -25,7 +25,7 @@ export function TrackedExternalLink({
       href={href}
       className={className}
       onClick={() =>
-        track(Events.ExternalCompanyClick, { slug, ...(label ? { label } : {}) })
+        track(Events.ExternalProductClick, { slug, ...(label ? { label } : {}) })
       }
     >
       {children}

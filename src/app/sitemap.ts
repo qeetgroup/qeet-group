@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { listCompanies, listMemos, listPosts } from "@/lib/content";
+import { listProducts, listMemos, listPosts } from "@/lib/content";
 
 const SITE_ORIGIN = "https://qeet.in";
 
@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "", changeFreq: "weekly" },
     { path: "/about", changeFreq: "monthly" },
     { path: "/team", changeFreq: "monthly" },
-    { path: "/companies", changeFreq: "monthly" },
+    { path: "/products", changeFreq: "monthly" },
     { path: "/newsroom", changeFreq: "weekly" },
     { path: "/memos", changeFreq: "weekly" },
     { path: "/careers", changeFreq: "monthly" },
@@ -23,8 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/legal/terms", changeFreq: "yearly" },
   ];
 
-  const [companies, posts, memos] = await Promise.all([
-    listCompanies(),
+  const [products, posts, memos] = await Promise.all([
+    listProducts(),
     listPosts(),
     listMemos(),
   ]);
@@ -36,8 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: r.changeFreq,
       priority: r.path === "" ? 1.0 : 0.7,
     })),
-    ...companies.map((c) => ({
-      url: `${SITE_ORIGIN}/companies/${c.slug}`,
+    ...products.map((c) => ({
+      url: `${SITE_ORIGIN}/products/${c.slug}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.8,

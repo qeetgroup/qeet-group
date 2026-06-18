@@ -4,7 +4,7 @@ import matter from "gray-matter";
 
 const CONTENT_ROOT = path.join(process.cwd(), "src", "content");
 
-export type CompanyFrontmatter = {
+export type ProductFrontmatter = {
   name: string;
   tagline: string;
   sector: string;
@@ -37,9 +37,9 @@ export type MemoFrontmatter = {
   author?: string;
 };
 
-export type LoadedCompany = {
+export type LoadedProduct = {
   slug: string;
-  data: CompanyFrontmatter;
+  data: ProductFrontmatter;
   content: string;
 };
 
@@ -110,13 +110,13 @@ function normalizeDate(value: unknown): string {
   return String(value ?? "");
 }
 
-export const loadCompany = (slug: string): Promise<LoadedCompany | null> =>
-  readMdx<CompanyFrontmatter>("companies", slug);
+export const loadProduct = (slug: string): Promise<LoadedProduct | null> =>
+  readMdx<ProductFrontmatter>("products", slug);
 
-export async function listCompanies(): Promise<LoadedCompany[]> {
-  const items = await listMdx<CompanyFrontmatter>("companies");
+export async function listProducts(): Promise<LoadedProduct[]> {
+  const items = await listMdx<ProductFrontmatter>("products");
   // Explicit `order` drives the home-page feature order and the listing.
-  // Companies without an order sort last, then alphabetically by name, so
+  // Products without an order sort last, then alphabetically by name, so
   // the flagship leads rather than whatever the filesystem happens to return.
   return items.sort((a, b) => {
     const ao = a.data.order ?? Number.MAX_SAFE_INTEGER;

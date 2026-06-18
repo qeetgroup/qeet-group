@@ -1,8 +1,8 @@
 import { ImageResponse } from "next/og";
-import { loadCompany } from "@/lib/content";
+import { loadProduct } from "@/lib/content";
 import { loadSerifFont } from "@/lib/og-fonts";
 
-export const alt = "Qeet Group company";
+export const alt = "Qeet Group product";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -12,12 +12,12 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const company = await loadCompany(slug);
+  const product = await loadProduct(slug);
   const serif = await loadSerifFont();
 
-  const name = company?.data.name ?? "Qeet Group";
-  const tagline = company?.data.tagline ?? "";
-  const sector = company?.data.sector ?? "";
+  const name = product?.data.name ?? "Qeet Group";
+  const tagline = product?.data.tagline ?? "";
+  const sector = product?.data.sector ?? "";
 
   return new ImageResponse(
     (
@@ -53,7 +53,7 @@ export default async function Image({
               textTransform: "uppercase",
             }}
           >
-            {sector ? `A Qeet Group company · ${sector}` : "A Qeet Group company"}
+            {sector ? `A Qeet Group product · ${sector}` : "A Qeet Group product"}
           </div>
           <div
             style={{
@@ -78,7 +78,7 @@ export default async function Image({
           )}
         </div>
 
-        <div style={{ display: "flex", fontSize: 22 }}>qeet.in/companies/{slug}</div>
+        <div style={{ display: "flex", fontSize: 22 }}>qeet.in/products/{slug}</div>
       </div>
     ),
     {

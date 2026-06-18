@@ -5,6 +5,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
 import { Link } from "@/components/ui/Link";
 import { SocialIcons } from "@/components/ui/SocialIcons";
+import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 
 export const metadata: Metadata = {
@@ -44,7 +45,8 @@ export default function PressPage() {
   return (
     <>
       {/* Hero */}
-      <section className="pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+      <section className="relative isolate overflow-hidden pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+        <PageAmbient />
         <Container>
           <FadeRise>
             <Eyebrow className="mb-10 md:mb-14">Press</Eyebrow>
@@ -102,7 +104,7 @@ export default function PressPage() {
           {assets.map((a, i) => (
             <FadeRise key={a.href} delay={i * 0.06}>
               <div>
-                <div className="flex h-40 items-center justify-center border border-rule px-6">
+                <div className="glass-panel flex h-40 items-center justify-center rounded-2xl px-6 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg">
                   {/* Plain <img> so the SVG renders 1:1 without Next image optimization. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

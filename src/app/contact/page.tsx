@@ -3,7 +3,9 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
+import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
+import { Spotlight } from "@/components/motion/Spotlight";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { TrackedMailto } from "@/components/ui/TrackedMailto";
 import { SocialIcons } from "@/components/ui/SocialIcons";
@@ -36,7 +38,8 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+      <section className="relative isolate overflow-hidden pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+        <PageAmbient />
         <Container>
           <FadeRise>
             <Eyebrow className="mb-10 md:mb-14">Contact</Eyebrow>
@@ -59,24 +62,29 @@ export default function ContactPage() {
         <FadeRise>
           <Eyebrow className="mb-12 md:mb-16">By topic</Eyebrow>
         </FadeRise>
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8 lg:gap-16">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
           {channels.map((c, i) => (
-            <FadeRise key={c.label} delay={i * 0.06}>
-              <div>
-                <h2 className="font-serif font-normal text-balance tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.16] md:text-[2rem]">
-                  {c.label}
-                </h2>
-                <p className="mt-4 text-body text-ink-muted">{c.description}</p>
-                <div className="mt-5">
-                  <TrackedMailto
-                    email={c.email}
-                    context="contact-channels"
-                    className="font-sans text-body text-ink"
-                  >
-                    {c.email}
-                  </TrackedMailto>
+            <FadeRise key={c.label} delay={i * 0.06} className="h-full">
+              <Spotlight
+                color="color-mix(in oklab, var(--color-brand) 12%, transparent)"
+                className="h-full rounded-3xl"
+              >
+                <div className="glass-panel flex h-full flex-col rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg md:p-8">
+                  <h2 className="font-serif font-normal text-balance tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.16] md:text-[2rem]">
+                    {c.label}
+                  </h2>
+                  <p className="mt-4 text-body text-ink-muted">{c.description}</p>
+                  <div className="mt-5">
+                    <TrackedMailto
+                      email={c.email}
+                      context="contact-channels"
+                      className="font-sans text-body text-ink"
+                    >
+                      {c.email}
+                    </TrackedMailto>
+                  </div>
                 </div>
-              </div>
+              </Spotlight>
             </FadeRise>
           ))}
         </div>

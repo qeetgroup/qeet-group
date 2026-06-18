@@ -90,19 +90,19 @@ export function articleSchema(args: {
   };
 }
 
-export function companiesListSchema(
-  companies: Array<{ slug: string; name: string; description: string }>,
+export function productsListSchema(
+  products: Array<{ slug: string; name: string; description: string }>,
 ) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Qeet Group companies",
-    itemListElement: companies.map((c, i) => ({
+    name: "Qeet Group products",
+    itemListElement: products.map((p, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `${SITE_ORIGIN}/companies/${c.slug}`,
-      name: c.name,
-      description: c.description,
+      url: `${SITE_ORIGIN}/products/${p.slug}`,
+      name: p.name,
+      description: p.description,
     })),
   } as const;
 }

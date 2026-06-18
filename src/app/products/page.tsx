@@ -3,41 +3,43 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
-import { CompanyListingRow } from "@/components/ui/CompanyListingRow";
+import { ProductListingRow } from "@/components/ui/ProductListingRow";
+import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
-import { listCompanies } from "@/lib/content";
+import { listProducts } from "@/lib/content";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { companiesListSchema } from "@/lib/structured-data";
+import { productsListSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Companies",
+  title: "Products",
   description:
-    "Qeet Group companies. Each is built for what it is. They share a philosophy, not a roadmap.",
-  alternates: { canonical: "/companies" },
+    "Qeet Group products. Each is built for what it is. They share a philosophy, not a roadmap.",
+  alternates: { canonical: "/products" },
 };
 
-export default async function CompaniesPage() {
-  const companies = await listCompanies();
+export default async function ProductsPage() {
+  const products = await listProducts();
 
   return (
     <>
       <JsonLd
-        data={companiesListSchema(
-          companies.map((c) => ({
+        data={productsListSchema(
+          products.map((c) => ({
             slug: c.slug,
             name: c.data.name,
             description: c.data.description,
           })),
         )}
       />
-      <section className="pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+      <section className="relative isolate overflow-hidden pb-20 pt-20 md:pb-24 md:pt-28 lg:pb-32 lg:pt-32">
+        <PageAmbient />
         <Container>
           <FadeRise>
-            <Eyebrow className="mb-10 md:mb-14">Our Companies</Eyebrow>
+            <Eyebrow className="mb-10 md:mb-14">Our Products</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
             <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.04] sm:text-[3.5rem] md:text-[5rem] md:leading-[1.03] lg:text-[6rem] lg:leading-[1.02]">
-              Our companies.
+              Our products.
             </h1>
           </FadeRise>
           <FadeRise delay={0.35} className="mt-10 max-w-xl md:mt-12">
@@ -49,16 +51,16 @@ export default async function CompaniesPage() {
       </section>
 
       <Section className="border-t border-rule" padding="tight">
-        {companies.map((c, i) => (
+        {products.map((c, i) => (
           <FadeRise key={c.slug}>
-            <CompanyListingRow
+            <ProductListingRow
               name={c.data.name}
               description={c.data.description}
               sector={c.data.sector}
               stage={c.data.stage}
               founded={c.data.founded}
               externalUrl={c.data.externalUrl}
-              internalHref={`/companies/${c.slug}`}
+              internalHref={`/products/${c.slug}`}
               isFirst={i === 0}
             />
           </FadeRise>

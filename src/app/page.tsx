@@ -1,7 +1,7 @@
 import { Hero } from "@/components/sections/Hero";
 import { Philosophy } from "@/components/sections/Philosophy";
 import { VisionMission } from "@/components/sections/VisionMission";
-import { Companies } from "@/components/sections/Companies";
+import { Products } from "@/components/sections/Products";
 import { NewsroomPreview } from "@/components/sections/NewsroomPreview";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
 
@@ -11,7 +11,7 @@ export default function HomePage() {
       <Hero />
       <Philosophy />
       <VisionMission />
-      <Companies />
+      <Products />
       <NewsroomPreview />
       <ClosingCTA />
     </>

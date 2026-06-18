@@ -6,7 +6,7 @@
  */
 
 export type SearchEntry = {
-  type: "post" | "memo" | "company" | "page";
+  type: "post" | "memo" | "product" | "page";
   title: string;
   description: string;
   url: string;
@@ -20,7 +20,7 @@ export type SearchEntry = {
  */
 export const SEARCH_TYPE_LABEL: Record<SearchEntry["type"], string> = {
   page: "Page",
-  company: "Company",
+  product: "Product",
   post: "Newsroom",
   memo: "Memo",
 };
@@ -52,9 +52,9 @@ export const STATIC_PAGES: ReadonlyArray<Omit<SearchEntry, "haystack">> = [
   },
   {
     type: "page",
-    title: "Companies",
-    description: "Qeet Group companies. One philosophy. Many companies.",
-    url: "/companies",
+    title: "Products",
+    description: "Qeet Group products. One philosophy. Many products.",
+    url: "/products",
   },
   {
     type: "page",
