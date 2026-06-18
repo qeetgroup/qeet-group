@@ -12,7 +12,7 @@ const facts = [
     body: "No outside capital, no fund. We answer to the work and the long term, not to a quarterly clock.",
   },
   {
-    title: "Remote-first, India-rooted",
+    title: "Remote-first",
     body: "A small senior team runs the holding, distributed; each company chooses the setup that suits it.",
   },
 ];
@@ -22,7 +22,7 @@ export function Structure() {
     <Section className="border-t border-rule">
       <FadeRise>
         <SectionHeader
-          index="04"
+          index="03"
           eyebrow="How We're Structured"
           title="A holding company, not a hierarchy."
           description="The group exists to set the philosophy, hold the quality bar, and back the operators who build — then get out of the way."

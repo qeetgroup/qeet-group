@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "What do the products share?",
-    a: "One identity graph (Qeet ID), one design system (Qeetrix), and one quality bar — all built India-first.",
+    a: "One identity graph (Qeet ID), one design system (Qeetrix), and one quality bar — built to feel like one family.",
   },
   {
     q: "Are you hiring?",
@@ -35,7 +35,7 @@ export function HomeFaq() {
     <Section className="border-t border-rule">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
         <FadeRise className="md:col-span-4">
-          <SectionHeader index="08" eyebrow="FAQ" title="Questions, answered." />
+          <SectionHeader index="07" eyebrow="FAQ" title="Questions, answered." />
           <div className="mt-6">
             <Link href="/faq" variant="arrow" className="text-body text-ink">
               All questions

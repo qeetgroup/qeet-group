@@ -1,6 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
 import { ProductsBento } from "@/components/sections/ProductsBento";
-import { IndiaFirst } from "@/components/sections/IndiaFirst";
 import { HowWeBuild } from "@/components/sections/HowWeBuild";
 import { Structure } from "@/components/sections/Structure";
 import { Philosophy } from "@/components/sections/Philosophy";
@@ -19,7 +18,6 @@ export default function HomePage() {
       <Hero />
       <Philosophy />
       <ProductsBento />
-      <IndiaFirst />
       <VisionMission />
       <HowWeBuild />
       <Structure />

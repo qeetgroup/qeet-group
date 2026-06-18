@@ -24,7 +24,7 @@ export async function ProofMetrics() {
   return (
     <Section className="border-t border-rule" padding="tight">
       <FadeRise>
-        <SectionHeader index="06" eyebrow="By the numbers" />
+        <SectionHeader index="05" eyebrow="By the numbers" />
       </FadeRise>
 
       <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-12 md:mt-14 lg:grid-cols-4">

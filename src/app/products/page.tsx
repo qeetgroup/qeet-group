@@ -13,7 +13,7 @@ import { productsListSchema, breadcrumbSchema } from "@/lib/structured-data";
 export const metadata: Metadata = {
   title: "Products",
   description:
-    "Explore Qeet Group's products — Qeet ID, Qeetrix, Qeet Logs, Qeet People, Qeet Notify, and Qeet Pay. Built India-first on one identity graph.",
+    "Explore Qeet Group's products — Qeet ID, Qeetrix, Qeet Logs, Qeet People, Qeet Notify, and Qeet Pay. Built on one identity graph.",
   alternates: { canonical: "/products" },
 };
 

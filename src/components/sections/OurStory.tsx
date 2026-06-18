@@ -30,7 +30,7 @@ const milestones: Milestone[] = [
   {
     when: "Next",
     title: "The platform expands.",
-    body: "Logs, People, Notify, and Pay — each on the same identity graph, India-first, and built to the same quality bar.",
+    body: "Logs, People, Notify, and Pay — each on the same identity graph, and built to the same quality bar.",
     upcoming: true,
   },
 ];
@@ -40,7 +40,7 @@ export function OurStory() {
     <Section className="border-t border-rule">
       <FadeRise>
         <SectionHeader
-          index="05"
+          index="04"
           eyebrow="Our Story"
           title="Built in the open, for the long term."
           description="A young group with a clear trajectory — here's where we are, and where we're headed."

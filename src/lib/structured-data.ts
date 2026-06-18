@@ -22,7 +22,6 @@ export function organizationSchema() {
       "A multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
     slogan: "Question. Explore. Envision. Transform.",
     foundingDate: "2026",
-    areaServed: "IN",
     knowsAbout: [
       "Identity and access management",
       "Design systems",
