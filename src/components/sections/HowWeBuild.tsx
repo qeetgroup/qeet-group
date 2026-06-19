@@ -34,7 +34,7 @@ export function HowWeBuild() {
     <Section className="border-t border-rule">
       <FadeRise>
         <SectionHeader
-          index="03"
+          index="02"
           eyebrow="How We Build"
           title="How we operate, and what we back."
           description="A holding structure lets us treat each product as a long campaign. Four principles run across every company in the group."
