@@ -16,4 +16,4 @@ Single test: `pnpm vitest run src/lib/foo.test.ts`. Tests are `src/**/*.test.ts(
 
 ## Architecture
 
-Next.js App Router site. Content is **MDX in [src/content/](src/content/)** (`companies/`, `newsroom/`, `legal/`, `memos/`), loaded via `next-mdx-remote` + `gray-matter`; each company/post gets a generated OG image and a route. Adding content = adding an MDX file with the frontmatter shape documented in [README.md](README.md). Monochrome editorial design; motion always respects `prefers-reduced-motion`; external links detected centrally via `isExternalHref()` in [src/lib/utils.ts](src/lib/utils.ts).
+Next.js App Router site. Content is **MDX in [src/content/](src/content/)** (`products/`, `newsroom/`, `legal/`, `memos/`), loaded via `next-mdx-remote` + `gray-matter`; each product/post gets a generated OG image and a route. Adding content = adding an MDX file with the frontmatter shape documented in [README.md](README.md). Monochrome editorial design; motion always respects `prefers-reduced-motion`; external links detected centrally via `isExternalHref()` in [src/lib/utils.ts](src/lib/utils.ts).
