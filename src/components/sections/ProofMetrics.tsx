@@ -22,7 +22,7 @@ export async function ProofMetrics() {
   ];
 
   return (
-    <Section className="border-t border-rule" padding="tight">
+    <Section className="border-t border-rule bg-mesh" padding="tight">
       <FadeRise>
         <SectionHeader index="05" eyebrow="By the numbers" />
       </FadeRise>

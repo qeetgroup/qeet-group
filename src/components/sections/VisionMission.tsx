@@ -9,7 +9,7 @@ const statementClass =
 
 export function VisionMission() {
   return (
-    <Section className="border-t border-rule">
+    <Section className="border-t border-rule bg-surface">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
         <FadeRise>
           <Spotlight

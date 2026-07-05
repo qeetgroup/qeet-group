@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
+import { TeamMarquee } from "@/components/sections/TeamMarquee";
 import { ProductsBento } from "@/components/sections/ProductsBento";
 import { HowWeBuild } from "@/components/sections/HowWeBuild";
 import { Structure } from "@/components/sections/Structure";
@@ -16,6 +17,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <TeamMarquee />
       <Philosophy />
       <ProductsBento />
       <VisionMission />

@@ -326,4 +326,37 @@
       background-color: var(--color-glass-strong);
     }
   }
+
+  /* Lifted interactive card — consistent hover elevation across product cards,
+   * newsroom cards, and any other tappable card surface. */
+  .interactive-card {
+    transition:
+      transform 200ms var(--ease-out-expo),
+      box-shadow 200ms var(--ease-out-expo);
+  }
+  .interactive-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+/* Infinite marquee loop. The inner track must use `w-max` and contain two
+ * identical copies of the items; this keyframe shifts it by -50% (= one copy
+ * width) so the second copy fills in seamlessly. */
+@keyframes marquee-loop {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee-loop 40s linear infinite;
+}
+
+@utility animate-marquee-slow {
+  animation: marquee-loop 60s linear infinite;
+}
+
+@utility animate-marquee-reverse {
+  animation: marquee-loop 40s linear infinite reverse;
 }

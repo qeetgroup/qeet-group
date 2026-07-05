@@ -4,13 +4,16 @@ import { SectionHeader } from "../ui/SectionHeader";
 import { StatusPill } from "../ui/StatusPill";
 import { Link } from "../ui/Link";
 import { FadeRise } from "../motion/FadeRise";
+import { Spotlight } from "../motion/Spotlight";
+import { cn } from "@/lib/utils";
 import { listProducts } from "@/lib/content";
 
 /**
- * Scalable product portfolio grid for the group homepage. Uniform, data-driven
- * cards (a sector icon, name, tagline, status, sector) — add an MDX file under
- * src/content/products and a card appears. Rich product UIs live on each
- * product's detail page, not here.
+ * Asymmetric bento grid for the group portfolio. The first product (ordered by
+ * the `order` frontmatter field — Qeet ID) occupies a 2×2 featured cell with
+ * larger typography and the product description. Remaining products sit in 1×1
+ * cells. Spotlight glow follows the cursor on every card. Data-driven: adding
+ * an MDX file adds a card; no hardcoded list.
  */
 function SectorIcon({ sector }: { sector: string }) {
   switch (sector) {
@@ -79,39 +82,75 @@ export async function ProductsBento() {
         />
       </FadeRise>
 
-      <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-3">
-        {products.map((p, i) => (
-          <FadeRise key={p.slug} delay={(i % 3) * 0.06} className="h-full">
-            <NextLink
-              href={`/products/${p.slug}`}
-              className="group/card glass-panel flex h-full flex-col rounded-2xl p-6 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/25 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand md:p-7"
+      <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-3 lg:grid-rows-[repeat(3,minmax(180px,auto))]">
+        {products.map((p, i) => {
+          const isFeatured = i === 0;
+          return (
+            <FadeRise
+              key={p.slug}
+              delay={(i % 3) * 0.06}
+              className={cn("h-full", isFeatured && "lg:col-span-2 lg:row-span-2")}
             >
-              <div className="flex items-start justify-between gap-3">
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-rule bg-canvas text-ink transition-colors duration-300 group-hover/card:border-brand/40 group-hover/card:text-brand">
-                  <SectorIcon sector={p.data.sector} />
-                </span>
-                <StatusPill stage={p.data.stage} />
-              </div>
-
-              <h3 className="mt-6 font-display font-semibold tracking-tight text-ink text-[1.625rem] leading-[1.05]">
-                {p.data.name}
-              </h3>
-              <p className="mt-3 flex-1 text-body-s text-ink-muted">{p.data.tagline}</p>
-
-              <div className="mt-6 flex items-center justify-between border-t border-rule pt-4">
-                <span className="font-mono text-caption uppercase tracking-[0.12em] text-ink-subtle">
-                  {p.data.sector}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="text-ink-subtle transition-all duration-300 group-hover/card:translate-x-1 group-hover/card:text-brand"
+              <Spotlight
+                color="color-mix(in oklab, var(--color-brand) 10%, transparent)"
+                className="h-full rounded-2xl"
+              >
+                <NextLink
+                  href={`/products/${p.slug}`}
+                  className={cn(
+                    "group/card glass-panel flex h-full flex-col rounded-2xl transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/25 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+                    isFeatured ? "p-7 md:p-9" : "p-6 md:p-7",
+                  )}
                 >
-                  →
-                </span>
-              </div>
-            </NextLink>
-          </FadeRise>
-        ))}
+                  <div className="flex items-start justify-between gap-3">
+                    <span
+                      className={cn(
+                        "inline-flex items-center justify-center rounded-xl border border-rule bg-canvas text-ink transition-colors duration-300 group-hover/card:border-brand/40 group-hover/card:text-brand",
+                        isFeatured ? "h-13 w-13" : "h-11 w-11",
+                      )}
+                    >
+                      <SectorIcon sector={p.data.sector} />
+                    </span>
+                    <StatusPill stage={p.data.stage} />
+                  </div>
+
+                  <h3
+                    className={cn(
+                      "mt-6 font-display font-semibold tracking-tight text-ink leading-[1.05]",
+                      isFeatured ? "text-[2rem] lg:text-[2.25rem]" : "text-[1.625rem]",
+                    )}
+                  >
+                    {p.data.name}
+                  </h3>
+
+                  <p className={cn("mt-3 text-ink-muted", isFeatured ? "text-body" : "text-body-s")}>
+                    {p.data.tagline}
+                  </p>
+
+                  {isFeatured && (
+                    <p className="mt-4 flex-1 text-body-s text-ink-subtle">
+                      {p.data.description}
+                    </p>
+                  )}
+
+                  {!isFeatured && <div className="flex-1" />}
+
+                  <div className="mt-6 flex items-center justify-between border-t border-rule pt-4">
+                    <span className="font-mono text-caption uppercase tracking-[0.12em] text-ink-subtle">
+                      {p.data.sector}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="text-ink-subtle transition-all duration-300 group-hover/card:translate-x-1 group-hover/card:text-brand"
+                    >
+                      →
+                    </span>
+                  </div>
+                </NextLink>
+              </Spotlight>
+            </FadeRise>
+          );
+        })}
       </div>
 
       <FadeRise className="mt-10 md:mt-12">

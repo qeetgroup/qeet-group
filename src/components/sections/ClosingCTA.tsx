@@ -7,7 +7,16 @@ import { Magnetic } from "../motion/Magnetic";
 export function ClosingCTA() {
   return (
     <Section tone="inverse" contained={false} className="relative isolate overflow-hidden">
-      {/* Subtle monochrome grid texture — no colour wash */}
+      {/* Brand-orange ambient glow behind the headline */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-20"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 25% 50%, color-mix(in oklab, var(--color-brand) 18%, transparent), transparent 70%)",
+        }}
+      />
+      {/* Subtle monochrome grid texture */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle,var(--color-ink-inverse)_1px,transparent_1px)] bg-size-[28px_28px] opacity-[0.05] mask-[radial-gradient(ellipse_70%_80%_at_50%_0%,black,transparent_72%)]"
@@ -15,7 +24,7 @@ export function ClosingCTA() {
       <Container>
         <FadeRise>
           <div className="max-w-3xl">
-            <p className="font-serif font-normal text-balance tracking-[-0.015em] text-ink-inverse text-[2.5rem] leading-[1.08] md:text-[3.5rem] md:leading-[1.06] lg:text-[4.5rem] lg:leading-[1.04]">
+            <p className="font-serif font-normal text-balance tracking-[-0.015em] text-ink-inverse text-[2.5rem] leading-[1.08] md:text-[3.5rem] md:leading-[1.06] lg:text-[5rem] lg:leading-[1.03] xl:text-[5.5rem]">
               Build something that matters with us.
             </p>
             <p className="mt-6 max-w-xl text-body-l text-ink-inverse/70 md:mt-8">

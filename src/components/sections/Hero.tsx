@@ -20,7 +20,25 @@ export async function Hero() {
   const nodes = products.map((p) => ({ label: p.short }));
   return (
     <section className="relative flex min-h-[92svh] items-center overflow-hidden pb-20 pt-28 md:pb-28 md:pt-32">
-      {/* Faint grain only — the graph itself is the hero's visual, no blob mesh. */}
+      {/* Ambient orbs: slowly-drifting colour blobs that add depth to the hero
+          background. Purely decorative; aria-hidden and pointer-events-none.
+          The reduced-motion CSS block in globals.css collapses all animation
+          durations to 0.01ms for users who request it. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div
+          className="absolute -left-32 -top-24 h-[420px] w-[580px] rounded-full bg-brand opacity-[0.10] blur-[120px] animate-blob"
+          style={{ animationDelay: "0s" }}
+        />
+        <div
+          className="absolute -bottom-16 -right-24 h-[380px] w-[460px] rounded-full bg-brand-deep opacity-[0.07] blur-[100px] animate-blob-slow"
+          style={{ animationDelay: "-8s" }}
+        />
+        <div
+          className="absolute left-1/2 top-1/2 h-[280px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink opacity-[0.05] blur-[80px] animate-blob"
+          style={{ animationDelay: "-16s" }}
+        />
+      </div>
+      {/* Fine grain texture over the blobs. */}
       <div aria-hidden="true" className="bg-grain pointer-events-none absolute inset-0 -z-10" />
 
       <Container>
@@ -37,7 +55,10 @@ export async function Hero() {
             </FadeRise>
 
             <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[4.75rem]">
-              <WordReveal text="We question, we explore, we envision, we transform." />
+              <WordReveal text="We question, we explore, we envision, we" />{" "}
+              <span className="text-brand">
+                <WordReveal text="transform." initialDelay={0.57} />
+              </span>
             </h1>
 
             <FadeRise delay={0.7} className="mt-8 max-w-xl md:mt-10">
