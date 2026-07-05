@@ -55,7 +55,7 @@ export async function Hero() {
             </FadeRise>
 
             <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[4.75rem]">
-              <WordReveal text="We question, we explore, we envision, we" />{" "}
+              <WordReveal text="We question, We explore, We envision, We" />{" "}
               <span className="text-brand">
                 <WordReveal text="transform." initialDelay={0.57} />
               </span>

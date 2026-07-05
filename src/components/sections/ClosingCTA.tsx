@@ -24,7 +24,7 @@ export function ClosingCTA() {
       <Container>
         <FadeRise>
           <div className="max-w-3xl">
-            <p className="font-serif font-normal text-balance tracking-[-0.015em] text-ink-inverse text-[2.5rem] leading-[1.08] md:text-[3.5rem] md:leading-[1.06] lg:text-[5rem] lg:leading-[1.03] xl:text-[5.5rem]">
+            <p className="font-serif font-normal text-balance tracking-[-0.015em] text-ink-inverse text-[2.5rem] leading-[1.08] md:text-[3.5rem] md:leading-[1.06] lg:text-[5rem] lg:leading-[1.03] xl:text-[5rem]">
               Build something that matters with us.
             </p>
             <p className="mt-6 max-w-xl text-body-l text-ink-inverse/70 md:mt-8">
