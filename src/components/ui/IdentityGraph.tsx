@@ -94,6 +94,7 @@ export function IdentityGraph({
     <svg
       viewBox="0 0 560 560"
       className={cn("h-full w-full", className)}
+      style={{ filter: "drop-shadow(0 0 20px color-mix(in oklab, var(--color-brand) 30%, transparent))" }}
       role={decorative ? undefined : "img"}
       aria-hidden={decorative ? "true" : undefined}
       aria-label={decorative ? undefined : `${n} Qeet platforms connected to one shared identity core`}
@@ -101,13 +102,13 @@ export function IdentityGraph({
     >
       <defs>
         <radialGradient id="ig-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.55" />
-          <stop offset="55%" stopColor="var(--color-brand)" stopOpacity="0.12" />
+          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.65" />
+          <stop offset="50%" stopColor="var(--color-brand)" stopOpacity="0.18" />
           <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="ig-edge" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="var(--color-rule-strong)" stopOpacity="0.7" />
+          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="var(--color-rule-strong)" stopOpacity="0.5" />
         </linearGradient>
       </defs>
 
@@ -136,10 +137,10 @@ export function IdentityGraph({
         pts.slice(0, pulseCount).map((p, i) => (
           <motion.circle
             key={`pulse-${i}`}
-            r="3"
+            r="3.5"
             fill="var(--color-brand)"
             initial={{ cx: p.x, cy: p.y, opacity: 0 }}
-            animate={{ cx: [p.x, CENTER.x], cy: [p.y, CENTER.y], opacity: [0, 0.9, 0] }}
+            animate={{ cx: [p.x, CENTER.x], cy: [p.y, CENTER.y], opacity: [0, 1, 0] }}
             transition={{
               duration: 2.6,
               delay: 1.4 + i * 0.45,
@@ -180,7 +181,13 @@ export function IdentityGraph({
       {/* Identity core. */}
       <motion.g {...pop(0.4)} style={{ transformOrigin: `${CENTER.x}px ${CENTER.y}px` }}>
         <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="var(--color-brand)" />
-        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-brand)" strokeWidth="1" opacity="0.35">
+        {/* Outer halo — a second ring that pulses out and fades */}
+        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-brand)" strokeWidth="0.75" opacity="0.2">
+          {!reduce && <animate attributeName="r" values="16;38;16" dur="3.4s" repeatCount="indefinite" />}
+          {!reduce && <animate attributeName="opacity" values="0.2;0;0.2" dur="3.4s" repeatCount="indefinite" />}
+        </circle>
+        {/* Inner pulse ring */}
+        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-brand)" strokeWidth="1" opacity="0.4">
           {!reduce && <animate attributeName="r" values="16;26;16" dur="3.4s" repeatCount="indefinite" />}
         </circle>
         {labels && (

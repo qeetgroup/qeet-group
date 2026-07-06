@@ -60,7 +60,8 @@ export function Footer({ products }: { products: ProductSummary[] }) {
     contactColumn,
   ];
   return (
-    <footer className="relative border-t border-rule bg-canvas">
+    <footer className="relative bg-canvas">
+      <div aria-hidden="true" className="h-px bg-linear-to-r from-transparent via-brand/50 to-transparent" />
       <Container>
         <FadeRise className="grid grid-cols-1 gap-10 py-16 md:grid-cols-12 md:gap-12 md:py-20">
           <div className="md:col-span-5">

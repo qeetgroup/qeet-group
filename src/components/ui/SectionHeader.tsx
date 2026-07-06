@@ -33,6 +33,9 @@ export function SectionHeader({
         className,
       )}
     >
+      {index && (
+        <div className={cn("h-px w-8 bg-brand", align === "center" && "mx-auto")} />
+      )}
       <Eyebrow className="flex items-center gap-2.5">
         {index && (
           <>
