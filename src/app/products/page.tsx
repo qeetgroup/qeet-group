@@ -8,7 +8,7 @@ import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { listProducts } from "@/lib/content";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { productsListSchema, breadcrumbSchema } from "@/lib/structured-data";
+import { productsListSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "Products",

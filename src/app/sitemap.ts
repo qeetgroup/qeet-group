@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { listProducts, listMemos, listPosts } from "@/lib/content";
-
-const SITE_ORIGIN = "https://qeet.in";
+import { SITE_ORIGIN } from "@/config/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

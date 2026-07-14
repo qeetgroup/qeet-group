@@ -11,13 +11,9 @@ import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { cn } from "@/lib/utils";
 import { EASE_OUT } from "@/lib/motion";
 import type { ProductSummary } from "@/lib/content";
+import { NAV_LINKS } from "@/config/site";
 
-const navLinks = [
-  { href: "/about", label: "About" },
-  { href: "/newsroom", label: "Newsroom" },
-  { href: "/careers", label: "Careers" },
-  { href: "/contact", label: "Contact" },
-];
+const navLinks = NAV_LINKS;
 
 export function Nav({ products }: { products: ProductSummary[] }) {
   const [scrolled, setScrolled] = useState(false);
@@ -176,12 +172,13 @@ export function Nav({ products }: { products: ProductSummary[] }) {
                 e.preventDefault();
                 window.dispatchEvent(new Event(COMMAND_PALETTE_OPEN_EVENT));
               }}
-              className="ml-2 inline-flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink rounded-sm"
+              className="ml-2 inline-flex h-9 items-center gap-2 rounded-full border border-rule px-3.5 text-ink-muted transition-colors duration-200 hover:border-rule-strong hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" />
                 <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
+              <kbd className="font-mono text-[0.6875rem] tracking-[0.08em] text-ink-subtle">⌘K</kbd>
             </NextLink>
             <ThemeToggle />
           </nav>

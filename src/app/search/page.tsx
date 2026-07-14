@@ -4,7 +4,7 @@ import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { SearchBox } from "@/components/sections/SearchBox";
-import { buildSearchIndex } from "@/lib/search-index";
+import { buildSearchIndex } from "@/lib/search/build-index";
 
 export const metadata: Metadata = {
   title: "Search",

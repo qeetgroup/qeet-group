@@ -88,10 +88,14 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
       .slice(0, 12);
   }, [index, query]);
 
-  // Reset selection when results change.
-  useEffect(() => {
+  // Reset selection when the result set changes — done during render (the
+  // documented "adjust state when props change" pattern) instead of an
+  // effect, so there's no extra cascading render pass.
+  const [prevResultsLen, setPrevResultsLen] = useState(results.length);
+  if (prevResultsLen !== results.length) {
+    setPrevResultsLen(results.length);
     setActiveIdx(0);
-  }, [results.length]);
+  }
 
   // Keep the active row in view while arrowing through.
   useEffect(() => {

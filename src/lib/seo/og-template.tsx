@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { loadSerifFont } from "@/lib/og-fonts";
+import { loadSerifFont } from "./og-fonts";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = "image/png";

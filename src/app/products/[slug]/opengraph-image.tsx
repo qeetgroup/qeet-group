@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { loadProduct } from "@/lib/content";
-import { loadSerifFont } from "@/lib/og-fonts";
+import { loadSerifFont } from "@/lib/seo/og-fonts";
 
 export const alt = "Qeet Group product";
 export const size = { width: 1200, height: 630 };

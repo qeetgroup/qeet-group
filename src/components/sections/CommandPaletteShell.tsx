@@ -1,4 +1,4 @@
-import { buildSearchIndex } from "@/lib/search-index";
+import { buildSearchIndex } from "@/lib/search/build-index";
 import { CommandPalette } from "./CommandPalette";
 
 /**

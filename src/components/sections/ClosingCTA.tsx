@@ -7,15 +7,8 @@ import { Magnetic } from "../motion/Magnetic";
 export function ClosingCTA() {
   return (
     <Section tone="inverse" contained={false} className="relative isolate overflow-hidden">
-      {/* Brand-orange ambient glow behind the headline */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-20"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 25% 50%, color-mix(in oklab, var(--color-brand) 18%, transparent), transparent 70%)",
-        }}
-      />
+      {/* Brand-orange breathing aura anchored to the band's bottom edge */}
+      <div aria-hidden="true" className="bg-cta-glow pointer-events-none absolute inset-0 -z-20" />
       {/* Subtle monochrome grid texture */}
       <div
         aria-hidden="true"

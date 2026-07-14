@@ -45,16 +45,17 @@ export async function Hero() {
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
             <FadeRise>
-              <Eyebrow className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 md:mb-10">
+              <Eyebrow className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 md:mb-10">
                 <span>Qeet Group</span>
                 <span aria-hidden="true" className="text-rule-strong">/</span>
-                <span className="font-mono normal-case tracking-normal text-ink-subtle">
+                <span className="glass-panel inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono normal-case tracking-normal text-ink-subtle">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-brand" />
                   Holding company · Est. 2026
                 </span>
               </Eyebrow>
             </FadeRise>
 
-            <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[4.75rem]">
+            <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[5.25rem] lg:leading-[1.01]">
               <WordReveal text="We question, We explore, We envision, We" />{" "}
               <span className="text-brand">
                 <WordReveal text="transform." initialDelay={0.57} />
@@ -104,6 +105,20 @@ export async function Hero() {
           </FadeRise>
         </div>
       </Container>
+
+      {/* Scroll cue — a hairline with a slow-falling dot. Decorative; frozen by
+          the global reduced-motion block. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex"
+      >
+        <span className="font-mono text-caption uppercase tracking-[0.18em] text-ink-subtle">
+          Scroll
+        </span>
+        <span className="relative block h-10 w-px overflow-hidden bg-rule">
+          <span className="absolute left-0 top-0 h-3 w-px animate-scroll-cue bg-ink" />
+        </span>
+      </div>
     </section>
   );
 }

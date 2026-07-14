@@ -5,6 +5,7 @@ import { StatusPill } from "../ui/StatusPill";
 import { Link } from "../ui/Link";
 import { FadeRise } from "../motion/FadeRise";
 import { Spotlight } from "../motion/Spotlight";
+import { PRODUCT_UI } from "../product-ui/registry";
 import { cn } from "@/lib/utils";
 import { listProducts } from "@/lib/content";
 
@@ -85,6 +86,7 @@ export async function ProductsBento() {
       <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-3 lg:grid-rows-[repeat(3,minmax(180px,auto))]">
         {products.map((p, i) => {
           const isFeatured = i === 0;
+          const FeaturedMock = isFeatured ? PRODUCT_UI[p.slug] : undefined;
           return (
             <FadeRise
               key={p.slug}
@@ -128,12 +130,24 @@ export async function ProductsBento() {
                   </p>
 
                   {isFeatured && (
-                    <p className="mt-4 flex-1 text-body-s text-ink-subtle">
+                    <p className="mt-4 text-body-s text-ink-subtle">
                       {p.data.description}
                     </p>
                   )}
 
-                  {!isFeatured && <div className="flex-1" />}
+                  {/* Featured cell: the product's real UI mock as the visual
+                      payload — the flagship shows, the rest tell. Decorative
+                      (each mock is aria-hidden internally); masked at the
+                      bottom so it reads as a glimpse, not a screenshot. */}
+                  {isFeatured && FeaturedMock ? (
+                    <div className="relative mt-6 hidden flex-1 items-end overflow-hidden lg:flex [mask-image:linear-gradient(to_bottom,black_58%,transparent_96%)]">
+                      <div className="w-full transition-transform duration-500 ease-out-expo group-hover/card:-translate-y-1.5">
+                        <FeaturedMock />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex-1" />
+                  )}
 
                   <div className="mt-6 flex items-center justify-between border-t border-rule pt-4">
                     <span className="font-mono text-caption uppercase tracking-[0.12em] text-ink-subtle">

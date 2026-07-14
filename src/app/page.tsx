@@ -1,31 +1,33 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
-import { TeamMarquee } from "@/components/sections/TeamMarquee";
-import { ProductsBento } from "@/components/sections/ProductsBento";
-import { HowWeBuild } from "@/components/sections/HowWeBuild";
-import { Structure } from "@/components/sections/Structure";
+import { ProofBand } from "@/components/sections/ProofBand";
 import { Philosophy } from "@/components/sections/Philosophy";
-import { VisionMission } from "@/components/sections/VisionMission";
-import { OurStory } from "@/components/sections/OurStory";
-import { ProofMetrics } from "@/components/sections/ProofMetrics";
-import { FoundersNote } from "@/components/sections/FoundersNote";
+import { ProductsBento } from "@/components/sections/ProductsBento";
+import { OperatingModel } from "@/components/sections/OperatingModel";
+import { Story } from "@/components/sections/Story";
 import { Team } from "@/components/sections/Team";
 import { HomeFaq } from "@/components/sections/HomeFaq";
 import { NewsroomPreview } from "@/components/sections/NewsroomPreview";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+/**
+ * Ten sections, one argument: thesis (Hero) → proof (ProofBand) → doctrine
+ * (Philosophy) → evidence (Products) → method (OperatingModel) → narrative
+ * (Story) → people (Team) → objections (FAQ) → signal (Newsroom) → ask (CTA).
+ */
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <TeamMarquee />
+      <ProofBand />
       <Philosophy />
       <ProductsBento />
-      <VisionMission />
-      <HowWeBuild />
-      <Structure />
-      <OurStory />
-      <ProofMetrics />
-      <FoundersNote />
+      <OperatingModel />
+      <Story />
       <Team />
       <HomeFaq />
       <NewsroomPreview />
