@@ -11,13 +11,12 @@ import { listProductSummaries } from "@/lib/content";
 /**
  * The thesis. A confident two-column opening: the group's defining statement on
  * the left, the identity-graph signature as a real figure on the right. The
- * graph and the count are derived from the live product list, so the hero scales
- * as the portfolio grows. A monospace thesis line carries the hard facts; orange
- * appears only at the graph's core.
+ * figure is deliberately abstract — it never encodes the product count — while
+ * the monospace fact line below the CTAs derives the real number from the live
+ * product list. Orange appears only at the graph's core.
  */
 export async function Hero() {
   const products = await listProductSummaries();
-  const nodes = products.map((p) => ({ label: p.short }));
   return (
     <section className="relative flex min-h-[92svh] items-center overflow-hidden pb-20 pt-28 md:pb-28 md:pt-32">
       {/* Ambient orbs: slowly-drifting colour blobs that add depth to the hero
@@ -93,12 +92,11 @@ export async function Hero() {
             </FadeRise>
           </div>
 
-          {/* Signature figure. Decorative=false → it's a real, labelled diagram,
-              one node per live product. */}
+          {/* Signature figure. Decorative=false → it's a real diagram of the
+              thesis: an abstract orbital system around one identity core. */}
           <FadeRise delay={0.3} className="lg:col-span-5">
             <IdentityGraph
-              nodes={nodes}
-              labels
+              coreLabel
               decorative={false}
               className="mx-auto max-w-sm sm:max-w-md lg:max-w-none"
             />
