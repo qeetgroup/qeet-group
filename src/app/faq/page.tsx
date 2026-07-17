@@ -7,7 +7,7 @@ import { Link } from "@/components/ui/Link";
 import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { faqPageSchema } from "@/lib/structured-data";
+import { faqPageSchema } from "@/lib/seo/structured-data";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {

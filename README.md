@@ -14,20 +14,23 @@ Marketing site for Qeet Group — a multi-company holding. Editorial design, MDX
 ## Getting started
 
 ```bash
-pnpm install
+bun install
 cp .env.example .env       # fill in only what you need; missing keys degrade gracefully
-pnpm dev                   # http://localhost:3000
+bun run dev                # http://localhost:3000
 ```
 
 Other scripts:
 
 ```bash
-pnpm build          # production build
-pnpm start          # serve the production build
-pnpm lint           # eslint
-pnpm test           # vitest run (single pass)
-pnpm test:watch     # vitest in watch mode
+bun run build       # production build
+bun run start       # serve the production build
+bun run lint        # eslint
+bun run test        # vitest run (single pass)
+bun run test:watch  # vitest in watch mode
 ```
+
+Bun is the package manager and script runner; Next.js itself still builds and
+runs on Node (Vercel-compatible).
 
 ## Environment
 
@@ -88,16 +91,22 @@ description: Meta description shown on the page and in search results.
 
 ```
 src/
-  app/              # routes, OG images, manifest, sitemap, robots
+  app/              # routes, OG images, manifest, sitemap, robots, llms.txt
   components/
     forms/          # ContactForm, NewsletterForm
     layout/         # Nav, Footer, Container, Section
     motion/         # FadeRise, WordReveal — respect prefers-reduced-motion
+    product-ui/     # Stylized product mocks for the bento + product pages
     sections/       # Home-page sections + page-level compositions
     seo/            # JsonLd helper
-    ui/             # Primitives (Link, Button, Eyebrow, Lede, …)
-  content/          # MDX content (companies, newsroom, legal)
-  lib/              # content loader, search index, analytics, OG fonts, structured data
+    ui/             # Primitives (Link, Button, Eyebrow, Breadcrumbs, …)
+  config/           # site.ts (origin, nav, contacts), social.ts (platforms)
+  content/          # MDX content (products, newsroom, legal, memos)
+  lib/
+    content/        # MDX loaders + frontmatter types (barrel: @/lib/content)
+    search/         # client-safe search core + server index builder
+    seo/            # structured data, page-metadata builder, OG fonts/template
+    …               # utils, motion, analytics
 ```
 
 ## Deployment

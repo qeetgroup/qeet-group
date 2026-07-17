@@ -3,12 +3,13 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { Link } from "@/components/ui/Link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { listMemos, loadMemo } from "@/lib/content";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { articleSchema, breadcrumbSchema } from "@/lib/structured-data";
+import { articleSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
 export const dynamicParams = false;
 
@@ -27,11 +28,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const memo = await loadMemo(slug);
   if (!memo) return {};
-  return {
+  return buildPageMetadata({
     title: memo.data.title.replace(/\.$/, ""),
     description: memo.data.dek,
-    alternates: { canonical: `/memos/${slug}` },
-  };
+    path: `/memos/${slug}`,
+    ogType: "article",
+    article: {
+      publishedTime: memo.data.date,
+      authors: [memo.data.author ?? "Qeet Group"],
+    },
+  });
 }
 
 function formatDate(iso: string) {
@@ -66,6 +72,7 @@ export default async function MemoPage({
             section: "memos",
           }),
           breadcrumbSchema([
+            { name: "Home", path: "/" },
             { name: "Memos", path: "/memos" },
             { name: data.title.replace(/\.$/, ""), path: `/memos/${slug}` },
           ]),
@@ -74,10 +81,13 @@ export default async function MemoPage({
       <section className="pb-12 pt-20 md:pb-16 md:pt-28 lg:pt-32">
         <Container>
           <FadeRise>
-            <Link href="/memos" className="font-sans text-body-s text-ink-muted">
-              <span aria-hidden="true" className="mr-1 inline-block">←</span>
-              Memos
-            </Link>
+            <Breadcrumbs
+              items={[
+                { name: "Home", path: "/" },
+                { name: "Memos", path: "/memos" },
+                { name: data.title.replace(/\.$/, ""), path: `/memos/${slug}` },
+              ]}
+            />
           </FadeRise>
           <FadeRise delay={0.1} className="mt-10 max-w-3xl md:mt-14">
             <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">

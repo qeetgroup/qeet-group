@@ -4,9 +4,16 @@
  * Render with <JsonLd> from "@/components/seo/JsonLd".
  */
 
-import { SOCIAL_PLATFORMS } from "./social";
+import { SOCIAL_PLATFORMS } from "@/config/social";
+import {
+  CONTACT,
+  FOUNDING_YEAR,
+  SITE_NAME,
+  SITE_ORIGIN,
+  SITE_SLOGAN,
+} from "@/config/site";
 
-export const SITE_ORIGIN = "https://qeet.in";
+export { SITE_ORIGIN };
 
 type WithContext<T> = { "@context": "https://schema.org" } & T;
 
@@ -14,14 +21,14 @@ export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Qeet Group",
-    legalName: "Qeet Group",
+    name: SITE_NAME,
+    legalName: SITE_NAME,
     url: SITE_ORIGIN,
     logo: `${SITE_ORIGIN}/qeet-logo-light.svg`,
     description:
       "A multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
-    slogan: "Question. Explore. Envision. Transform.",
-    foundingDate: "2026",
+    slogan: SITE_SLOGAN,
+    foundingDate: FOUNDING_YEAR,
     knowsAbout: [
       "Identity and access management",
       "Design systems",
@@ -35,19 +42,19 @@ export function organizationSchema() {
       {
         "@type": "ContactPoint",
         contactType: "partnerships",
-        email: "partnerships@qeet.in",
+        email: CONTACT.partnerships,
         availableLanguage: ["English"],
       },
       {
         "@type": "ContactPoint",
         contactType: "press",
-        email: "press@qeet.in",
+        email: CONTACT.press,
         availableLanguage: ["English"],
       },
       {
         "@type": "ContactPoint",
         contactType: "customer support",
-        email: "support@qeet.in",
+        email: CONTACT.support,
         availableLanguage: ["English"],
       },
     ],
@@ -58,8 +65,16 @@ export function websiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Qeet Group",
+    name: SITE_NAME,
     url: SITE_ORIGIN,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_ORIGIN}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
   } as const;
 }
 

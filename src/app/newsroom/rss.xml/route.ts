@@ -1,6 +1,5 @@
 import { listPosts } from "@/lib/content";
-
-const SITE_ORIGIN = "https://qeet.in";
+import { SITE_ORIGIN } from "@/config/site";
 
 function escapeXml(s: string): string {
   return s

@@ -5,18 +5,19 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Link } from "@/components/ui/Link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PostRow } from "@/components/ui/PostRow";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { listPosts, loadPost } from "@/lib/content";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { articleSchema, breadcrumbSchema } from "@/lib/structured-data";
+import { articleSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
+import { buildPageMetadata } from "@/lib/seo/meta";
+import { SITE_ORIGIN } from "@/config/site";
 
 export const dynamicParams = false;
 
 type RouteParams = { slug: string };
-
-const SITE_ORIGIN = "https://qeet.in";
 
 export async function generateStaticParams() {
   const posts = await listPosts();
@@ -31,11 +32,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await loadPost(slug);
   if (!post) return {};
-  return {
+  return buildPageMetadata({
     title: post.data.title.replace(/\.$/, ""),
     description: post.data.dek,
-    alternates: { canonical: `/newsroom/${slug}` },
-  };
+    path: `/newsroom/${slug}`,
+    ogType: "article",
+    article: {
+      publishedTime: post.data.date,
+      authors: [post.data.author ?? "Qeet Group"],
+    },
+  });
 }
 
 function formatDate(iso: string) {
@@ -91,6 +97,7 @@ export default async function PostPage({
             author: data.author,
           }),
           breadcrumbSchema([
+            { name: "Home", path: "/" },
             { name: "Newsroom", path: "/newsroom" },
             { name: data.title.replace(/\.$/, ""), path: `/newsroom/${slug}` },
           ]),
@@ -100,10 +107,13 @@ export default async function PostPage({
       <section className="pb-12 pt-20 md:pb-16 md:pt-28 lg:pt-32">
         <Container>
           <FadeRise>
-            <Link href="/newsroom" className="font-sans text-body-s text-ink-muted">
-              <span aria-hidden="true" className="mr-1 inline-block">←</span>
-              Newsroom
-            </Link>
+            <Breadcrumbs
+              items={[
+                { name: "Home", path: "/" },
+                { name: "Newsroom", path: "/newsroom" },
+                { name: data.title.replace(/\.$/, ""), path: `/newsroom/${slug}` },
+              ]}
+            />
           </FadeRise>
           <FadeRise delay={0.1} className="mt-10 max-w-3xl md:mt-14">
             <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">

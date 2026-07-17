@@ -13,7 +13,7 @@ export function Team() {
     <Section className="border-t border-rule">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
         <FadeRise className="md:col-span-5">
-          <SectionHeader index="06" eyebrow="The Team" title="The people behind the bet." />
+          <SectionHeader index="04" eyebrow="The Team" title="The people behind the bet." />
         </FadeRise>
         <FadeRise delay={0.1} className="md:col-span-7 lg:col-span-6">
           <p className="text-body-l text-ink">

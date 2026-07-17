@@ -1,4 +1,4 @@
-import { SOCIAL_PLATFORMS } from "@/lib/social";
+import { SOCIAL_PLATFORMS } from "@/config/social";
 import { cn } from "@/lib/utils";
 
 type Size = "sm" | "md";

@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const SITE_ORIGIN = "https://qeet.in";
+import { SITE_ORIGIN } from "@/config/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {

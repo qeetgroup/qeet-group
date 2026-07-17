@@ -11,13 +11,12 @@ import { listProductSummaries } from "@/lib/content";
 /**
  * The thesis. A confident two-column opening: the group's defining statement on
  * the left, the identity-graph signature as a real figure on the right. The
- * graph and the count are derived from the live product list, so the hero scales
- * as the portfolio grows. A monospace thesis line carries the hard facts; orange
- * appears only at the graph's core.
+ * figure is deliberately abstract — it never encodes the product count — while
+ * the monospace fact line below the CTAs derives the real number from the live
+ * product list. Orange appears only at the graph's core.
  */
 export async function Hero() {
   const products = await listProductSummaries();
-  const nodes = products.map((p) => ({ label: p.short }));
   return (
     <section className="relative flex min-h-[92svh] items-center overflow-hidden pb-20 pt-28 md:pb-28 md:pt-32">
       {/* Ambient orbs: slowly-drifting colour blobs that add depth to the hero
@@ -45,16 +44,17 @@ export async function Hero() {
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
             <FadeRise>
-              <Eyebrow className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 md:mb-10">
+              <Eyebrow className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 md:mb-10">
                 <span>Qeet Group</span>
                 <span aria-hidden="true" className="text-rule-strong">/</span>
-                <span className="font-mono normal-case tracking-normal text-ink-subtle">
+                <span className="glass-panel inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono normal-case tracking-normal text-ink-subtle">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-brand" />
                   Holding company · Est. 2026
                 </span>
               </Eyebrow>
             </FadeRise>
 
-            <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[4.75rem]">
+            <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[5.25rem] lg:leading-[1.01]">
               <WordReveal text="We question, We explore, We envision, We" />{" "}
               <span className="text-brand">
                 <WordReveal text="transform." initialDelay={0.57} />
@@ -92,18 +92,31 @@ export async function Hero() {
             </FadeRise>
           </div>
 
-          {/* Signature figure. Decorative=false → it's a real, labelled diagram,
-              one node per live product. */}
+          {/* Signature figure. Decorative=false → it's a real diagram of the
+              thesis: an abstract orbital system around one identity core. */}
           <FadeRise delay={0.3} className="lg:col-span-5">
             <IdentityGraph
-              nodes={nodes}
-              labels
+              coreLabel
               decorative={false}
               className="mx-auto max-w-sm sm:max-w-md lg:max-w-none"
             />
           </FadeRise>
         </div>
       </Container>
+
+      {/* Scroll cue — a hairline with a slow-falling dot. Decorative; frozen by
+          the global reduced-motion block. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex"
+      >
+        <span className="font-mono text-caption uppercase tracking-[0.18em] text-ink-subtle">
+          Scroll
+        </span>
+        <span className="relative block h-10 w-px overflow-hidden bg-rule">
+          <span className="absolute left-0 top-0 h-3 w-px animate-scroll-cue bg-ink" />
+        </span>
+      </div>
     </section>
   );
 }

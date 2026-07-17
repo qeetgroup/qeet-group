@@ -88,6 +88,12 @@
   --shadow-lg:
     0 18px 56px -12px color-mix(in oklab, var(--color-ink) 20%, transparent),
     0 6px 16px -6px color-mix(in oklab, var(--color-ink) 10%, transparent);
+  /* Hero-grade elevation — reserved for the single most-lifted surface per
+   * view (featured bento cell, story panel). If two surfaces carry it, one
+   * of them is wrong. */
+  --shadow-xl:
+    0 32px 88px -20px color-mix(in oklab, var(--color-ink) 26%, transparent),
+    0 12px 28px -10px color-mix(in oklab, var(--color-ink) 12%, transparent);
   /* Brand-tinted glow — the expressive accent for primary CTAs / featured
    * cards. Same value in both themes (the brand colour doesn't flip). */
   --shadow-glow: 0 10px 44px -10px color-mix(in oklab, var(--color-brand) 40%, transparent);
@@ -143,6 +149,9 @@
   --shadow-lg:
     0 24px 64px -16px rgb(0 0 0 / 0.7),
     inset 0 1px 0 0 color-mix(in oklab, var(--color-ink) 8%, transparent);
+  --shadow-xl:
+    0 36px 96px -20px rgb(0 0 0 / 0.75),
+    inset 0 1px 0 0 color-mix(in oklab, var(--color-ink) 10%, transparent);
 
   /* Glass reads as a lifted-dark pane rather than a frosted-white one. */
   --color-glass: color-mix(in oklab, var(--color-surface) 56%, transparent);
@@ -248,6 +257,25 @@
   }
 }
 
+/* Hero scroll cue: a short dash falling down its hairline track. */
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(400%);
+    opacity: 0;
+  }
+}
+
+@utility animate-scroll-cue {
+  animation: scroll-cue 2.2s var(--ease-out-expo) infinite;
+}
+
 @layer components {
   /*
    * Gradient mesh: warm brand + ink radial blobs over the canvas. Used as a
@@ -337,6 +365,42 @@
   .interactive-card:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-lg);
+  }
+
+  /*
+   * Closing-CTA glow: a slow-breathing brand aura anchored to the band's
+   * bottom edge, over the inverse surface. Decorative — carriers must be
+   * aria-hidden. Static for reduced-motion users (the global block freezes
+   * the animation).
+   */
+  .bg-cta-glow {
+    background-image:
+      radial-gradient(
+        52rem 26rem at 50% 118%,
+        color-mix(in oklab, var(--color-brand) 26%, transparent),
+        transparent 65%
+      ),
+      radial-gradient(
+        30rem 18rem at 14% -20%,
+        color-mix(in oklab, var(--color-brand-deep) 12%, transparent),
+        transparent 60%
+      );
+  }
+
+  /*
+   * Premium headline treatment: ink fading toward muted at the tail. Use on
+   * one display headline per view, never on body copy — it reads as texture,
+   * not colour, and stays monochrome in both themes.
+   */
+  .text-gradient-ink {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-ink) 55%,
+      color-mix(in oklab, var(--color-ink) 62%, transparent)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }
 

@@ -6,7 +6,7 @@ import "./globals.css";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { organizationSchema, websiteSchema } from "@/lib/structured-data";
+import { organizationSchema, websiteSchema } from "@/lib/seo/structured-data";
 import { CommandPaletteShell } from "@/components/sections/CommandPaletteShell";
 import { listProductSummaries } from "@/lib/content";
 
@@ -66,8 +66,23 @@ export const metadata: Metadata = {
   description:
     "Qeet Group is a multi-company holding building software products on one identity graph — identity, design systems, observability, people, notifications, and payments.",
   metadataBase: new URL("https://qeet.in"),
+  applicationName: "Qeet Group",
+  category: "technology",
+  publisher: "Qeet Group",
+  keywords: [
+    "Qeet Group",
+    "holding company",
+    "identity platform",
+    "design systems",
+    "observability",
+    "notification infrastructure",
+    "payments",
+  ],
+  formatDetection: { telephone: false },
+  // Canonicals are set per page (every route owns its own path); only the
+  // RSS alternate is site-wide. A layout-level canonical would silently
+  // attach the homepage canonical to any future page that forgets its own.
   alternates: {
-    canonical: "/",
     types: {
       "application/rss+xml": [
         { url: "/newsroom/rss.xml", title: "Qeet Group — Newsroom" },

@@ -34,7 +34,6 @@ export default async function Icon() {
           background: "transparent",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={dataUri} width={192} height={192} alt="Qeet" />
       </div>
     ),

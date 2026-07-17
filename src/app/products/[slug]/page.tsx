@@ -5,7 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
-import { Link } from "@/components/ui/Link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { MetaPair } from "@/components/ui/MetaPair";
 import { TrackedExternalLink } from "@/components/ui/TrackedExternalLink";
 import { PageAmbient } from "@/components/ui/PageAmbient";
@@ -13,7 +13,7 @@ import { FadeRise } from "@/components/motion/FadeRise";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { PRODUCT_UI } from "@/components/product-ui/registry";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { productSchema, breadcrumbSchema } from "@/lib/structured-data";
+import { productSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
 import { listProducts, loadProduct } from "@/lib/content";
 
 export const dynamicParams = false;
@@ -76,10 +76,13 @@ export default async function ProductPage({
         <PageAmbient />
         <Container>
           <FadeRise>
-            <Link href="/products" variant="arrow" className="text-body-s text-ink-muted">
-              <span className="inline-block rotate-180 mr-1" aria-hidden="true">→</span>
-              All products
-            </Link>
+            <Breadcrumbs
+              items={[
+                { name: "Home", path: "/" },
+                { name: "Products", path: "/products" },
+                { name: data.name, path: `/products/${slug}` },
+              ]}
+            />
           </FadeRise>
           <FadeRise delay={0.1} className="mt-10 md:mt-14">
             <Eyebrow className="mb-6 md:mb-8">{data.tagline}</Eyebrow>

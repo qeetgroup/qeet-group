@@ -1,6 +1,6 @@
 import "server-only";
-import { listProducts, listMemos, listPosts } from "./content";
-import { STATIC_PAGES, type SearchEntry } from "./search";
+import { listProducts, listMemos, listPosts } from "@/lib/content";
+import { STATIC_PAGES, type SearchEntry } from "./index";
 
 /**
  * Server-only index builder. Reads MDX from disk (products, newsroom,

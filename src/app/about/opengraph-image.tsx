@@ -2,7 +2,7 @@ import {
   OG_CONTENT_TYPE,
   OG_SIZE,
   ogTemplate,
-} from "@/lib/og-template";
+} from "@/lib/seo/og-template";
 
 export const alt = "About Qeet Group — A holding company for ideas that compound.";
 export const size = OG_SIZE;

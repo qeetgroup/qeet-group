@@ -5,81 +5,118 @@ import { cn } from "@/lib/utils";
 import { EASE_OUT } from "@/lib/motion";
 
 /**
- * The signature mark of the group: every platform resolving into one central
- * identity core. It's the brief made visual — "a family of products on one
- * identity graph." Orange is reserved for the core and the identity pulses that
- * travel inward along each edge; everything else stays hairline-quiet.
+ * The signature mark of the group, drawn as a precision instrument: an
+ * abstract orbital system resolving into one glowing identity core. A
+ * chronograph tick ring frames the figure, hairline concentric orbits give it
+ * depth, a few satellites drift along the orbits, and a slow brand-coloured
+ * sweep plus inward identity pulses give it life — "a family of products on
+ * one identity graph," rendered like a watch face rather than a network
+ * diagram. Orange stays reserved for the core, the sweep and the pulses;
+ * everything else is hairline-quiet.
  *
- * Scales to any portfolio size: pass `nodes` (one per product) and the layout
- * distributes them evenly around the circle — add a product and a node appears,
- * no fixed count anywhere. Falls back to `count` placeholder nodes when used as
- * a pure decoration.
+ * Deliberately abstract: the satellites are a fixed decorative few, NOT
+ * one-per-product, so the figure never encodes the portfolio size and never
+ * changes shape as products are added. The hero's monospace fact line carries
+ * the real count.
  *
  * Two registers:
- *  - decorative backdrop (default) — aria-hidden, no labels.
- *  - labelled diagram (`labels`) — monospace node labels + an "identity" core,
- *    used as a real figure (e.g. the hero).
+ *  - decorative backdrop (default) — aria-hidden, no caption.
+ *  - real figure (`coreLabel` + `decorative={false}`) — monospace "identity"
+ *    caption under the core, used in the hero.
  *
- * Motion is the page's one orchestrated moment: edges draw out, nodes settle,
- * then slow pulses flow into the core. All of it collapses to the final static
- * state under `prefers-reduced-motion`.
+ * Motion is the page's one orchestrated moment: orbits settle in, satellites
+ * fade up, then the sweep and pulses run on a slow loop. All of it collapses
+ * to the final static state under `prefers-reduced-motion`.
  */
 
 const CENTER = { x: 280, y: 280 };
-const RADIUS = 186; // node ring radius; labels sit just outside it.
+const ORBIT = 186; // outer orbit radius.
+const TICK_COUNT = 60; // chronograph ticks on the outer ring.
 
-type NodeInput = { label?: string };
+/**
+ * Round to 3 decimals. Math.sin/cos are allowed to differ by 1 ulp across JS
+ * engines, so raw values hydrate differently between the Node server and the
+ * browser — rounding makes both sides render identical coordinates.
+ */
+const r3 = (v: number) => Math.round(v * 1000) / 1000;
+
+/** Point on a circle around CENTER at `deg` degrees (0° = 3 o'clock). */
+const toXY = (r: number, deg: number) => ({
+  x: r3(CENTER.x + r * Math.cos((deg * Math.PI) / 180)),
+  y: r3(CENTER.y + r * Math.sin((deg * Math.PI) / 180)),
+});
+
+/**
+ * Satellites drifting on the orbits — a fixed, deliberately asymmetric few.
+ * Not one-per-product, so the figure stays stable as the portfolio grows.
+ */
+const SATELLITE_ORBITS = [
+  { r: ORBIT, angles: [-75, 55, 170], size: 8, dot: 2.5, dur: 120, reverse: false },
+  { r: 126, angles: [-20, 135], size: 5.5, dot: 2, dur: 90, reverse: true },
+];
+
+/** Runner dot on the micro orbit. */
+const MICRO_RUNNER = toXY(66, -140);
+
+/** Fixed origins for the inward identity pulses (angles kept irregular). */
+const PULSE_POINTS = [-60, 35, 140, 255].map((deg) => toXY(ORBIT, deg));
 
 type IdentityGraphProps = {
   className?: string;
-  /** One entry per product. Order is preserved; labels render when `labels`. */
-  nodes?: NodeInput[];
-  /** Placeholder node count when `nodes` isn't supplied (decorative use). */
-  count?: number;
-  /** Show monospace node labels and the "identity" core label. */
-  labels?: boolean;
+  /** Show the monospace "identity" caption under the core. */
+  coreLabel?: boolean;
   /** Decorative backdrop (aria-hidden). Default true. */
   decorative?: boolean;
 };
 
 export function IdentityGraph({
   className,
-  nodes,
-  count = 6,
-  labels = false,
+  coreLabel = false,
   decorative = true,
 }: IdentityGraphProps) {
   const reduce = useReducedMotion();
 
-  const items: NodeInput[] =
-    nodes && nodes.length ? nodes : Array.from({ length: Math.max(count, 1) }, () => ({}));
-  const n = items.length;
-
-  // Even radial distribution, first node at top, clockwise — works for any N.
-  const pts = items.map((it, i) => {
-    const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
+  // Chronograph tick ring — every 5th tick is a hair longer and darker.
+  const ticks = Array.from({ length: TICK_COUNT }, (_, i) => {
+    const a = (i * 2 * Math.PI) / TICK_COUNT;
+    const major = i % 5 === 0;
+    const r1 = 249;
+    const r2 = major ? 258 : 254;
     return {
-      label: it.label,
-      a,
-      x: CENTER.x + RADIUS * Math.cos(a),
-      y: CENTER.y + RADIUS * Math.sin(a),
+      major,
+      x1: r3(CENTER.x + r1 * Math.cos(a)),
+      y1: r3(CENTER.y + r1 * Math.sin(a)),
+      x2: r3(CENTER.x + r2 * Math.cos(a)),
+      y2: r3(CENTER.y + r2 * Math.sin(a)),
     };
   });
 
-  // Constellation ring connecting adjacent nodes (the faint N-gon outline).
-  const ring = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ") + " Z";
+  // Sweep arc on the node orbit: 70° of trail fading in toward the head.
+  const sweepEnd = {
+    x: r3(CENTER.x + ORBIT * Math.cos(-Math.PI / 9)),
+    y: r3(CENTER.y + ORBIT * Math.sin(-Math.PI / 9)),
+  };
+  const sweepPath = `M ${CENTER.x} ${CENTER.y - ORBIT} A ${ORBIT} ${ORBIT} 0 0 1 ${sweepEnd.x.toFixed(1)} ${sweepEnd.y.toFixed(1)}`;
 
-  // Cap the inward pulses so the motion stays calm as the portfolio grows.
-  const pulseCount = Math.min(n, 8);
-
-  const draw = (delay: number) =>
+  const settle = (delay: number) =>
     reduce
-      ? { initial: false as const, animate: { pathLength: 1, opacity: 1 } }
+      ? { initial: false as const, animate: { scale: 1, opacity: 1 } }
       : {
-          initial: { pathLength: 0, opacity: 0 },
-          animate: { pathLength: 1, opacity: 1 },
+          initial: { scale: 0.94, opacity: 0 },
+          animate: { scale: 1, opacity: 1 },
           transition: { duration: 1.1, delay, ease: EASE_OUT },
         };
+
+  const fade = (delay: number) =>
+    reduce
+      ? { initial: false as const, animate: { opacity: 1 } }
+      : {
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          transition: { duration: 1, delay, ease: EASE_OUT },
+        };
+
+  const origin = { transformOrigin: `${CENTER.x}px ${CENTER.y}px` };
 
   const pop = (delay: number) =>
     reduce
@@ -94,92 +131,183 @@ export function IdentityGraph({
     <svg
       viewBox="0 0 560 560"
       className={cn("h-full w-full", className)}
-      style={{ filter: "drop-shadow(0 0 20px color-mix(in oklab, var(--color-brand) 30%, transparent))" }}
       role={decorative ? undefined : "img"}
       aria-hidden={decorative ? "true" : undefined}
-      aria-label={decorative ? undefined : `${n} Qeet platforms connected to one shared identity core`}
+      aria-label={decorative ? undefined : "Qeet platforms orbiting one shared identity core"}
       fill="none"
     >
       <defs>
         <radialGradient id="ig-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.65" />
-          <stop offset="50%" stopColor="var(--color-brand)" stopOpacity="0.18" />
+          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.55" />
+          <stop offset="50%" stopColor="var(--color-brand)" stopOpacity="0.14" />
           <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="ig-edge" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.7" />
-          <stop offset="100%" stopColor="var(--color-rule-strong)" stopOpacity="0.5" />
+        <linearGradient
+          id="ig-sweep"
+          gradientUnits="userSpaceOnUse"
+          x1={CENTER.x}
+          y1={CENTER.y - ORBIT}
+          x2={sweepEnd.x}
+          y2={sweepEnd.y}
+        >
+          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0" />
+          <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0.85" />
         </linearGradient>
       </defs>
 
       {/* Soft glow behind the identity core. */}
-      <circle cx={CENTER.x} cy={CENTER.y} r="150" fill="url(#ig-core)" />
+      <circle cx={CENTER.x} cy={CENTER.y} r="140" fill="url(#ig-core)" />
 
-      {/* Constellation ring (faint). */}
-      <motion.path d={ring} stroke="var(--color-rule)" strokeWidth="1" {...draw(0.15)} />
+      {/* Chronograph tick ring. */}
+      <motion.g {...fade(0.2)}>
+        {ticks.map((t, i) => (
+          <line
+            key={`tick-${i}`}
+            x1={t.x1}
+            y1={t.y1}
+            x2={t.x2}
+            y2={t.y2}
+            stroke={t.major ? "var(--color-rule-strong)" : "var(--color-rule)"}
+            strokeWidth={t.major ? 1.25 : 1}
+          />
+        ))}
+      </motion.g>
 
-      {/* Edges: core → each node. */}
-      {pts.map((p, i) => (
-        <motion.line
-          key={`edge-${i}`}
-          x1={CENTER.x}
-          y1={CENTER.y}
-          x2={p.x}
-          y2={p.y}
-          stroke="url(#ig-edge)"
-          strokeWidth="1.25"
-          {...draw(0.25 + i * (0.5 / n))}
-        />
-      ))}
+      {/* Concentric orbits — hairline-quiet. */}
+      <motion.circle
+        cx={CENTER.x}
+        cy={CENTER.y}
+        r={ORBIT}
+        stroke="var(--color-rule)"
+        strokeWidth="1"
+        style={origin}
+        {...settle(0.15)}
+      />
+      <motion.circle
+        cx={CENTER.x}
+        cy={CENTER.y}
+        r="126"
+        stroke="var(--color-rule)"
+        strokeWidth="1"
+        opacity="0.7"
+        style={origin}
+        {...settle(0.3)}
+      />
+      {/* Dashed micro orbit, counter-rotating slowly. */}
+      <motion.g {...fade(0.45)}>
+        <circle
+          cx={CENTER.x}
+          cy={CENTER.y}
+          r="66"
+          stroke="var(--color-rule-strong)"
+          strokeWidth="1"
+          strokeDasharray="1.5 7"
+          strokeLinecap="round"
+        >
+          {!reduce && (
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from={`360 ${CENTER.x} ${CENTER.y}`}
+              to={`0 ${CENTER.x} ${CENTER.y}`}
+              dur="80s"
+              repeatCount="indefinite"
+            />
+          )}
+        </circle>
+      </motion.g>
 
-      {/* Identity pulses flowing inward (node → core). The signature motion. */}
+      {/* Brand sweep travelling the outer orbit — the figure's slow heartbeat. */}
+      <motion.g {...fade(0.9)}>
+        <g>
+          {!reduce && (
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from={`0 ${CENTER.x} ${CENTER.y}`}
+              to={`360 ${CENTER.x} ${CENTER.y}`}
+              dur="26s"
+              repeatCount="indefinite"
+            />
+          )}
+          <path d={sweepPath} stroke="url(#ig-sweep)" strokeWidth="1.5" strokeLinecap="round" />
+          <circle cx={sweepEnd.x} cy={sweepEnd.y} r="3" fill="var(--color-brand)" opacity="0.9" />
+        </g>
+      </motion.g>
+
+      {/* Identity pulses flowing inward (edge → core). The signature motion. */}
       {!reduce &&
-        pts.slice(0, pulseCount).map((p, i) => (
+        PULSE_POINTS.map((p, i) => (
           <motion.circle
             key={`pulse-${i}`}
-            r="3.5"
+            r="3"
             fill="var(--color-brand)"
             initial={{ cx: p.x, cy: p.y, opacity: 0 }}
-            animate={{ cx: [p.x, CENTER.x], cy: [p.y, CENTER.y], opacity: [0, 1, 0] }}
+            animate={{ cx: [p.x, CENTER.x], cy: [p.y, CENTER.y], opacity: [0, 0.9, 0] }}
             transition={{
               duration: 2.6,
-              delay: 1.4 + i * 0.45,
+              delay: 1.4 + i * 0.5,
               repeat: Infinity,
-              repeatDelay: 2.8,
+              repeatDelay: 3.2,
               ease: "easeIn",
             }}
           />
         ))}
 
-      {/* Outer product nodes + optional labels. */}
-      {pts.map((p, i) => {
-        const cos = Math.cos(p.a);
-        const sin = Math.sin(p.a);
-        const lr = RADIUS + 32;
-        const lx = CENTER.x + lr * cos;
-        const ly = CENTER.y + lr * sin + (sin > 0.35 ? 10 : sin < -0.35 ? -4 : 4);
-        const anchor = cos > 0.35 ? "start" : cos < -0.35 ? "end" : "middle";
-        return (
-          <motion.g key={`node-${i}`} {...pop(0.5 + i * (0.5 / n))} style={{ transformOrigin: `${p.x}px ${p.y}px` }}>
-            <circle cx={p.x} cy={p.y} r="9" fill="var(--color-surface)" stroke="var(--color-rule-strong)" strokeWidth="1.5" />
-            <circle cx={p.x} cy={p.y} r="3" fill="var(--color-ink-subtle)" />
-            {labels && p.label && (
-              <text
-                x={lx}
-                y={ly}
-                textAnchor={anchor}
-                className="fill-ink-subtle font-mono"
-                style={{ fontSize: "13px", letterSpacing: "0.04em" }}
-              >
-                {p.label}
-              </text>
+      {/* Satellites drifting along the orbits — decorative, deliberately few
+          and asymmetric so nothing reads as a per-product count. */}
+      {SATELLITE_ORBITS.map((orbit, oi) => (
+        <motion.g key={`orbit-${oi}`} {...fade(0.55 + oi * 0.15)}>
+          <g>
+            {!reduce && (
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from={`${orbit.reverse ? 360 : 0} ${CENTER.x} ${CENTER.y}`}
+                to={`${orbit.reverse ? 0 : 360} ${CENTER.x} ${CENTER.y}`}
+                dur={`${orbit.dur}s`}
+                repeatCount="indefinite"
+              />
             )}
-          </motion.g>
-        );
-      })}
+            {orbit.angles.map((deg) => {
+              const p = toXY(orbit.r, deg);
+              return (
+                <g key={`sat-${oi}-${deg}`}>
+                  <circle
+                    cx={p.x}
+                    cy={p.y}
+                    r={orbit.size}
+                    fill="var(--color-surface)"
+                    stroke="var(--color-rule-strong)"
+                    strokeWidth="1.5"
+                  />
+                  <circle cx={p.x} cy={p.y} r={orbit.dot} fill="var(--color-ink-subtle)" />
+                </g>
+              );
+            })}
+          </g>
+        </motion.g>
+      ))}
+
+      {/* Runner dot on the micro orbit. */}
+      <motion.g {...fade(0.7)}>
+        <g>
+          {!reduce && (
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from={`0 ${CENTER.x} ${CENTER.y}`}
+              to={`360 ${CENTER.x} ${CENTER.y}`}
+              dur="48s"
+              repeatCount="indefinite"
+            />
+          )}
+          <circle cx={MICRO_RUNNER.x} cy={MICRO_RUNNER.y} r="2.5" fill="var(--color-ink-subtle)" />
+        </g>
+      </motion.g>
 
       {/* Identity core. */}
-      <motion.g {...pop(0.4)} style={{ transformOrigin: `${CENTER.x}px ${CENTER.y}px` }}>
+      <motion.g {...pop(0.4)} style={origin}>
         <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="var(--color-brand)" />
         {/* Outer halo — a second ring that pulses out and fades */}
         <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-brand)" strokeWidth="0.75" opacity="0.2">
@@ -190,7 +318,7 @@ export function IdentityGraph({
         <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-brand)" strokeWidth="1" opacity="0.4">
           {!reduce && <animate attributeName="r" values="16;26;16" dur="3.4s" repeatCount="indefinite" />}
         </circle>
-        {labels && (
+        {coreLabel && (
           <text
             x={CENTER.x}
             y={CENTER.y + 38}

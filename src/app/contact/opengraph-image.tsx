@@ -2,7 +2,7 @@ import {
   OG_CONTENT_TYPE,
   OG_SIZE,
   ogTemplate,
-} from "@/lib/og-template";
+} from "@/lib/seo/og-template";
 
 export const alt = "Contact Qeet Group — Get in touch.";
 export const size = OG_SIZE;
