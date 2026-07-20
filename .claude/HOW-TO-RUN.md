@@ -14,15 +14,15 @@ Outputs (in-repo, separate from published content in `src/content`):
 # Part 1 — Find gaps (marketing-pm)
 
 ## ⭐ Double-click (no typing)
-1. Finder → `Desktop → QG → qeet-in → .claude → scripts` (press **⌘ + Shift + .** to show hidden folders).
-2. Double-click **`Run qeet-in PM.command`** → pick a focus (or Enter) → wait a few minutes.
+1. Finder → `Desktop → QG → qeet-websites → qeet-group → .claude → scripts` (press **⌘ + Shift + .** to show hidden folders).
+2. Double-click **`Run qeet-group PM.command`** → pick a focus (or Enter) → wait a few minutes.
 3. First time: macOS may ask → **right-click → Open → Open** (once).
 
 ## Or one line in Terminal
 ```bash
-bash ~/Desktop/QG/qeet-in/.claude/scripts/run-marketing-pm.sh
+bash ~/Desktop/QG/qeet-websites/qeet-group/.claude/scripts/run-marketing-pm.sh
 # focus: positioning | seo | conversion   ·   deeper: PM_MODEL=opus bash …/run-marketing-pm.sh
-open ~/Desktop/QG/qeet-in/planning/CONTENT-PROPOSALS.md
+open ~/Desktop/QG/qeet-websites/qeet-group/planning/CONTENT-PROPOSALS.md
 ```
 
 ═══════════════════════════════════════════════════════════════
@@ -32,7 +32,7 @@ open ~/Desktop/QG/qeet-in/planning/CONTENT-PROPOSALS.md
 You **chat with Claude** (no script). Full flow: [PIPELINE.md](PIPELINE.md).
 
 ```bash
-cd ~/Desktop/QG/qeet-in
+cd ~/Desktop/QG/qeet-websites/qeet-group
 claude
 ```
 Then, e.g.:
@@ -52,4 +52,4 @@ Then, e.g.:
 
 ## If the Part 1 script fails
 - **`Operation not permitted`** → grant macOS **Full Disk Access** to `/bin/bash` + `/Users/a3097640/.local/bin/claude` (System Settings → Privacy & Security).
-- **Log:** `ls -t ~/Desktop/QG/qeet-in/.claude/logs/run-*.log | head -1 | xargs cat`
+- **Log:** `ls -t ~/Desktop/QG/qeet-websites/qeet-group/.claude/logs/run-*.log | head -1 | xargs cat`

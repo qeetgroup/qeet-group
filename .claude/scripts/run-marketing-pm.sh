@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Manual runner for the qeet.in marketing-pm competitive-intelligence agent.
 # Researches peer marketing/positioning/SEO and writes proposals into planning/.
-# Run whenever you want (no schedule); or double-click "Run qeet-in PM.command".
+# Run whenever you want (no schedule); or double-click "Run qeet-group PM.command".
 set -euo pipefail
 
-QIN="/Users/a3097640/Desktop/QG/qeet-in"
+QIN="/Users/a3097640/Desktop/QG/qeet-websites/qeet-group"
 CLAUDE_BIN="${CLAUDE_BIN:-/Users/a3097640/.local/bin/claude}"
 MODEL="${PM_MODEL:-sonnet}"            # override with PM_MODEL=opus for a deeper run
 

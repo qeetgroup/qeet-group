@@ -1,4 +1,4 @@
-# qeet-in `.claude/` — automation
+# qeet-group `.claude/` — automation
 
 > **👉 New here? Read [HOW-TO-RUN.md](HOW-TO-RUN.md).**
 
@@ -19,7 +19,7 @@ Turns a `planning/CONTENT-PROPOSALS.md` row into a published page. Full flow in 
 |---|---|
 | [`agents/marketing-pm.md`](agents/marketing-pm.md) | positioning/messaging/SEO research vs Auth0/Clerk/WorkOS/Stripe/Vercel → proposals |
 | [`scripts/run-marketing-pm.sh`](scripts/run-marketing-pm.sh) | manual headless runner |
-| [`scripts/Run qeet-in PM.command`](scripts/) | double-click launcher |
+| [`scripts/Run qeet-group PM.command`](scripts/) | double-click launcher |
 
 **Outputs (in-repo, separate from published content):** `planning/COMPETITIVE-INTEL.md` (log) + `planning/CONTENT-PROPOSALS.md` (backlog); architect specs in `planning/specs/`.
 

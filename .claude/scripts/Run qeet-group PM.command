@@ -19,6 +19,6 @@ case "$choice" in
   *) FOCUS=all ;;
 esac
 echo
-bash "/Users/a3097640/Desktop/QG/qeet-in/.claude/scripts/run-marketing-pm.sh" "$FOCUS"
+bash "/Users/a3097640/Desktop/QG/qeet-websites/qeet-group/.claude/scripts/run-marketing-pm.sh" "$FOCUS"
 echo
 read -r -p "All done — press Enter to close this window."

@@ -1,8 +1,8 @@
-# qeet-in — CLAUDE.md
+# qeet-group — CLAUDE.md
 
 **qeet.in** — Qeet Group marketing site (editorial, MDX content). Next.js 16.2.6 / React 19.2.4 / Tailwind 4.3.0 / TypeScript 5.9.3 (**Bun** for install + scripts; Next runs on Node). **Self-contained — does NOT consume `@qeetrix/*`**; its design tokens live in its own `src/app/globals.css`.
 
-## Commands (`cd qeet-in`)
+## Commands (`cd qeet-websites/qeet-group`)
 
 ```bash
 bun install

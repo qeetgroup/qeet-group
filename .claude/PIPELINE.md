@@ -31,7 +31,7 @@ YOU: review the diff and commit
 ```
 
 ## How to run it
-Open a session in `qeet-in/` and drive the agents:
+Open a session in `qeet-group/` and drive the agents:
 > "Build the **security/trust page** from CONTENT-PROPOSALS. Use **content-architect** to plan it, then **content-engineer**, then **seo-perf-engineer**, then **product-accuracy-editor** to verify the claims. Stop before committing."
 
 ## Definition of done
