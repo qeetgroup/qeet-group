@@ -186,7 +186,7 @@ export function CommandPalette() {
             aria-activedescendant={
               results[activeIdx] ? `cmd-row-${activeIdx}` : undefined
             }
-            className="w-full appearance-none border-0 bg-transparent py-4 font-sans text-[1.0625rem] text-ink placeholder:text-ink-subtle"
+            className="w-full appearance-none border-0 bg-transparent py-4 font-sans text-body text-ink placeholder:text-ink-subtle"
           />
           <kbd className="hidden shrink-0 rounded-sm border border-rule bg-canvas px-1.5 py-0.5 font-sans text-caption text-ink-subtle sm:inline-flex">
             Esc

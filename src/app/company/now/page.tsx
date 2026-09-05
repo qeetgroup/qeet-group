@@ -112,7 +112,7 @@ export default function NowPage() {
                   <h2 className="mb-3 font-sans font-medium text-heading-m text-ink">
                     {item.title}
                   </h2>
-                  <p className="max-w-[34rem] text-body text-ink-muted">{item.body}</p>
+                  <p className="max-w-note text-body text-ink-muted">{item.body}</p>
                 </div>
               </li>
             </FadeRise>

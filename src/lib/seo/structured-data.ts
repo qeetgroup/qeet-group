@@ -8,6 +8,7 @@ import { SOCIAL_PLATFORMS } from "@/config/social";
 import {
   CONTACT,
   FOUNDING_YEAR,
+  SITE_DESCRIPTION,
   SITE_NAME,
   SITE_ORIGIN,
   SITE_SLOGAN,
@@ -25,12 +26,18 @@ export function organizationSchema() {
     legalName: SITE_NAME,
     url: SITE_ORIGIN,
     logo: `${SITE_ORIGIN}/qeet-logo-light.svg`,
-    description:
-      "A multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
+    /*
+     * Kept in step with SITE_DESCRIPTION deliberately. This is the single most
+     * consequential place the positioning appears — it is what a search engine
+     * and every AI crawler reads as the organisation's own account of itself,
+     * and it outlives any page copy that contradicts it.
+     */
+    description: SITE_DESCRIPTION,
     slogan: SITE_SLOGAN,
     foundingDate: FOUNDING_YEAR,
     knowsAbout: [
       "Identity and access management",
+      "Artificial intelligence infrastructure",
       "Design systems",
       "Log management and observability",
       "Human capital management",

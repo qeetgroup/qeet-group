@@ -65,7 +65,7 @@ export default async function NotFound() {
                 <Link href={r.href} variant="arrow" className="text-body text-ink">
                   {r.label}
                 </Link>
-                <p className="mt-3 max-w-[24rem] text-body-s text-ink-muted">
+                <p className="mt-3 max-w-sm text-body-s text-ink-muted">
                   {r.description}
                 </p>
               </li>

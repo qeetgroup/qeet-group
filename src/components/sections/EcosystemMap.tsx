@@ -36,6 +36,11 @@ import { cn } from "@/lib/utils";
  *    fifteen SVG nodes to reach the footer would be its own accessibility
  *    failure.
  *
+ * SVG text sizes here are given in px (text-[15px] and similar) rather than
+ * from the type scale. That is correct: inside a viewBox they are userSpace
+ * units scaled by the SVG's own transform, so a fluid clamp() from the page
+ * scale would be resized twice and stop matching the geometry around it.
+ *
  * 3. THE INFORMATION MUST EXIST WITHOUT THE PICTURE. A visually-hidden table
  *    carries every product, its status and its role — so a screen reader gets
  *    the content rather than a description of a diagram, and reduced-motion
@@ -150,7 +155,7 @@ export function EcosystemMap({
       <div className="lg:col-span-7">
         <svg
           viewBox={`0 0 ${SIZE} ${SIZE}`}
-          className="mx-auto h-auto w-full max-w-[42rem]"
+          className="mx-auto h-auto w-full max-w-2xl"
           role="group"
           aria-label="Qeet Group product ecosystem. Use arrow keys to explore."
           onKeyDown={onKeyDown}
@@ -287,11 +292,8 @@ export function EcosystemMap({
             <p className="mt-4 max-w-prose text-body-l text-ink-muted">{active.oneLiner}</p>
             <p className="mt-6 font-mono text-label uppercase text-ink-subtle">
               {FOUNDATIONS.has(active.slug)
-                ? "Every product depends on this"
-                : `Builds on ${[...FOUNDATIONS]
-                    .map((f) => products.find((p) => p.slug === f)?.name)
-                    .filter(Boolean)
-                    .join(" and ")}`}
+                ? "Connects the whole Qeet portfolio"
+                : "Part of one connected Qeet experience"}
             </p>
             <NextLink
               href={active.href}

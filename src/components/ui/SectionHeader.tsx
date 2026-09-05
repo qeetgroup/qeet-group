@@ -55,7 +55,7 @@ export function SectionHeader({
       {description && (
         <p
           className={cn(
-            "max-w-[42rem] text-body-l text-ink-muted",
+            "max-w-measure text-body-l text-ink-muted",
             align === "center" && "mx-auto",
           )}
         >

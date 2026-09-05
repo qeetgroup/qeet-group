@@ -74,7 +74,7 @@ export function Link({
 
   const labelClass = cn(
     underline &&
-      "underline underline-offset-[5px] decoration-[1px] decoration-current/30 motion-safe:transition-[text-decoration-color] motion-safe:duration-300 group-hover/link:decoration-accent",
+      "underline underline-offset-[5px] decoration-1 decoration-current/30 motion-safe:transition-[text-decoration-color] motion-safe:duration-300 group-hover/link:decoration-accent",
   );
 
   const content = (

@@ -86,7 +86,7 @@ export default function PressPage() {
                 </div>
               ))}
             </dl>
-            <p className="mt-10 max-w-[34rem] text-body text-ink-muted">
+            <p className="mt-10 max-w-note text-body text-ink-muted">
               Qeet Group is a technology organisation building a connected ecosystem of
               products on shared identity and design foundations. It is built on a
               single philosophy: that meaningful progress begins with the right question, asked early, and the
@@ -129,7 +129,7 @@ export default function PressPage() {
             </FadeRise>
           ))}
         </div>
-        <p className="mt-12 max-w-[34rem] font-sans text-body-s text-ink-muted md:mt-16">
+        <p className="mt-12 max-w-note font-sans text-body-s text-ink-muted md:mt-16">
           Please don&rsquo;t alter the marks, recolor them, or pair them with messaging
           that misrepresents the Group or its companies. If you need a custom format or
           have a question about usage, email{" "}
@@ -150,7 +150,7 @@ export default function PressPage() {
             <p className="text-body-l text-ink">
               Official accounts where the Group is active.
             </p>
-            <p className="mt-5 max-w-[34rem] text-body text-ink-muted">
+            <p className="mt-5 max-w-note text-body text-ink-muted">
               These are the only accounts that speak for Qeet Group. Anything
               else using the brand mark is not us.
             </p>
@@ -173,7 +173,7 @@ export default function PressPage() {
                 press@qeet.in
               </Link>
             </p>
-            <p className="mt-5 max-w-[34rem] text-body text-ink-muted">
+            <p className="mt-5 max-w-note text-body text-ink-muted">
               We aim to respond within two business days. For partnership inquiries, use{" "}
               <Link href="mailto:partnerships@qeet.in" className="text-ink">
                 partnerships@qeet.in

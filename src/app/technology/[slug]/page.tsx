@@ -103,7 +103,7 @@ export default async function TechnologyDetailPage({
 
       <Section padding="tight">
         <FadeRise>
-          <article className="max-w-[42rem]">
+          <article className="max-w-measure">
             <MDXRemote source={item.content} components={mdxComponents} />
           </article>
         </FadeRise>

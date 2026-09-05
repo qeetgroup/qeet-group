@@ -12,7 +12,7 @@ function MdxLink({ href = "#", children, ...props }: ComponentPropsWithoutRef<"a
   return (
     <Anchor
       href={href}
-      className="rounded-sm text-ink underline decoration-current/30 decoration-[1px] underline-offset-[5px] transition-[text-decoration-color] hover:decoration-accent focus-ring"
+      className="rounded-sm text-ink underline decoration-current/30 decoration-1 underline-offset-[5px] transition-[text-decoration-color] hover:decoration-accent focus-ring"
       {...props}
     >
       {children}

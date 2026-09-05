@@ -148,7 +148,7 @@ export default async function InsightPage({
               className="mt-6 text-balance font-display text-ink text-display-l"
             />
 
-            <FadeRise delay={0.3} className="mt-7 max-w-[40rem]">
+            <FadeRise delay={0.3} className="mt-7 max-w-measure">
               <p className="text-body-l text-ink-muted">{data.dek}</p>
             </FadeRise>
 
@@ -176,7 +176,7 @@ export default async function InsightPage({
         <FadeRise>
           {/* ~70 characters. The one measurement that decides whether a long
               piece gets finished. */}
-          <article className="max-w-[42rem]">
+          <article className="max-w-measure">
             <MDXRemote source={content} components={mdxComponents} />
           </article>
         </FadeRise>

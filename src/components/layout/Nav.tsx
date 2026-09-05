@@ -391,7 +391,7 @@ export function Nav({
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" />
                 <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
-              <kbd className="font-mono text-[0.6875rem] tracking-[0.08em] text-ink-subtle">⌘K</kbd>
+              <kbd className="font-mono text-caption tracking-[0.08em] text-ink-subtle">⌘K</kbd>
             </NextLink>
             <ThemeToggle />
           </nav>

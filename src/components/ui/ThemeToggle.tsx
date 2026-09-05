@@ -54,7 +54,7 @@ export function ThemeToggle({ className }: { className?: string }) {
 
   const baseCls = cn(
     "inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors duration-200",
-    "hover:bg-ink/[5%] hover:text-ink",
+    "hover:bg-ink/5 hover:text-ink",
     "focus-ring",
     className,
   );

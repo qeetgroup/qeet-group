@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 type Size = "sm" | "md";
 
 const sizeMap: Record<Size, { box: string; svg: string }> = {
-  sm: { box: "h-9 w-9", svg: "h-[18px] w-[18px]" },
+  sm: { box: "h-9 w-9", svg: "h-4.5 w-4.5" },
   md: { box: "h-10 w-10", svg: "h-5 w-5" },
 };
 

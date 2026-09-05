@@ -198,7 +198,7 @@ export default function FaqPage() {
                       <dt className="font-display text-balance text-ink text-heading-m">
                         {item.question}
                       </dt>
-                      <dd className="mt-4 max-w-[40rem] text-body text-ink-muted">
+                      <dd className="mt-4 max-w-measure text-body text-ink-muted">
                         {item.answer}
                       </dd>
                     </div>
@@ -220,7 +220,7 @@ export default function FaqPage() {
             <p className="text-body-l text-ink">
               Write to the address that fits best.
             </p>
-            <p className="mt-5 max-w-[34rem] text-body text-ink-muted">
+            <p className="mt-5 max-w-note text-body text-ink-muted">
               <Link href="mailto:partnerships@qeet.in" className="text-ink">
                 partnerships@qeet.in
               </Link>{" "}

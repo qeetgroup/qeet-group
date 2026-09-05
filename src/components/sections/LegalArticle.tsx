@@ -38,7 +38,7 @@ export function LegalArticle({ doc }: { doc: LoadedLegal }) {
 
       <Section className="border-t border-rule" padding="tight">
         <FadeRise>
-          <article className="max-w-[42rem]">
+          <article className="max-w-measure">
             <MDXRemote source={content} components={mdxComponents} />
           </article>
         </FadeRise>

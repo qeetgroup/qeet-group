@@ -19,7 +19,7 @@ export function Team() {
             A small, senior team runs the group itself — not the products. We set the philosophy,
             hold the quality bar, and back the operators who build each company.
           </p>
-          <p className="mt-5 max-w-[34rem] text-body text-ink-muted">
+          <p className="mt-5 max-w-note text-body text-ink-muted">
             We&rsquo;ll introduce everyone as the team comes together. If you&rsquo;re a senior
             operator who thinks in decades, there&rsquo;s room to build here.
           </p>

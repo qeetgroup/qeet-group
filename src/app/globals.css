@@ -72,30 +72,17 @@
  * Type roles — the Qeet typefaces.
  * ---------------------------------------------------------------------------
  *
- *   display   Qeet UI      headings and display type
- *   ui        Qeet UI      controls, navigation, labels
+ *   display   Newsreader   editorial statements and major headings
+ *   ui        Qeet UI      controls, navigation, labels, compact headings
  *   sans      Qeet Text    body copy
  *   mono      Fira Code    data, metrics, timestamps
  *
- * Two faces, from `@qeetrix/ui`, so this site is set in the same type as the
- * products it describes.
- *
- * Qeet Display — the geometric cut Qeetrix maps to its own `--font-display` —
- * is deliberately NOT used. At the sizes this site sets display type, its
- * geometry reads as styling rather than as voice, and a corporate page wants
- * the opposite. Qeet UI is the more neutral drawing and holds from a 12px
- * label to a 96px headline, so it carries both roles.
- *
- * With one face doing headings and chrome, hierarchy has to come from weight,
- * size and space alone — there is no second face to change voice with. That is
- * a harder system to build and a steadier one, and it is what nearly every
- * large technology organisation actually ships.
+ * Newsreader separates the organisation's editorial voice from its product
+ * interfaces. The Qeet faces remain the functional foundation, while the
+ * display role can carry a more distinctive, publication-led cadence.
  */
 @theme inline {
-  /* `display` and `ui` are the same FACE and remain distinct ROLES. Keeping
-   * both names means display type can later diverge — a different weight
-   * default, tighter tracking — without touching every call site. */
-  --font-display: var(--font-ui-face);
+  --font-display: var(--font-display-face);
   --font-sans: var(--font-body-face);
   --font-ui: var(--font-ui-face);
   --font-mono: var(--font-mono-face);
@@ -411,6 +398,23 @@
    * measure asks for `max-w-prose` instead of an inline `max-w-2xl`.
    * ======================================================================= */
   --container-prose: 46rem;
+  /*
+   * Text measures, named.
+   *
+   * Three inline values had drifted into the codebase doing this job —
+   * max-w-[42rem] (6 uses), max-w-[40rem] (3) and max-w-[34rem] (7). The first
+   * two are 2rem apart and visually indistinguishable, which is the tell: they
+   * were not two decisions, they were one decision made twice. Container's own
+   * doc comment warns about exactly this.
+   *
+   *   measure  the reading measure, ~70 characters. Article bodies, section
+   *            descriptions, leads. The single most consequential typographic
+   *            number on a page whose purpose is being read.
+   *   note     short supporting copy beside something else — a caption-length
+   *            paragraph that should not run as wide as body text.
+   */
+  --container-measure: 42rem;
+  --container-note: 34rem;
   --container-narrow: 62rem;
   --container-default: 80rem;
   --container-wide: 96rem;

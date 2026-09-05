@@ -1,10 +1,6 @@
 import { Hero } from "@/components/sections/Hero";
 import { PositionStatement } from "@/components/sections/PositionStatement";
 import { EcosystemSection } from "@/components/sections/EcosystemSection";
-import { IdentitySection } from "@/components/sections/IdentitySection";
-import { TechnologyRail } from "@/components/sections/TechnologyRail";
-import { IntelligenceSection } from "@/components/sections/IntelligenceSection";
-import { TrustSection } from "@/components/sections/TrustSection";
 import { ScaleSection } from "@/components/sections/ScaleSection";
 import { InsightPreview } from "@/components/sections/InsightPreview";
 import { CompanySection } from "@/components/sections/CompanySection";
@@ -24,28 +20,20 @@ export const metadata = buildPageMetadata({
  * The homepage, as an argument
  * ============================================================================
  *
- * Eleven sections, in the order a sceptical visitor needs them:
+ * Seven sections, in the order a corporate visitor needs them:
  *
- *   1  Hero          what this organisation is, over media
- *   2  Position      the claim, set as type — nothing to hide behind
- *   3  Ecosystem     the proof of the claim, and the signature interaction
- *   4  Identity      why the ecosystem holds together at all
- *   5  Technology    the capability spread, as a rail rather than six cards
- *   6  Intelligence  the AI story, told as infrastructure not as a chatbot
- *   7  Trust         how we build and what we protect — principles, not badges
- *   8  Scale         the numbers, each carrying its source
- *   9  Insights      evidence of a point of view
- *   10 Company       who is behind it
- *   11 Audience      six ways out, one per visitor
+ *   1  Hero          the organisation's ambition, over media
+ *   2  Position      what kind of company Qeet is
+ *   3  Ecosystem     the portfolio and its signature interaction
+ *   4  Company       the point of view behind the work
+ *   5  Scale         the portfolio facts, each carrying its source
+ *   6  Insights      evidence of an active corporate voice
+ *   7  Audience      a useful next step for every visitor
  *
- * The ordering choice worth defending: the ecosystem comes third, immediately
- * after the claim, rather than being saved for later. Everything after it only
- * means something once a visitor understands that these products compose one
- * another — that is the difference between Qeet and a company with a lot of
- * tabs, and it should not be discovered halfway down the page.
- *
- * Products are NOT enumerated here. Sixteen product pitches on a homepage is a
- * catalogue; the navigation and /products exist for that.
+ * Product architecture, AI, security and engineering retain dedicated routes.
+ * Putting each explanation on the homepage made the organisation read like a
+ * product specification; this page now establishes the group before offering
+ * deeper technical paths through navigation and search.
  */
 export default function HomePage() {
   return (
@@ -53,13 +41,9 @@ export default function HomePage() {
       <Hero />
       <PositionStatement />
       <EcosystemSection />
-      <IdentitySection />
-      <TechnologyRail />
-      <IntelligenceSection />
-      <TrustSection />
+      <CompanySection />
       <ScaleSection />
       <InsightPreview />
-      <CompanySection />
       <AudiencePaths />
     </>
   );

@@ -14,7 +14,7 @@ export function CompanySection() {
   return (
     <Section id="company" className="border-t border-rule bg-surface-sunken">
       <EditorialFeature
-        eyebrow="07 — Company"
+        eyebrow="02 — Company"
         headline={["Progress begins", "with the right", "question."]}
         accentLine={2}
         slot="companyVision"
@@ -23,14 +23,13 @@ export function CompanySection() {
       >
         <p>
           Qeet is an acronym before it is a name: question, explore, envision,
-          transform. It describes an order of operations, and the first step is
-          the one most organisations skip.
+          transform. These are not values arranged for a wall; they describe how
+          we move from uncertainty to useful work.
         </p>
         <p className="mt-6">
-          It also has consequences we would rather live with than talk around.
-          It is why the organisation keeps a register of the places its own
-          documentation disagrees with its code, and why a roadmap entry is not
-          allowed to be cited here as a shipped capability.
+          Qeet Group is being built for a long horizon. That means choosing
+          clarity over noise, treating every product as part of a larger whole
+          and being candid about what is here today and what still lies ahead.
         </p>
       </EditorialFeature>
     </Section>

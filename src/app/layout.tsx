@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Fira_Code } from "next/font/google";
+import { Fira_Code, Newsreader } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Nav } from "@/components/layout/Nav";
@@ -21,19 +21,15 @@ import {
  * Type system
  * ============================================================================
  *
- *   Qeet UI     headings, display type, navigation, controls, labels
+ *   Newsreader  editorial display type and major headings
+ *   Qeet UI     navigation, controls, labels and compact headings
  *   Qeet Text   body copy
  *   Fira Code   data, metrics, timestamps
  *
- * Two Qeet faces, not three. Qeet Display — the geometric cut Qeetrix maps to
- * `--font-display` — is deliberately unused here: at the display sizes this
- * site sets, its geometry reads as styling rather than as voice, which is the
- * wrong register for a corporate page. Qeet UI is the more neutral drawing and
- * it holds up from a 12px label to a 96px headline, so it carries both.
- *
- * The consequence is that hierarchy comes from WEIGHT, SIZE and SPACE rather
- * than from switching typeface — the harder system to build and the steadier
- * one, and the one nearly every large technology organisation actually ships.
+ * The display face deliberately differs from the product UI. Qeet Group is a
+ * corporate headquarters and an editorial publisher, not another interface in
+ * the product suite; Newsreader gives its large statements a recognisable
+ * institutional voice while Qeet UI keeps every functional surface familiar.
  *
  * ---------------------------------------------------------------------------
  * Why the files are copied in rather than imported from the package
@@ -77,6 +73,15 @@ const body = localFont({
     { path: "./fonts/QeetText-Regular.woff2", weight: "400", style: "normal" },
     { path: "./fonts/QeetText-Medium.woff2", weight: "500", style: "normal" },
   ],
+});
+
+const display = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-display-face",
+  display: "swap",
+  preload: true,
+  fallback: ["Georgia", "Times New Roman", "serif"],
+  weight: ["400", "500", "600"],
 });
 
 /** Qeetrix's mono. Google-hosted rather than vendored — it is not a Qeet face. */
@@ -180,7 +185,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ui.variable} ${body.variable} ${mono.variable} h-full`}
+      className={`${display.variable} ${ui.variable} ${body.variable} ${mono.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

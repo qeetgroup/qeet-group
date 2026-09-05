@@ -71,7 +71,7 @@ export function SearchBox() {
                   {r.title}
                 </h2>
                 {r.description && (
-                  <p className="mt-2 max-w-[40rem] text-body text-ink-muted">
+                  <p className="mt-2 max-w-measure text-body text-ink-muted">
                     {r.description}
                   </p>
                 )}

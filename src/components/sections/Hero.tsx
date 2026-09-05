@@ -5,7 +5,6 @@ import { Button } from "../ui/Button";
 import { FadeRise } from "../motion/FadeRise";
 import { RevealLines } from "../motion/RevealLines";
 import { VideoFigure } from "../media/VideoFigure";
-import { portfolioCounts } from "@/lib/content";
 
 /**
  * ============================================================================
@@ -28,14 +27,11 @@ import { portfolioCounts } from "@/lib/content";
  *   do not know what the visitor should do next. The secondary path is a text
  *   link, which is a hierarchy rather than a choice.
  *
- *   THE FACT LINE IS DERIVED. Counts come from the content collection at build
- *   time, so the hero cannot claim a portfolio size the site does not contain.
- *   That is a real risk here: hero copy is exactly where a stale number
- *   survives longest, because nobody re-reads it.
+ *   NO METRIC STRIP. Portfolio counts have a sourced section of their own.
+ *   Putting them above the fold made the organisation feel like a dashboard
+ *   and forced visitors to process evidence before they understood the idea.
  */
-export async function Hero() {
-  const counts = await portfolioCounts();
-
+export function Hero() {
   return (
     // `on-dark`: this hero sits on a scrimmed photograph in BOTH themes, so its
     // accent tokens must not follow the light theme. See globals.css.
@@ -67,47 +63,26 @@ export async function Hero() {
 
           <RevealLines
             as="h1"
-            lines={["Building the systems", "other systems", "are built on."]}
-            className="max-w-[18ch] text-balance font-display text-ink-inverse text-display-2xl"
+            lines={["Building what", "belongs together."]}
+            className="max-w-[16ch] text-balance font-display text-ink-inverse text-display-2xl"
           />
 
-          <FadeRise delay={0.5} className="mt-10 max-w-xl md:mt-12">
+          <FadeRise delay={0.5} className="mt-8 max-w-lg md:mt-10">
             <p className="text-body-l text-ink-inverse/75">
-              One organisation, one identity layer, one design foundation — and a
-              portfolio of products that compose each other rather than compete
-              for the same desk.
+              Qeet Group creates a connected family of digital products, each
+              stronger as part of one organisation.
             </p>
           </FadeRise>
 
           <FadeRise delay={0.65} className="mt-10 md:mt-12">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
               <Button href="/ecosystem" size="lg" variant="accent">
-                See the ecosystem
+                Explore Qeet
               </Button>
               <Link href="/company/about" variant="arrow" className="text-body text-ink-inverse">
-                What Qeet Group is
+                About the group
               </Link>
             </div>
-          </FadeRise>
-
-          <FadeRise delay={0.8} className="mt-14 md:mt-20">
-            <dl className="flex flex-wrap gap-x-12 gap-y-6 border-t border-ink-inverse/20 pt-8">
-              {[
-                { n: counts.total, label: "Products" },
-                { n: counts.available, label: "Available today" },
-                { n: counts.development, label: "In development" },
-                { n: counts.planned, label: "Planned" },
-              ].map((s) => (
-                <div key={s.label}>
-                  <dd className="font-display text-ink-inverse text-heading-xl tabular-figures">
-                    {s.n}
-                  </dd>
-                  <dt className="mt-1 font-mono text-label uppercase text-ink-inverse/60">
-                    {s.label}
-                  </dt>
-                </div>
-              ))}
-            </dl>
           </FadeRise>
         </div>
       </Container>

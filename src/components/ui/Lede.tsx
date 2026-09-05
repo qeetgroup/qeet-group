@@ -8,7 +8,7 @@ type LedeProps = {
 
 export function Lede({ children, className }: LedeProps) {
   return (
-    <p className={cn("font-sans text-body-l text-ink-muted max-w-[36rem]", className)}>
+    <p className={cn("font-sans text-body-l text-ink-muted max-w-xl", className)}>
       {children}
     </p>
   );

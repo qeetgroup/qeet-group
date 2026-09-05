@@ -23,6 +23,13 @@ import { QeetPayMock } from "./QeetPayMock";
  * lifecycle system exists to prevent, committed in pixels rather than words.
  * Products without a visual fall back to a Figure at the call site.
  *
+ * These components use arbitrary type sizes (text-[0.6875rem] and similar)
+ * rather than the site's type scale, and that is deliberate: they render
+ * miniature product interfaces, where the smallest step of the page's scale is
+ * already too large. Converting them to `text-caption` would also inherit that
+ * token's line-height and tracking, which are tuned for page copy, not for a
+ * 20rem-wide facsimile of a sign-in screen.
+ *
  * The keys were previously plain strings, and `qeetid` silently stopped
  * matching when the flagship's slug became `qeet-id` — the page kept rendering
  * with no visual and nothing failed. `ProductVisualSlug` is checked against

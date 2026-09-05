@@ -197,7 +197,7 @@ export default async function ProductPage({
 
       <Section padding="tight">
         <FadeRise>
-          <article className="max-w-[42rem]">
+          <article className="max-w-measure">
             <MDXRemote source={content} components={mdxComponents} />
           </article>
         </FadeRise>

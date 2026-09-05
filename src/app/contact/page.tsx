@@ -101,7 +101,7 @@ export default function ContactPage() {
             <p className="text-body-l text-ink">
               We&rsquo;re also on the platforms below.
             </p>
-            <p className="mt-5 max-w-[28rem] text-body text-ink-muted">
+            <p className="mt-5 max-w-md text-body text-ink-muted">
               Email is the fastest way to reach us. Social is where we share
               shorter notes and respond when we can.
             </p>
@@ -117,7 +117,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
           <FadeRise className="md:col-span-4">
             <Eyebrow>Or send a message</Eyebrow>
-            <p className="mt-6 max-w-[28rem] text-body text-ink-muted">
+            <p className="mt-6 max-w-md text-body text-ink-muted">
               We&rsquo;ll route it to the right person and respond within a few days.
             </p>
           </FadeRise>
