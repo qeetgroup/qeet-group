@@ -129,6 +129,14 @@ const CHECKS: Check[] = [
   },
   { fg: "--color-accent-text", bg: "--color-surface", min: 4.5, why: "accent text on cards" },
   {
+    fg: "--color-accent-text-display",
+    bg: "--color-canvas",
+    // 3:1 is the WCAG large-text threshold. This token is only ever used on
+    // display type (the hero headline), which is far above 24px.
+    min: 3,
+    why: "accent text at display size",
+  },
+  {
     fg: "--color-accent-contrast",
     bg: "--color-accent",
     min: 4.5,

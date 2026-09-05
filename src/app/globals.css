@@ -137,9 +137,17 @@
   /*
    * Accent — three distinct jobs. Conflating them is how accessible palettes
    * go wrong, so they stay separate tokens even where values coincide:
-   *   accent          fills, graphics, glows. Never text.
-   *   accent-text     accent-coloured TEXT. Contrast-safe in both themes.
-   *   accent-contrast a label sitting ON an accent fill.
+   *   accent               fills, graphics, glows. Never text.
+   *   accent-text          accent-coloured TEXT at normal size (needs 4.5:1).
+   *   accent-text-display  the same, but only for large display type, which
+   *                        WCAG lets sit at 3:1. On the light canvas that
+   *                        difference is what keeps the hero vivid: brand-600
+   *                        clears 3:1 and reads almost identically to the brand
+   *                        orange, where brand-700 visibly darkens it.
+   *   accent-contrast      a label sitting ON an accent fill.
+   *
+   * In dark mode all three text tokens are the true brand orange — it is only
+   * the light canvas that forces them apart.
    */
   --color-accent: var(--color-brand-500);
   --color-accent-hover: var(--color-brand-400);
@@ -147,6 +155,7 @@
    * raised surface, so it comfortably clears AA. It is only the LIGHT canvas
    * (2.94:1) that forces a different value, which is what .light overrides. */
   --color-accent-text: var(--color-brand-500);
+  --color-accent-text-display: var(--color-brand-500);
   --color-accent-contrast: var(--color-brand-950);
   --color-accent-soft: color-mix(in oklab, var(--color-accent) 14%, transparent);
   --color-accent-faint: color-mix(in oklab, var(--color-accent) 7%, transparent);
@@ -324,11 +333,14 @@
   /* 3.28:1 on canvas, 3.36:1 on surface. */
   --color-rule-interactive: oklch(0.64 0 0);
 
-  /* The accent FILL does not change, but brand-500 is only 2.94:1 on this
-   * canvas — so here, and only here, accent text drops to brand-700 (5.16:1)
-   * and the focus ring to brand-600 (3.72:1, clearing the 3:1 non-text UI
-   * needs). In dark mode accent text stays the true brand orange. */
+  /* The accent FILL does not change, but brand-500 measures 2.94:1 here —
+   * below AA for normal text (4.5:1) AND for large text (3:1), by 0.06. So on
+   * this canvas only, accent text splits by size: brand-700 at 5.16:1 for
+   * normal text, brand-600 at 3.72:1 for display type, which clears the
+   * large-text bar while staying visually close to the brand orange. The focus
+   * ring uses brand-600 too (3.72:1 clears the 3:1 non-text UI needs). */
   --color-accent-text: var(--color-brand-700);
+  --color-accent-text-display: var(--color-brand-600);
   --color-accent-hover: var(--color-brand-600);
   --color-focus: var(--color-brand-600);
 

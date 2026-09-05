@@ -56,7 +56,7 @@ export async function Hero() {
 
             <h1 className="text-balance font-display font-normal text-ink text-display-2xl">
               <WordReveal text="We question, We explore, We envision, We" />{" "}
-              <span className="text-accent-text">
+              <span className="text-accent-text-display">
                 <WordReveal text="transform." initialDelay={0.57} />
               </span>
             </h1>

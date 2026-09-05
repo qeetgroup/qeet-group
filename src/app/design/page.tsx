@@ -170,11 +170,20 @@ export default function DesignPage() {
               </Text>
             </div>
             <div className="flex flex-wrap items-center gap-4">
-              <span className="text-body text-accent-text">Accent-coloured text</span>
+              <span className="text-body text-accent-text">Accent text (normal size)</span>
               <Contrast fg="--color-accent-text" bg="--color-canvas" />
               <Text size="caption" tone="subtle">
-                brand-700 in light, brand-400 in dark. The raw accent is 2.94:1
-                on the light canvas.
+                Needs 4.5:1. brand-700 in light; the true brand orange in dark.
+              </Text>
+            </div>
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="font-display text-display-m text-accent-text-display">
+                Accent at display size
+              </span>
+              <Contrast fg="--color-accent-text-display" bg="--color-canvas" use="large-text" />
+              <Text size="caption" tone="subtle">
+                Large text only, so 3:1 applies. Lets the light canvas stay
+                close to #f26d0e, which measures 2.94:1 and clears neither bar.
               </Text>
             </div>
             <div className="flex flex-wrap items-center gap-4">
