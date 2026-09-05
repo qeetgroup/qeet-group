@@ -2,7 +2,7 @@ import { Section } from "../layout/Section";
 import { SectionHeader } from "../ui/SectionHeader";
 import { FadeRise } from "../motion/FadeRise";
 import { MetricBand } from "./MetricBand";
-import { portfolioMetrics, PORTFOLIO_VERIFIED_ON } from "@/config/metrics";
+import { ORGANISATION_METRICS, portfolioMetrics, PORTFOLIO_VERIFIED_ON } from "@/config/metrics";
 import { portfolioCounts } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
@@ -26,10 +26,10 @@ export async function ScaleSection() {
     <Section id="scale" className="border-t border-rule">
       <FadeRise>
         <SectionHeader
-          index="03"
-          eyebrow="The group today"
-          title="Growing with intention."
-          description="A clear view of the portfolio today, including the products still being built and those planned for the future."
+          index="06"
+          eyebrow="Scale"
+          title="What actually exists."
+          description="Counts derived from the portfolio itself rather than stated — so this section cannot drift from what the site contains."
         />
       </FadeRise>
 
@@ -38,9 +38,11 @@ export async function ScaleSection() {
         metrics={portfolioMetrics(counts)}
       />
 
-      <p className="mt-8 font-mono text-caption text-ink-subtle">
-        Portfolio status verified {formatDate(PORTFOLIO_VERIFIED_ON)}.
-      </p>
+      <MetricBand
+        className="mt-16"
+        metrics={ORGANISATION_METRICS}
+        provenance={`Organisation figures verified ${formatDate(PORTFOLIO_VERIFIED_ON)} against the Qeet Group repository records.`}
+      />
     </Section>
   );
 }

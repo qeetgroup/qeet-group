@@ -33,9 +33,9 @@ export async function InsightPreview() {
     <Section id="insights" className="border-t border-rule">
       <FadeRise>
         <SectionHeader
-          index="04"
+          index="08"
           eyebrow="Insights"
-          title="Ideas worth making public."
+          title="What we think, written down."
         />
       </FadeRise>
 

@@ -21,9 +21,9 @@ export async function EcosystemSection() {
       <FadeRise>
         <SectionHeader
           index="01"
-          eyebrow="The Qeet portfolio"
-          title="Different products. One company."
-          description={`${products.length} products across one growing portfolio. Explore what is available now, what is being built and what is planned next.`}
+          eyebrow="The ecosystem"
+          title={`${products.length} products. Two dependencies.`}
+          description="Almost nothing in this portfolio stands alone. Every product authenticates through the same identity layer and is built from the same design foundation — so they compose rather than merely coexist."
         />
       </FadeRise>
 

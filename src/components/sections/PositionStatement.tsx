@@ -27,22 +27,25 @@ export function PositionStatement() {
           <RevealLines
             as="h2"
             lines={[
-              "A family of products.",
-              "A single point of view.",
+              "Most software companies",
+              "build a product. We are",
+              "building the ground it",
+              "stands on.",
             ]}
-            accentIndex={1}
+            accentIndex={3}
             className="text-balance font-display text-ink text-display-l"
           />
           <FadeRise className="mt-10 max-w-prose space-y-6 text-body-l text-ink-muted md:mt-14">
             <p>
-              Qeet Group brings together products for people, work,
-              communication, payments and more. Each has a clear role and its
-              own path, while the group gives them shared purpose and reach.
+              Qeet Group is one technology organisation, not a collection of
+              separate ventures. Its products are built by different teams for
+              different problems, but they share an identity layer, a design
+              foundation, and a set of standards that do not bend per product.
             </p>
             <p>
-              We build for the long term: thoughtfully, honestly and with the
-              discipline to let every new product strengthen what already
-              exists.
+              That shared ground is the actual work. It is why signing in once
+              reaches everything, why every interface behaves the same way, and
+              why adding the next product costs less than the last one did.
             </p>
           </FadeRise>
         </div>
