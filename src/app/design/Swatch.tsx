@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { contrastRatio, resolveCssColor } from "@/lib/color";
 
 /* ---------------------------------------------------------------------------
  * Contrast is measured from resolved computed styles rather than from numbers
@@ -39,29 +40,11 @@ function subscribe(onChange: () => void) {
   };
 }
 
-/**
- * Resolves a custom property to a concrete colour string.
- *
- * `getComputedStyle(html).getPropertyValue(token)` is not enough: a custom
- * property's computed value keeps its `var()` references unsubstituted, so
- * `--color-canvas: var(--color-neutral-950)` comes back literally. Assigning
- * it to a real `color` property and reading that back forces substitution.
- */
-function resolveToken(token: string): string {
-  const probe = document.createElement("span");
-  probe.style.cssText = "position:absolute;opacity:0;pointer-events:none";
-  probe.style.color = `var(${token})`;
-  document.body.appendChild(probe);
-  const resolved = getComputedStyle(probe).color;
-  probe.remove();
-  return resolved;
-}
-
 function getSnapshot(token: string): string {
   const key = `${generation}:${token}`;
   let value = cache.get(key);
   if (value === undefined) {
-    value = resolveToken(token);
+    value = resolveCssColor(token);
     cache.set(key, value);
   }
   return value;
@@ -74,46 +57,6 @@ function useResolvedToken(token: string): string {
     () => getSnapshot(token),
     () => "",
   );
-}
-
-/*
- * Chrome returns wide-gamut computed colours as `lab(...)` / `oklch(...)`
- * rather than `rgb(...)`, so string-matching for rgb() silently returns null
- * for every token here. Painting onto a 1x1 canvas and reading the pixel back
- * yields sRGB bytes whatever notation the browser chose.
- */
-let ctx: CanvasRenderingContext2D | null | undefined;
-
-function toSrgb(value: string): [number, number, number] | null {
-  if (ctx === undefined) {
-    const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 1;
-    ctx = canvas.getContext("2d", { willReadFrequently: true });
-  }
-  if (!ctx) return null;
-  ctx.clearRect(0, 0, 1, 1);
-  ctx.fillStyle = "#000";
-  ctx.fillStyle = value;
-  ctx.fillRect(0, 0, 1, 1);
-  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-  return [r, g, b];
-}
-
-function relativeLuminance([r, g, b]: [number, number, number]): number {
-  const lin = (c: number) => {
-    const s = c / 255;
-    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-  };
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-}
-
-function contrastRatio(a: string, b: string): number | null {
-  const ca = toSrgb(a);
-  const cb = toSrgb(b);
-  if (!ca || !cb) return null;
-  const la = relativeLuminance(ca);
-  const lb = relativeLuminance(cb);
-  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
 /**

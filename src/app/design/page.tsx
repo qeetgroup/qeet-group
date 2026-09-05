@@ -3,6 +3,23 @@ import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Icon } from "@/components/ui/Icon";
+import { Link } from "@/components/ui/Link";
+import { Stat } from "@/components/ui/Stat";
+import { StatusPill } from "@/components/ui/StatusPill";
+import {
+  Activity,
+  ArrowRight,
+  Colorfilter,
+  FingerScan,
+  Notification,
+  People,
+  ShieldTick,
+  Wallet,
+} from "@qeetrix/icons";
 import { Contrast, Swatch } from "./Swatch";
 
 export const metadata: Metadata = {
@@ -348,7 +365,159 @@ export default function DesignPage() {
       </Section>
 
       <Section padding="tight" className="border-t border-rule">
-        <Eyebrow>05 — Ambient surfaces</Eyebrow>
+        <Eyebrow>05 — Components</Eyebrow>
+        <Heading size="display-m" className="mt-5 text-ink">
+          Every variant, every state
+        </Heading>
+        <Text size="body-s" className="mt-4 max-w-prose">
+          Interactive elements carry all six states — default, hover,
+          focus-visible, active, disabled and loading. Tab through this section
+          to check the focus treatment against each surface.
+        </Text>
+
+        <Row label="Button — variants">
+          <div className="flex flex-wrap items-center gap-4">
+            <Button variant="solid">Solid</Button>
+            <Button variant="accent">Accent</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+          </div>
+        </Row>
+
+        <Row label="Button — sizes">
+          <div className="flex flex-wrap items-center gap-4">
+            <Button size="sm">Small</Button>
+            <Button size="md">Medium</Button>
+            <Button size="lg">Large</Button>
+          </div>
+        </Row>
+
+        <Row label="Button — states">
+          <div className="flex flex-wrap items-center gap-4">
+            <Button>Default</Button>
+            <Button disabled>Disabled</Button>
+            <Button loading>Loading</Button>
+            <Button variant="outline" disabled>
+              Disabled outline
+            </Button>
+            <Button href="/design" variant="ghost">
+              As a link
+            </Button>
+          </div>
+          <Text size="caption" tone="subtle" className="mt-4">
+            Loading keeps the label in flow but hidden, so the control does not
+            change width mid-submit.
+          </Text>
+        </Row>
+
+        <Row label="Button — with icons">
+          <div className="flex flex-wrap items-center gap-4">
+            <Button icon={<Icon icon={ArrowRight} />} iconPosition="end">
+              Explore products
+            </Button>
+            <Button variant="outline" icon={<Icon icon={ShieldTick} />}>
+              Security
+            </Button>
+          </div>
+        </Row>
+
+        <Row label="Badge">
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge>Neutral</Badge>
+            <Badge tone="accent" dot>
+              Accent
+            </Badge>
+            <Badge tone="success" dot>
+              Success
+            </Badge>
+            <Badge tone="warning" dot>
+              Warning
+            </Badge>
+            <Badge tone="error" dot>
+              Error
+            </Badge>
+            <Badge tone="outline">Outline</Badge>
+          </div>
+        </Row>
+
+        <Row label="StatusPill — the closed stage vocabulary">
+          <div className="flex flex-wrap items-center gap-3">
+            {["Generally available", "Early access", "Preview", "Coming soon", "Planned"].map(
+              (stage) => (
+                <StatusPill key={stage} stage={stage} />
+              ),
+            )}
+          </div>
+          <Text size="caption" tone="subtle" className="mt-4">
+            Product status must trace to a verified source, so an unrecognised
+            stage falls back to the most conservative tone rather than inventing
+            one.
+          </Text>
+        </Row>
+
+        <Row label="Card">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <Card padding="sm">
+              <p className="font-sans text-body-s text-ink">glass (default)</p>
+            </Card>
+            <Card variant="solid" padding="sm">
+              <p className="font-sans text-body-s text-ink">solid</p>
+            </Card>
+            <Card variant="outline" padding="sm">
+              <p className="font-sans text-body-s text-ink">outline</p>
+            </Card>
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Card href="/design" padding="sm">
+              <p className="font-sans text-body-s text-ink">
+                interactive — hover and tab me
+              </p>
+            </Card>
+            <Card padding="sm" interactive spotlight={false}>
+              <p className="font-sans text-body-s text-ink">interactive, no spotlight</p>
+            </Card>
+          </div>
+        </Row>
+
+        <Row label="Stat">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            <Stat value="6" label="Platforms" context="One identity graph" />
+            <Stat value="67" label="Repositories" context="Across the group" />
+            <Stat value="2026" label="Founded" context="India" />
+          </div>
+        </Row>
+
+        <Row label="Icon — @qeetrix/icons">
+          <div className="flex flex-wrap items-center gap-6 text-ink">
+            <Icon icon={FingerScan} size={24} />
+            <Icon icon={Colorfilter} size={24} />
+            <Icon icon={Activity} size={24} />
+            <Icon icon={People} size={24} />
+            <Icon icon={Notification} size={24} />
+            <Icon icon={Wallet} size={24} />
+            <Icon icon={ShieldTick} size={24} variant="solid" />
+          </div>
+          <Text size="caption" tone="subtle" className="mt-4">
+            1,166 icons, tree-shaken. The wrapper forces{" "}
+            <code className="font-mono">color=&quot;currentColor&quot;</code>: the
+            library defaults each svg to white, which would vanish on this
+            canvas in light mode.
+          </Text>
+        </Row>
+
+        <Row label="Link">
+          <div className="flex flex-wrap items-center gap-6">
+            <Link href="/design">Default</Link>
+            <Link href="/design" variant="arrow">
+              With arrow
+            </Link>
+            <Link href="https://qeet.in">External</Link>
+          </div>
+        </Row>
+      </Section>
+
+      <Section padding="tight" className="border-t border-rule">
+        <Eyebrow>06 — Ambient surfaces</Eyebrow>
         <Text size="body-s" className="mt-4 max-w-prose">
           All decorative. Carriers must be{" "}
           <code className="font-mono">aria-hidden</code>, and the reduced-motion

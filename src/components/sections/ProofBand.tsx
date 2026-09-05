@@ -1,3 +1,4 @@
+import { Stat } from "@/components/ui/Stat";
 import { Counter } from "../motion/Counter";
 import { FadeRise } from "../motion/FadeRise";
 import { Container } from "../layout/Container";
@@ -65,14 +66,11 @@ export async function ProofBand() {
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4">
           {metrics.map((m, i) => (
             <FadeRise key={m.label} delay={i * 0.06}>
-              <div>
-                <div className="font-display font-normal tabular-figures text-ink text-display-m leading-none">
-                  {m.display ?? <Counter value={m.value ?? 0} />}
-                </div>
-                <div aria-hidden="true" className="mt-5 h-px w-9 bg-accent" />
-                <p className="mt-5 font-sans text-body font-medium text-ink">{m.label}</p>
-                <p className="mt-1.5 text-body-s text-ink-subtle">{m.context}</p>
-              </div>
+              <Stat
+                value={m.display ?? <Counter value={m.value ?? 0} />}
+                label={m.label}
+                context={m.context}
+              />
             </FadeRise>
           ))}
         </div>
