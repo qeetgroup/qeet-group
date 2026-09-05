@@ -558,14 +558,6 @@
   font-feature-settings: "tnum" 1;
 }
 
-/* Used by the hero shader layer, which fades in only once it has mounted so
- * the swap from the static mesh is never a hard cut. */
-@keyframes fade-in {
-  to {
-    opacity: 1;
-  }
-}
-
 @keyframes blob-float {
   0%,
   100% {
