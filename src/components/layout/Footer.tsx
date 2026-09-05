@@ -73,18 +73,18 @@ export function Footer({ products }: { products: ProductSummary[] }) {
   ];
   return (
     <footer className="relative bg-canvas">
-      <div aria-hidden="true" className="h-px bg-linear-to-r from-transparent via-brand/50 to-transparent" />
+      <div aria-hidden="true" className="h-px bg-linear-to-r from-transparent via-accent/50 to-transparent" />
       <Container>
         <FadeRise className="grid grid-cols-1 gap-10 py-16 md:grid-cols-12 md:gap-12 md:py-20">
           <div className="md:col-span-4">
             <NextLink
               href="/"
               aria-label="Qeet Group home"
-              className="group inline-flex items-center gap-2.5 font-display text-[1.625rem] font-semibold leading-none tracking-[-0.03em] text-ink transition-colors duration-200 hover:text-brand"
+              className="group inline-flex items-center gap-2.5 font-display text-[clamp(1.375rem,1.2rem+0.6vw,1.625rem)] font-semibold leading-none tracking-[-0.03em] text-ink transition-colors duration-fast hover:text-accent-text"
             >
               <span
                 aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-brand transition-transform duration-300 group-hover:scale-125"
+                className="h-2.5 w-2.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-125"
               />
               Qeet Group
             </NextLink>

@@ -62,10 +62,10 @@ export function OperatingModel() {
         {principles.map((p, i) => (
           <FadeRise key={p.n} delay={(i % 2) * 0.06}>
             <div className="border-t border-rule pt-6">
-              <span className="font-serif font-normal tracking-[-0.02em] tabular-nums text-ink-subtle text-[2rem] leading-none">
+              <span className="font-display font-normal tabular-figures text-ink-subtle text-display-m leading-none">
                 {p.n}
               </span>
-              <h3 className="mt-4 font-sans font-medium tracking-[-0.01em] text-ink text-[1.25rem] leading-[1.3]">
+              <h3 className="mt-4 font-sans font-medium text-ink text-heading-m">
                 {p.title}
               </h3>
               <p className="mt-2 max-w-[30rem] text-body text-ink-muted">{p.body}</p>
@@ -87,7 +87,7 @@ export function OperatingModel() {
               }
             >
               <div className="mb-3 flex items-center gap-2.5">
-                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-brand" />
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />
                 <h3 className="font-sans font-medium tracking-[-0.01em] text-ink text-[1.125rem]">
                   {f.title}
                 </h3>

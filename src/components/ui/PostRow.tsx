@@ -21,7 +21,7 @@ export function PostRow({ date, category, title, dek, href }: PostRowProps) {
   return (
     <NextLink
       href={href}
-      className="group/post block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+      className="group/post block focus-ring"
     >
       <article className="flex flex-col gap-3">
         <div className="flex items-center gap-3 font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
@@ -33,7 +33,7 @@ export function PostRow({ date, category, title, dek, href }: PostRowProps) {
             </>
           )}
         </div>
-        <h3 className="text-balance font-serif font-normal tracking-[-0.01em] text-ink text-[1.5rem] leading-[1.18] md:text-[1.75rem] md:leading-[1.16]">
+        <h3 className="text-balance font-display font-normal text-ink text-heading-l">
           {title}
         </h3>
         <p className="text-body-s text-ink-muted">{dek}</p>

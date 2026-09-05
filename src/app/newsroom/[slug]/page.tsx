@@ -121,7 +121,7 @@ export default async function PostPage({
               <span aria-hidden="true"> · </span>
               <span>{data.category}</span>
             </p>
-            <h1 className="mt-6 text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.25rem] leading-[1.08] md:mt-8 md:text-[3.25rem] md:leading-[1.06] lg:text-[4rem] lg:leading-[1.04]">
+            <h1 className="mt-6 text-balance font-display font-normal text-ink text-display-l md:mt-8">
               {data.title}
             </h1>
             <p className="mt-6 max-w-[40rem] text-body-l text-ink-muted md:mt-8">{data.dek}</p>
@@ -188,7 +188,7 @@ export default async function PostPage({
                   <span className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
                     ← Newer
                   </span>
-                  <span className="mt-3 block font-serif font-normal text-balance text-ink text-[1.5rem] leading-[1.18] md:text-[1.75rem] md:leading-[1.16]">
+                  <span className="mt-3 block font-display font-normal text-balance text-ink text-heading-l">
                     {newer.data.title}
                   </span>
                 </Link>
@@ -203,7 +203,7 @@ export default async function PostPage({
                   <span className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
                     Older →
                   </span>
-                  <span className="mt-3 block font-serif font-normal text-balance text-ink text-[1.5rem] leading-[1.18] md:text-[1.75rem] md:leading-[1.16]">
+                  <span className="mt-3 block font-display font-normal text-balance text-ink text-heading-l">
                     {older.data.title}
                   </span>
                 </Link>

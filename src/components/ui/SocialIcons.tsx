@@ -35,7 +35,7 @@ export function SocialIcons({
               className={cn(
                 "inline-flex items-center justify-center text-ink-muted hover:text-ink",
                 "transition-colors duration-200 rounded-sm",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+                "focus-ring",
                 sz.box,
               )}
             >

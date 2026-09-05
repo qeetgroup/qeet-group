@@ -68,13 +68,13 @@ export function Link({
 
   const baseClass = cn(
     "group/link inline-flex items-baseline gap-1.5 rounded-sm text-current",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "focus-ring",
     className,
   );
 
   const labelClass = cn(
     underline &&
-      "underline underline-offset-[5px] decoration-[1px] decoration-current/30 motion-safe:transition-[text-decoration-color] motion-safe:duration-300 group-hover/link:decoration-brand",
+      "underline underline-offset-[5px] decoration-[1px] decoration-current/30 motion-safe:transition-[text-decoration-color] motion-safe:duration-300 group-hover/link:decoration-accent",
   );
 
   const content = (

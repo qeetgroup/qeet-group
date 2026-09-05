@@ -6,7 +6,7 @@ const rows = [
   { t: "09:24:01", lvl: "INFO", tone: "text-ink-subtle", msg: "auth.login ok · passkey" },
   { t: "09:24:03", lvl: "INFO", tone: "text-ink-subtle", msg: "session.refresh rotated" },
   { t: "09:24:07", lvl: "WARN", tone: "text-ink", msg: "rate_limit near threshold" },
-  { t: "09:24:09", lvl: "ERROR", tone: "text-brand", msg: "webhook.delivery retry 2/5" },
+  { t: "09:24:09", lvl: "ERROR", tone: "text-accent-text", msg: "webhook.delivery retry 2/5" },
   { t: "09:24:12", lvl: "INFO", tone: "text-ink-subtle", msg: "scim.sync 142 users" },
 ];
 

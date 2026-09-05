@@ -14,7 +14,7 @@ const honeypotWrapCls =
   "absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden opacity-0";
 
 const inputCls =
-  "w-full appearance-none border-0 border-b border-rule-strong bg-transparent py-3 font-sans text-body text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none transition-colors duration-200 aria-[invalid=true]:border-error";
+  "w-full appearance-none border-0 border-b border-rule-strong bg-transparent py-3 font-sans text-body text-ink placeholder:text-ink-subtle focus:border-ink transition-colors duration-200 aria-[invalid=true]:border-error";
 
 const labelCls = "block font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle";
 
@@ -33,7 +33,7 @@ export function ContactForm() {
       <div className="max-w-2xl">
         <p
           role="status"
-          className="font-serif font-normal text-balance text-ink text-[1.75rem] leading-[1.18] md:text-[2.25rem] md:leading-[1.18]"
+          className="font-display font-normal text-balance text-ink text-heading-xl"
         >
           Got it. We&rsquo;ll get back to you within a few days.
         </p>
@@ -186,7 +186,7 @@ function SubmitButton() {
       className={cn(
         "inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-7 font-sans text-body font-medium text-canvas",
         "transition-opacity duration-200 hover:bg-ink/90 disabled:opacity-60 disabled:cursor-not-allowed",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+        "focus-ring",
       )}
     >
       {pending ? "Sending…" : "Send message"}

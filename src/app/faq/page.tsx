@@ -150,7 +150,7 @@ export default function FaqPage() {
             <Eyebrow className="mb-10 md:mb-14">FAQ</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.04] sm:text-[3.5rem] md:text-[5rem] md:leading-[1.03] lg:text-[6rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-xl">
               Questions, asked early.
             </h1>
           </FadeRise>
@@ -183,7 +183,7 @@ export default function FaqPage() {
                         i !== 0 && "border-t border-rule",
                       )}
                     >
-                      <dt className="font-serif font-normal text-balance text-ink text-[1.375rem] leading-[1.25] md:text-[1.625rem] md:leading-[1.22]">
+                      <dt className="font-display font-normal text-balance text-ink text-heading-m">
                         {item.question}
                       </dt>
                       <dd className="mt-4 max-w-[40rem] text-body text-ink-muted">

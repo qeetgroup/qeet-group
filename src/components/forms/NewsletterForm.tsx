@@ -59,7 +59,7 @@ export function NewsletterForm({ className }: { className?: string }) {
           required
           placeholder="you@example.com"
           aria-invalid={state.status === "error" || undefined}
-          className="min-w-0 flex-1 appearance-none border-0 bg-transparent py-2 font-sans text-body-s text-ink placeholder:text-ink-subtle focus:outline-none"
+          className="min-w-0 flex-1 appearance-none border-0 bg-transparent py-2 font-sans text-body-s text-ink placeholder:text-ink-subtle"
         />
         <SubmitButton />
       </div>
@@ -80,8 +80,8 @@ function SubmitButton() {
       disabled={pending}
       className={cn(
         "shrink-0 py-2 font-sans text-body-s text-ink underline decoration-current/30 decoration-1 underline-offset-[5px]",
-        "transition-[text-decoration-color,opacity] duration-200 hover:decoration-brand disabled:opacity-60 disabled:cursor-not-allowed",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+        "transition-[text-decoration-color,opacity] duration-200 hover:decoration-accent disabled:opacity-60 disabled:cursor-not-allowed",
+        "focus-ring",
       )}
     >
       {pending ? "Subscribing…" : "Subscribe"}

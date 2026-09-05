@@ -40,7 +40,7 @@ export function ProductListingRow({
     >
       <div className="md:col-span-8">
         <NextLink href={internalHref} className="group/name inline-block">
-          <h2 className="font-serif font-normal tracking-[-0.015em] text-ink text-[2.5rem] leading-[1.04] md:text-[3.5rem] md:leading-[1.03] lg:text-[4.5rem] lg:leading-[1.02]">
+          <h2 className="font-display font-normal text-ink text-display-l">
             {name}
           </h2>
         </NextLink>

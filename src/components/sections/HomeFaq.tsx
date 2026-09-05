@@ -51,7 +51,7 @@ export function HomeFaq() {
                 className={`group border-rule ${i !== 0 ? "border-t" : ""}`}
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 [&::-webkit-details-marker]:hidden">
-                  <dt className="font-serif font-normal text-ink text-[1.25rem] leading-[1.3] md:text-[1.375rem]">
+                  <dt className="font-display font-normal text-ink text-heading-m">
                     {item.q}
                   </dt>
                   <span

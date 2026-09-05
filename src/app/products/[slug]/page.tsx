@@ -87,7 +87,7 @@ export default async function ProductPage({
           </FadeRise>
           <FadeRise delay={0.1} className="mt-10 md:mt-14">
             <Eyebrow className="mb-6 md:mb-8">{data.tagline}</Eyebrow>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[3rem] leading-[1.04] sm:text-[4rem] md:text-[5.5rem] md:leading-[1.03] lg:text-[7rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-2xl">
               {data.name}
             </h1>
           </FadeRise>
@@ -155,7 +155,7 @@ export default async function ProductPage({
       <Section tone="inverse" padding="tight">
         <FadeRise>
           <div className="max-w-3xl">
-            <p className="font-serif font-normal text-balance tracking-[-0.015em] text-ink-inverse text-[2rem] leading-[1.1] md:text-[2.75rem] md:leading-[1.08] lg:text-[3.5rem] lg:leading-[1.06]">
+            <p className="font-display font-normal text-balance text-ink-inverse text-display-l">
               The product, documentation, and pricing live at {externalLabel}.
             </p>
             <div className="mt-10 md:mt-12">

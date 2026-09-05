@@ -90,16 +90,16 @@ export async function ProductsBento() {
             >
               <NextLink
                 href={`/products/${p.slug}`}
-                className="group/card glass-panel flex h-full flex-col rounded-2xl p-6 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/25 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand md:p-7"
+                className="group/card glass-panel flex h-full flex-col rounded-2xl p-6 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-accent/25 hover:shadow-lg focus-ring md:p-7"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-rule bg-canvas text-ink transition-colors duration-300 group-hover/card:border-brand/40 group-hover/card:text-brand">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-rule bg-canvas text-ink transition-colors duration-300 group-hover/card:border-accent/40 group-hover/card:text-accent-text">
                     <SectorIcon sector={p.data.sector} />
                   </span>
                   <StatusPill stage={p.data.stage} />
                 </div>
 
-                <h3 className="mt-6 font-display text-[1.625rem] font-semibold leading-[1.05] tracking-tight text-ink">
+                <h3 className="mt-6 font-display text-heading-l font-normal text-ink">
                   {p.data.name}
                 </h3>
 
@@ -113,7 +113,7 @@ export async function ProductsBento() {
                   </span>
                   <span
                     aria-hidden="true"
-                    className="text-ink-subtle transition-all duration-300 group-hover/card:translate-x-1 group-hover/card:text-brand"
+                    className="text-ink-subtle transition-all duration-300 group-hover/card:translate-x-1 group-hover/card:text-accent-text"
                   >
                     →
                   </span>

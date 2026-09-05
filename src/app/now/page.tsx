@@ -63,7 +63,7 @@ export default function NowPage() {
             <Eyebrow className="mb-10 md:mb-14">Now</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.04] sm:text-[3.5rem] md:text-[5rem] md:leading-[1.03] lg:text-[6rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-xl">
               What we&rsquo;re working on.
             </h1>
           </FadeRise>
@@ -77,7 +77,7 @@ export default function NowPage() {
             <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
               <span
                 aria-hidden="true"
-                className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-brand align-middle"
+                className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle"
               />
               <time dateTime={lastUpdated}>Updated {formatDate(lastUpdated)}</time>
               <span aria-hidden="true"> · </span>
@@ -103,12 +103,12 @@ export default function NowPage() {
                 }
               >
                 <div className="md:col-span-3 lg:col-span-2">
-                  <span className="block font-serif font-normal leading-none text-ink-subtle text-[2.5rem] md:text-[3rem] lg:text-[3.5rem]">
+                  <span className="block font-display font-normal leading-none text-ink-subtle text-display-m">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
                 <div className="md:col-span-9 lg:col-span-9 lg:col-start-4">
-                  <h2 className="mb-3 font-sans font-medium text-[1.25rem] leading-[1.3] text-ink md:text-[1.5rem] md:leading-[1.3]">
+                  <h2 className="mb-3 font-sans font-medium text-heading-m text-ink">
                     {item.title}
                   </h2>
                   <p className="max-w-[34rem] text-body text-ink-muted">{item.body}</p>

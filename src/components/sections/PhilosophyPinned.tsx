@@ -55,7 +55,7 @@ export function PhilosophyPinned({ blocks }: { blocks: PhilosophyEntry[] }) {
                 initial={reduce ? false : { opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, ease: EASE_OUT }}
-                className="block font-serif font-normal leading-[0.8] text-ink text-[11rem]"
+                className="block font-display font-normal leading-[0.8] text-ink text-[clamp(7rem,10vw,11rem)]"
               >
                 {blocks[active].letter}
               </motion.span>
@@ -72,7 +72,7 @@ export function PhilosophyPinned({ blocks }: { blocks: PhilosophyEntry[] }) {
                     <span
                       className={cn(
                         "h-px transition-all duration-300",
-                        i === active ? "w-10 bg-brand" : "w-5 bg-rule-strong",
+                        i === active ? "w-10 bg-accent" : "w-5 bg-rule-strong",
                       )}
                     />
                     {b.word}
@@ -99,12 +99,12 @@ export function PhilosophyPinned({ blocks }: { blocks: PhilosophyEntry[] }) {
           >
             <span
               aria-hidden="true"
-              className="mb-6 block font-serif font-normal leading-none text-ink text-[3.5rem] lg:hidden"
+              className="mb-6 block font-display font-normal leading-none text-ink text-display-m lg:hidden"
             >
               {b.letter}
             </span>
             <Eyebrow className="mb-4 md:mb-5">{b.word}</Eyebrow>
-            <h3 className="mb-5 font-serif font-normal text-balance tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.15] md:mb-6 md:text-[2.25rem] md:leading-[1.18] lg:text-[2.75rem] lg:leading-[1.16]">
+            <h3 className="mb-5 font-display font-normal text-balance text-ink text-display-m md:mb-6">
               {b.headline}
             </h3>
             <p className="max-w-[40rem] text-body-l text-ink-muted">{b.body}</p>

@@ -45,8 +45,8 @@ export function SearchBox() {
         placeholder="Search the site…"
         className={cn(
           "w-full appearance-none border-0 border-b border-rule-strong bg-transparent",
-          "py-4 font-serif text-[1.75rem] leading-[1.18] text-ink placeholder:text-ink-subtle md:text-[2.25rem]",
-          "focus:border-ink focus:outline-none transition-colors duration-200",
+          "py-4 font-display text-heading-xl text-ink placeholder:text-ink-subtle",
+          "focus:border-ink transition-colors duration-200",
         )}
       />
 
@@ -62,12 +62,12 @@ export function SearchBox() {
             <li key={r.url} className={cn(i !== 0 && "border-t border-rule")}>
               <NextLink
                 href={r.url}
-                className="block py-6 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas md:py-8"
+                className="block py-6 transition-colors duration-200 focus-ring md:py-8"
               >
                 <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
                   {SEARCH_TYPE_LABEL[r.type]}
                 </p>
-                <h2 className="mt-2 font-serif font-normal text-balance text-ink text-[1.5rem] leading-[1.18] md:text-[1.75rem] md:leading-[1.16]">
+                <h2 className="mt-2 font-display font-normal text-balance text-ink text-heading-l">
                   {r.title}
                 </h2>
                 {r.description && (

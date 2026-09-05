@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "check:contrast": "bun scripts/check-contrast.ts"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

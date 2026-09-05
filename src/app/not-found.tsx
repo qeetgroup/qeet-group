@@ -36,7 +36,7 @@ export default async function NotFound() {
             <Eyebrow className="mb-10 md:mb-12">404</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[3rem] leading-[1.05] sm:text-[4rem] md:text-[5.5rem] md:leading-[1.04] lg:text-[7rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-2xl">
               Nothing here.
             </h1>
           </FadeRise>

@@ -48,7 +48,7 @@ export function Nav({ products }: { products: ProductSummary[] }) {
   const productsActive = pathname === "/products" || pathname.startsWith("/products/");
 
   const linkBase =
-    "relative py-1 font-ui text-[0.9375rem] tracking-tight transition-colors duration-200";
+    "relative py-1 font-ui text-body-s tracking-tight transition-colors duration-200";
 
   return (
     <>
@@ -66,12 +66,12 @@ export function Nav({ products }: { products: ProductSummary[] }) {
             <NextLink
               href="/"
               aria-label="Qeet Group home"
-              className="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold leading-none tracking-[-0.03em] text-ink sm:text-[1.5rem] lg:text-[1.625rem]"
+              className="group flex items-center gap-2.5 font-display text-[clamp(1.375rem,1.2rem+0.6vw,1.625rem)] font-semibold leading-none tracking-[-0.03em] text-ink"
             >
               {/* Identity-core dot — a small echo of the graph signature. */}
               <span
                 aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-brand transition-transform duration-300 group-hover:scale-125"
+                className="h-2.5 w-2.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-125"
               />
               Qeet Group
             </NextLink>
@@ -96,7 +96,7 @@ export function Nav({ products }: { products: ProductSummary[] }) {
                 >
                   <path d="m3 4.5 3 3 3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                {productsActive && <span className="absolute inset-x-0 -bottom-0.5 h-px bg-brand" />}
+                {productsActive && <span className="absolute inset-x-0 -bottom-0.5 h-px bg-accent" />}
               </NextLink>
 
               {/* pt bridge keeps hover alive across the gap to the panel */}
@@ -107,22 +107,22 @@ export function Nav({ products }: { products: ProductSummary[] }) {
                       <NextLink
                         key={p.href}
                         href={p.href}
-                        className="group/item flex items-start gap-3 rounded-xl p-3 transition-colors duration-200 hover:bg-brand-faint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                        className="group/item flex items-start gap-3 rounded-xl p-3 transition-colors duration-200 hover:bg-accent-faint focus-ring"
                       >
                         <span
                           className={cn(
-                            "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-200 group-hover/item:bg-brand",
-                            p.live ? "bg-brand" : "bg-rule-strong",
+                            "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-200 group-hover/item:bg-accent",
+                            p.live ? "bg-accent" : "bg-rule-strong",
                           )}
                         />
                         <span className="min-w-0">
-                          <span className="block font-ui text-[0.9375rem] font-medium text-ink">{p.name}</span>
+                          <span className="block font-ui text-body-s font-medium text-ink">{p.name}</span>
                           <span className="mt-0.5 block truncate text-caption text-ink-subtle">{p.sector}</span>
                         </span>
                         <span
                           className={cn(
                             "ml-auto shrink-0 font-mono text-[0.6875rem] uppercase tracking-widest",
-                            p.live ? "text-brand" : "text-ink-subtle",
+                            p.live ? "text-accent-text" : "text-ink-subtle",
                           )}
                         >
                           {p.statusLabel}
@@ -132,7 +132,7 @@ export function Nav({ products }: { products: ProductSummary[] }) {
                   </div>
                   <NextLink
                     href="/products"
-                    className="mt-1 flex items-center justify-between rounded-xl border-t border-rule px-3 pb-1 pt-3 text-body-s text-ink transition-colors duration-200 hover:text-brand"
+                    className="mt-1 flex items-center justify-between rounded-xl border-t border-rule px-3 pb-1 pt-3 text-body-s text-ink transition-colors duration-200 hover:text-accent-text"
                   >
                     Explore all platforms
                     <span aria-hidden="true">→</span>
@@ -152,11 +152,11 @@ export function Nav({ products }: { products: ProductSummary[] }) {
                   {l.label}
                   {active &&
                     (reduce ? (
-                      <span className="absolute inset-x-0 -bottom-0.5 h-px bg-brand" />
+                      <span className="absolute inset-x-0 -bottom-0.5 h-px bg-accent" />
                     ) : (
                       <motion.span
                         layoutId="nav-underline"
-                        className="absolute inset-x-0 -bottom-0.5 h-px bg-brand"
+                        className="absolute inset-x-0 -bottom-0.5 h-px bg-accent"
                         transition={{ type: "spring", stiffness: 350, damping: 30 }}
                       />
                     ))}
@@ -172,7 +172,7 @@ export function Nav({ products }: { products: ProductSummary[] }) {
                 e.preventDefault();
                 window.dispatchEvent(new Event(COMMAND_PALETTE_OPEN_EVENT));
               }}
-              className="ml-2 inline-flex h-9 items-center gap-2 rounded-full border border-rule px-3.5 text-ink-muted transition-colors duration-200 hover:border-rule-strong hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+              className="ml-2 inline-flex h-9 items-center gap-2 rounded-full border border-rule px-3.5 text-ink-muted transition-colors duration-200 hover:border-rule-strong hover:text-ink focus-ring"
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" />
@@ -190,7 +190,7 @@ export function Nav({ products }: { products: ProductSummary[] }) {
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               aria-controls="mobile-nav"
-              className="-mr-2 inline-flex h-10 w-10 items-center justify-center text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas rounded-sm"
+              className="-mr-2 inline-flex h-10 w-10 items-center justify-center text-ink focus-ring rounded-sm"
               onClick={() => setOpen((v) => !v)}
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -242,7 +242,7 @@ export function Nav({ products }: { products: ProductSummary[] }) {
                       href={l.href}
                       onClick={closeMenu}
                       className={cn(
-                        "block border-b border-rule py-5 font-display font-medium text-[1.875rem] leading-tight tracking-[-0.02em] transition-colors duration-200 md:text-[2.25rem]",
+                        "block border-b border-rule py-5 font-display font-normal text-heading-xl transition-colors duration-fast",
                         active ? "text-ink" : "text-ink-muted hover:text-ink",
                       )}
                     >

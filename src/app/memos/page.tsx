@@ -34,7 +34,7 @@ export default async function MemosPage() {
             <Eyebrow className="mb-10 md:mb-14">Memos</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.04] sm:text-[3.5rem] md:text-[5rem] md:leading-[1.03] lg:text-[6rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-xl">
               Memos.
             </h1>
           </FadeRise>
@@ -63,7 +63,7 @@ export default async function MemosPage() {
               >
                 <a
                   href={`/memos/${m.slug}`}
-                  className="group/memo grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-4 focus-visible:ring-offset-canvas rounded-sm"
+                  className="group/memo grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-10 focus-ring rounded-sm"
                 >
                   <div className="md:col-span-3 lg:col-span-3">
                     <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
@@ -73,7 +73,7 @@ export default async function MemosPage() {
                     </p>
                   </div>
                   <div className="md:col-span-9 lg:col-span-9">
-                    <h2 className="text-balance font-serif font-normal tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.18] md:text-[2.25rem] md:leading-[1.16] lg:text-[2.5rem] lg:leading-[1.14]">
+                    <h2 className="text-balance font-display font-normal text-ink text-heading-xl">
                       {m.data.title}
                     </h2>
                     <p className="mt-3 max-w-[40rem] text-body text-ink-muted md:mt-4">

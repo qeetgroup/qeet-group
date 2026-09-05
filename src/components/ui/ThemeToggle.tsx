@@ -11,13 +11,17 @@ type Theme = "light" | "dark";
  * — the React-blessed pattern for reading external (DOM) state — to avoid
  * the setState-in-effect pattern that lint flags as a cascading render.
  *
- * The initial class is set by the inline FOUC script in layout.tsx, so there
- * is no theme flash on navigation. On the server snapshot we return null so
- * the button renders an invisible placeholder until hydration completes.
+ * Dark is the default, so it is the ABSENCE of a class — `.light` is what opts
+ * out. That way a visitor without JavaScript still gets the intended brand
+ * surface, and the inline script in layout.tsx only has to act for people who
+ * chose light.
+ *
+ * On the server snapshot we return null so the button renders an invisible
+ * placeholder until hydration, rather than guessing and then flipping.
  */
 function getThemeSnapshot(): Theme | null {
   if (typeof document === "undefined") return null;
-  return document.documentElement.classList.contains("dark") ? "dark" : "light";
+  return document.documentElement.classList.contains("light") ? "light" : "dark";
 }
 
 function subscribe(callback: () => void) {
@@ -40,7 +44,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   const toggle = () => {
     if (!theme) return;
     const next: Theme = theme === "dark" ? "light" : "dark";
-    document.documentElement.classList.toggle("dark", next === "dark");
+    document.documentElement.classList.toggle("light", next === "light");
     try {
       localStorage.setItem("theme", next);
     } catch {
@@ -51,7 +55,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   const baseCls = cn(
     "inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors duration-200",
     "hover:bg-ink/[5%] hover:text-ink",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "focus-ring",
     className,
   );
 

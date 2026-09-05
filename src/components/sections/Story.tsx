@@ -59,7 +59,7 @@ export function Story() {
         <div className="lg:col-span-7">
           <FadeRise>
             <Eyebrow>A note from the founders</Eyebrow>
-            <div className="mt-8 space-y-6 font-serif font-normal text-balance tracking-[-0.01em] text-ink text-[1.5rem] leading-[1.38] md:text-[1.75rem] md:leading-[1.36]">
+            <div className="mt-8 space-y-6 font-display font-normal text-balance text-ink text-heading-l leading-[1.38]">
               <p>
                 The best companies begin from the right question, asked early — and chased for
                 years, not quarters.
@@ -76,7 +76,7 @@ export function Story() {
           </FadeRise>
 
           <FadeRise delay={0.1} className="mt-12 space-y-8 md:mt-14">
-            <div className="border-l-2 border-brand pl-6">
+            <div className="border-l-2 border-accent pl-6">
               <Eyebrow>Vision</Eyebrow>
               <p className="mt-3 text-body-l text-ink-muted">
                 A future of limitless possibilities, where industries and individuals thrive
@@ -107,14 +107,14 @@ export function Story() {
                       aria-hidden="true"
                       className={cn(
                         "h-2.5 w-2.5 shrink-0 rounded-full",
-                        m.upcoming ? "border border-brand" : "bg-brand",
+                        m.upcoming ? "border border-accent" : "bg-accent",
                       )}
                     />
                     <span className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
                       {m.when}
                     </span>
                   </div>
-                  <h3 className="mt-3 font-serif font-normal tracking-[-0.01em] text-ink text-[1.25rem] leading-[1.22] md:text-[1.375rem]">
+                  <h3 className="mt-3 font-display font-normal text-ink text-heading-m">
                     {m.title}
                   </h3>
                   <p className="mt-1.5 text-body-s text-ink-muted">{m.body}</p>

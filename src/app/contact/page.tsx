@@ -45,7 +45,7 @@ export default function ContactPage() {
             <Eyebrow className="mb-10 md:mb-14">Contact</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.04] sm:text-[3.5rem] md:text-[5rem] md:leading-[1.03] lg:text-[6rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-xl">
               Get in touch.
             </h1>
           </FadeRise>
@@ -69,8 +69,8 @@ export default function ContactPage() {
                 color="color-mix(in oklab, var(--color-brand) 12%, transparent)"
                 className="h-full rounded-3xl"
               >
-                <div className="glass-panel flex h-full flex-col rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg md:p-8">
-                  <h2 className="font-serif font-normal text-balance tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.16] md:text-[2rem]">
+                <div className="glass-panel flex h-full flex-col rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg md:p-8">
+                  <h2 className="font-display font-normal text-balance text-ink text-heading-xl">
                     {c.label}
                   </h2>
                   <p className="mt-4 text-body text-ink-muted">{c.description}</p>

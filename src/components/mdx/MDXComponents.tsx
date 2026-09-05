@@ -12,7 +12,7 @@ import { isExternalHref } from "@/lib/utils";
 function MdxLink({ href = "#", children, ...props }: ComponentPropsWithoutRef<"a">) {
   const isExternal = isExternalHref(href);
   const cls =
-    "text-ink underline underline-offset-[5px] decoration-[1px] decoration-current/30 transition-[text-decoration-color] hover:decoration-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas rounded-sm";
+    "text-ink underline underline-offset-[5px] decoration-[1px] decoration-current/30 transition-[text-decoration-color] hover:decoration-accent focus-ring rounded-sm";
   if (isExternal) {
     return (
       <a
@@ -36,7 +36,7 @@ function MdxLink({ href = "#", children, ...props }: ComponentPropsWithoutRef<"a
 export const mdxComponents = {
   h2: (props: ComponentPropsWithoutRef<"h2">) => (
     <h2
-      className="mt-16 mb-6 font-serif font-normal text-balance tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.18] md:text-[2rem] md:leading-[1.2]"
+      className="mt-16 mb-6 font-display font-normal text-balance text-ink text-heading-xl"
       {...props}
     />
   ),
@@ -66,11 +66,11 @@ export const mdxComponents = {
     <strong className="font-medium text-ink" {...props} />
   ),
   em: (props: ComponentPropsWithoutRef<"em">) => (
-    <em className="font-serif italic" {...props} />
+    <em className="font-display italic" {...props} />
   ),
   blockquote: (props: ComponentPropsWithoutRef<"blockquote">) => (
     <blockquote
-      className="my-8 border-l-2 border-rule-strong pl-6 font-serif italic text-balance text-[1.375rem] leading-[1.4] text-ink"
+      className="my-8 border-l-2 border-rule-strong pl-6 font-display italic text-balance text-heading-m text-ink"
       {...props}
     />
   ),

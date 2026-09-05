@@ -25,11 +25,11 @@ export async function Hero() {
           durations to 0.01ms for users who request it. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
-          className="absolute -left-32 -top-24 h-[420px] w-[580px] rounded-full bg-brand opacity-[0.10] blur-[120px] animate-blob"
+          className="absolute -left-32 -top-24 h-[420px] w-[580px] rounded-full bg-accent opacity-[0.10] blur-[120px] animate-blob"
           style={{ animationDelay: "0s" }}
         />
         <div
-          className="absolute -bottom-16 -right-24 h-[380px] w-[460px] rounded-full bg-brand-deep opacity-[0.07] blur-[100px] animate-blob-slow"
+          className="absolute -bottom-16 -right-24 h-[380px] w-[460px] rounded-full bg-brand-700 opacity-[0.07] blur-[100px] animate-blob-slow"
           style={{ animationDelay: "-8s" }}
         />
         <div
@@ -48,15 +48,15 @@ export async function Hero() {
                 <span>Qeet Group</span>
                 <span aria-hidden="true" className="text-rule-strong">/</span>
                 <span className="glass-panel inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono normal-case tracking-normal text-ink-subtle">
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-brand" />
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent" />
                   Holding company · Est. 2026
                 </span>
               </Eyebrow>
             </FadeRise>
 
-            <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[5.25rem] lg:leading-[1.01]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-2xl">
               <WordReveal text="We question, We explore, We envision, We" />{" "}
-              <span className="text-brand">
+              <span className="text-accent-text">
                 <WordReveal text="transform." initialDelay={0.57} />
               </span>
             </h1>

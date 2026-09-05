@@ -28,7 +28,7 @@ export async function NewsroomPreview() {
               color="color-mix(in oklab, var(--color-brand) 12%, transparent)"
               className="h-full rounded-3xl"
             >
-              <div className="glass-panel h-full rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg md:p-8">
+              <div className="glass-panel h-full rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg md:p-8">
                 <PostRow
                   date={post.data.date}
                   category={post.data.category}

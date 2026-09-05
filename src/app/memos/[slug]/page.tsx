@@ -95,7 +95,7 @@ export default async function MemoPage({
               <span aria-hidden="true"> · </span>
               <span>{memo.readingTime} min read</span>
             </p>
-            <h1 className="mt-6 text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.25rem] leading-[1.08] md:mt-8 md:text-[3.25rem] md:leading-[1.06] lg:text-[4rem] lg:leading-[1.04]">
+            <h1 className="mt-6 text-balance font-display font-normal text-ink text-display-l md:mt-8">
               {data.title}
             </h1>
             <p className="mt-6 max-w-[40rem] text-body-l text-ink-muted md:mt-8">

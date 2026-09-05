@@ -58,7 +58,7 @@ export function QeetNotifyMock() {
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-2">
                 <span className="text-[0.75rem] font-medium leading-tight text-ink">{t.channel}</span>
-                {t.live && <span className="h-1.5 w-1.5 rounded-full bg-brand" />}
+                {t.live && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
               </span>
               <span className="block truncate text-[0.6875rem] leading-tight text-ink-subtle">
                 {t.msg}

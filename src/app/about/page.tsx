@@ -46,7 +46,7 @@ export default function AboutPage() {
             <Eyebrow className="mb-10 md:mb-14">About Qeet Group</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.05] sm:text-[3.5rem] md:text-[4.5rem] md:leading-[1.04] lg:text-[5.5rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-xl">
               A holding company for ideas that compound.
             </h1>
           </FadeRise>
@@ -112,12 +112,12 @@ export default function AboutPage() {
                 )}
               >
                 <div className="md:col-span-3 lg:col-span-2">
-                  <span className="block font-serif font-normal leading-none text-ink-subtle text-[2.5rem] md:text-[3rem] lg:text-[3.5rem]">
+                  <span className="block font-display font-normal leading-none text-ink-subtle text-display-m">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
                 <div className="md:col-span-9 lg:col-span-9 lg:col-start-4">
-                  <h3 className="mb-3 font-sans font-medium text-[1.25rem] leading-[1.3] text-ink md:text-[1.5rem] md:leading-[1.3]">
+                  <h3 className="mb-3 font-sans font-medium text-heading-m text-ink">
                     {p.title}
                   </h3>
                   <p className="max-w-[34rem] text-body text-ink-muted">{p.body}</p>
@@ -147,7 +147,7 @@ export default function AboutPage() {
               write to{" "}
               <a
                 href="mailto:careers@qeet.in"
-                className="text-ink underline decoration-current/30 decoration-[1px] underline-offset-[5px] transition-[text-decoration-color] hover:decoration-brand"
+                className="text-ink underline decoration-current/30 decoration-[1px] underline-offset-[5px] transition-[text-decoration-color] hover:decoration-accent"
               >
                 careers@qeet.in
               </a>
@@ -165,7 +165,7 @@ export default function AboutPage() {
             className="rounded-3xl"
           >
             <figure className="glass-panel rounded-3xl p-8 md:p-12 lg:p-16">
-              <blockquote className="font-serif italic font-normal text-balance text-ink text-[2rem] leading-[1.2] md:text-[2.75rem] md:leading-[1.16] lg:text-[3.5rem] lg:leading-[1.12]">
+              <blockquote className="font-display italic font-normal text-balance text-ink text-display-l">
                 &ldquo;The right question, asked early, makes most of what follows obvious.&rdquo;
               </blockquote>
             </figure>

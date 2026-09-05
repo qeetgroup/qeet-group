@@ -37,7 +37,7 @@ export function PostListingRow({
     >
       <NextLink
         href={href}
-        className="group/post grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-4 focus-visible:ring-offset-canvas rounded-sm"
+        className="group/post grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-10 focus-ring rounded-sm"
       >
         <div className="md:col-span-3 lg:col-span-3">
           <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
@@ -53,7 +53,7 @@ export function PostListingRow({
           </p>
         </div>
         <div className="md:col-span-9 lg:col-span-9">
-          <h2 className="text-balance font-serif font-normal tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.18] md:text-[2.25rem] md:leading-[1.16] lg:text-[2.5rem] lg:leading-[1.14]">
+          <h2 className="text-balance font-display font-normal text-ink text-heading-xl">
             {title}
           </h2>
           <p className="mt-3 max-w-[40rem] text-body text-ink-muted md:mt-4">{dek}</p>

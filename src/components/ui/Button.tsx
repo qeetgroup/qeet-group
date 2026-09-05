@@ -8,8 +8,8 @@ type Size = "md" | "lg";
 
 const variantMap: Record<Variant, string> = {
   solid: "bg-ink text-canvas hover:bg-ink/90 hover:-translate-y-0.5 hover:shadow-glow",
-  outline: "border border-rule-strong text-ink hover:border-brand/50 hover:bg-brand-soft",
-  ghost: "text-ink hover:bg-brand-soft",
+  outline: "border border-rule-strong text-ink hover:border-accent/50 hover:bg-accent-soft",
+  ghost: "text-ink hover:bg-accent-soft",
 };
 
 const sizeMap: Record<Size, string> = {
@@ -41,7 +41,7 @@ export function Button(props: ButtonProps) {
   const cls = cn(
     "inline-flex items-center justify-center gap-2 rounded-full font-ui font-medium tracking-tight",
     "transition-[transform,box-shadow,background-color,border-color] duration-200",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "focus-ring",
     variantMap[variant],
     sizeMap[size],
     className,

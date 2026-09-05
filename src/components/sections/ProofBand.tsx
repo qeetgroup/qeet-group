@@ -47,7 +47,7 @@ export async function ProofBand() {
           <div className="flex w-max animate-marquee">
             {[...items, ...items].map((item, i) => (
               <div key={i} className="flex shrink-0 items-center gap-4 px-8">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                 <span className="font-ui text-body-s font-medium text-ink whitespace-nowrap">
                   {item.name}
                 </span>
@@ -66,10 +66,10 @@ export async function ProofBand() {
           {metrics.map((m, i) => (
             <FadeRise key={m.label} delay={i * 0.06}>
               <div>
-                <div className="font-serif font-normal tracking-[-0.02em] tabular-nums text-ink text-[3.25rem] leading-none md:text-[4rem]">
+                <div className="font-display font-normal tabular-figures text-ink text-display-m leading-none">
                   {m.display ?? <Counter value={m.value ?? 0} />}
                 </div>
-                <div aria-hidden="true" className="mt-5 h-px w-9 bg-brand" />
+                <div aria-hidden="true" className="mt-5 h-px w-9 bg-accent" />
                 <p className="mt-5 font-sans text-body font-medium text-ink">{m.label}</p>
                 <p className="mt-1.5 text-body-s text-ink-subtle">{m.context}</p>
               </div>

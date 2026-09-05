@@ -13,8 +13,8 @@ const STAGE_MAP: Record<string, { label: string; tone: Tone }> = {
 };
 
 const dotTone: Record<Tone, string> = {
-  live: "bg-brand",
-  early: "bg-brand/60",
+  live: "bg-accent",
+  early: "bg-accent/60",
   soon: "bg-ink-subtle",
 };
 

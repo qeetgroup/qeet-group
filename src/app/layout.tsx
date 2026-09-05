@@ -121,20 +121,24 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  // Matches --color-canvas in each theme. Dark leads because it is the default.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FCFCFC" },
     { media: "(prefers-color-scheme: dark)", color: "#0A0A0A" },
+    { media: "(prefers-color-scheme: light)", color: "#FCFCFC" },
   ],
-  colorScheme: "light dark",
+  colorScheme: "dark light",
 };
 
 /*
- * Sets the initial theme class on <html> before any paint, so users who chose
- * dark (or whose OS prefers dark) don't get a flash of the default light theme
- * on first render. Runs synchronously, before React hydrates. The localStorage
- * key is the same one ThemeToggle writes to.
+ * Dark is the default and needs no class, so this only has to act for visitors
+ * who explicitly chose light: it adds `.light` before first paint so they don't
+ * get a flash of dark. Runs synchronously, ahead of hydration. The localStorage
+ * key is the one ThemeToggle writes to.
+ *
+ * It deliberately does NOT consult prefers-color-scheme. Dark is the brand
+ * surface rather than a system-derived preference; the toggle is how you leave it.
  */
-const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`;
+const themeInitScript = `(function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light')}catch(e){}})();`;
 
 export default async function RootLayout({
   children,

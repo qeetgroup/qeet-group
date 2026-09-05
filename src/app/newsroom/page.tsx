@@ -27,7 +27,7 @@ export default async function NewsroomPage() {
             <Eyebrow className="mb-10 md:mb-14">Newsroom</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.04] sm:text-[3.5rem] md:text-[5rem] md:leading-[1.03] lg:text-[6rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display font-normal text-ink text-display-xl">
               Newsroom.
             </h1>
           </FadeRise>

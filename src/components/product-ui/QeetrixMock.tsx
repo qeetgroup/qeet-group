@@ -8,8 +8,8 @@ export function QeetrixMock() {
     "bg-ink-muted",
     "bg-rule-strong",
     "bg-rule",
-    "bg-brand",
-    "bg-brand-deep",
+    "bg-accent",
+    "bg-brand-700",
   ];
   return (
     <div aria-hidden="true" className="flex h-full w-full items-center justify-center">
@@ -39,7 +39,7 @@ export function QeetrixMock() {
             Input
           </span>
           {/* toggle (on) */}
-          <span className="flex h-5 w-9 items-center rounded-full bg-brand p-0.5">
+          <span className="flex h-5 w-9 items-center rounded-full bg-accent p-0.5">
             <span className="ml-auto h-4 w-4 rounded-full bg-white" />
           </span>
         </div>
@@ -48,10 +48,10 @@ export function QeetrixMock() {
           <span className="rounded-full border border-rule px-2 py-0.5 text-[0.6875rem] text-ink-muted">
             Badge
           </span>
-          <span className="rounded-full bg-brand/12 px-2 py-0.5 text-[0.6875rem] font-medium text-brand">
+          <span className="rounded-full bg-accent/12 px-2 py-0.5 text-[0.6875rem] font-medium text-accent-text">
             New
           </span>
-          <span className="ml-auto font-serif text-[1.5rem] leading-none text-ink">Ag</span>
+          <span className="ml-auto font-display text-heading-l leading-none text-ink">Ag</span>
         </div>
       </div>
     </div>
