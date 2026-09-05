@@ -67,7 +67,7 @@ export function SearchBox() {
                 <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
                   {SEARCH_TYPE_LABEL[r.type]}
                 </p>
-                <h2 className="mt-2 font-display font-normal text-balance text-ink text-heading-l">
+                <h2 className="mt-2 font-display text-balance text-ink text-heading-l">
                   {r.title}
                 </h2>
                 {r.description && (

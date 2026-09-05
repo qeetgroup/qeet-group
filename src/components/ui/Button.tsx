@@ -1,7 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Anchor } from "./Anchor";
-import { Magnetic } from "@/components/motion/Magnetic";
 import { cn } from "@/lib/utils";
 
 /*
@@ -52,8 +51,6 @@ type CommonProps = ButtonVariants & {
   /** Rendered beside the label. Use ui/Icon. */
   icon?: ReactNode;
   iconPosition?: "start" | "end";
-  /** Cursor-following magnetic shell (mouse-only, reduced-motion safe). */
-  magnetic?: boolean;
 };
 
 type ButtonAsButton = CommonProps & {
@@ -99,10 +96,6 @@ function Content({
   );
 }
 
-function maybeMagnetic(el: ReactNode, magnetic: boolean) {
-  return magnetic ? <Magnetic>{el}</Magnetic> : el;
-}
-
 /*
  * Split into two components so each destructures its own props in its
  * signature. The previous single-function version had to strip seven custom
@@ -117,16 +110,14 @@ function ButtonLink({
   size,
   icon,
   iconPosition = "start",
-  magnetic = false,
   ...rest
 }: ButtonAsLink) {
-  return maybeMagnetic(
+  return (
     <Anchor href={href} className={cn(button({ variant, size }), className)} {...rest}>
       <Content icon={icon} iconPosition={iconPosition} loading={false}>
         {children}
       </Content>
-    </Anchor>,
-    magnetic,
+    </Anchor>
   );
 }
 
@@ -137,13 +128,12 @@ function ButtonControl({
   size,
   icon,
   iconPosition = "start",
-  magnetic = false,
   loading = false,
   disabled,
   type = "button",
   ...rest
 }: ButtonAsButton) {
-  return maybeMagnetic(
+  return (
     <button
       type={type}
       disabled={disabled || loading}
@@ -154,8 +144,7 @@ function ButtonControl({
       <Content icon={icon} iconPosition={iconPosition} loading={loading}>
         {children}
       </Content>
-    </button>,
-    magnetic,
+    </button>
   );
 }
 

@@ -23,7 +23,7 @@ type StatProps = {
 export function Stat({ value, label, context, className }: StatProps) {
   return (
     <div className={cn("min-w-0", className)}>
-      <div className="font-display font-normal tabular-figures leading-none text-ink text-display-m">
+      <div className="font-display tabular-figures leading-none text-ink text-display-m">
         {value}
       </div>
       <div aria-hidden="true" className="mt-5 h-px w-9 bg-accent" />

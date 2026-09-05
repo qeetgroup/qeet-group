@@ -1,0 +1,36 @@
+---
+title: "The parts of Qeet ID nobody demos."
+date: "2026-05-29"
+kind: perspective
+topic: Products
+dek: The features that decide whether a team is still content with their identity provider a year later are rarely the ones that get shown in the first hour.
+author: Mareedu Saibabu
+---
+
+When Qeet ID launched, the things we talked about were the things a new user touches immediately: signing up, signing in, adding a second factor. Reasonable — those are what a first impression is made of.
+
+This is a note about the rest, because the rest is what determines whether the decision still looks good in a year.
+
+## An audit trail that can be produced
+
+Every consequential action in Qeet ID is written down in a way that makes later tampering detectable. Not "logged" — logs can be edited by anyone who can edit logs. Recorded such that an alteration can be demonstrated after the fact.
+
+This matters exactly once, and it matters enormously: the day somebody asks what happened, and the answer needs to be believed by a person who has no reason to take your word for it.
+
+## Telling other systems what happened
+
+When something changes in Qeet ID, other systems usually need to know. That sounds simple and is not: the notification has to survive the receiving system being briefly unavailable, has to not be lost if something fails halfway, and has to be verifiable as genuinely from us rather than from someone impersonating us.
+
+Qeet ID handles all three. Most integrations that break in production break on exactly these.
+
+## Access for software, not just people
+
+A growing share of what accesses an organisation's systems is not a person. Automated processes need credentials too, and giving them a human's account — which happens more often than anyone admits — means an audit trail that says a person did something at 3am when no person did.
+
+Qeet ID treats software as its own kind of participant, with its own identity and its own limits.
+
+## Working with what already exists
+
+Qeet ID follows the established open standards for identity rather than inventing its own. That is a deliberately unglamorous choice, and it has a specific consequence: existing tools connect without custom work, and if an organisation later decides to leave, they can.
+
+We would rather be chosen each year than be difficult to leave.

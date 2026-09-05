@@ -9,7 +9,7 @@ export function QeetrixMock() {
     "bg-rule-strong",
     "bg-rule",
     "bg-accent",
-    "bg-brand-700",
+    "bg-accent-soft",
   ];
   return (
     <div aria-hidden="true" className="flex h-full w-full items-center justify-center">

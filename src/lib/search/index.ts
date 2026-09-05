@@ -6,7 +6,7 @@
  */
 
 export type SearchEntry = {
-  type: "post" | "memo" | "product" | "page";
+  type: "insight" | "product" | "technology" | "page";
   title: string;
   description: string;
   url: string;
@@ -21,8 +21,8 @@ export type SearchEntry = {
 export const SEARCH_TYPE_LABEL: Record<SearchEntry["type"], string> = {
   page: "Page",
   product: "Product",
-  post: "Newsroom",
-  memo: "Memo",
+  technology: "Technology",
+  insight: "Insight",
 };
 
 /**
@@ -46,27 +46,45 @@ export function scoreEntry(entry: SearchEntry, q: string): number {
 export const STATIC_PAGES: ReadonlyArray<Omit<SearchEntry, "haystack">> = [
   {
     type: "page",
-    title: "About",
-    description: "Why Qeet Group exists, how we work, our principles.",
-    url: "/about",
-  },
-  {
-    type: "page",
     title: "Products",
-    description: "Qeet Group products. One philosophy. Many products.",
+    description: "The Qeet Group portfolio, grouped by what each product does.",
     url: "/products",
   },
   {
     type: "page",
-    title: "Newsroom",
-    description: "Announcements and milestones from Qeet Group.",
-    url: "/newsroom",
+    title: "Ecosystem",
+    description: "How the products relate to one another.",
+    url: "/ecosystem",
   },
   {
     type: "page",
-    title: "Memos",
-    description: "Long-form notes from the Qeet Group team.",
-    url: "/memos",
+    title: "Technology",
+    description: "The capabilities behind the portfolio.",
+    url: "/technology",
+  },
+  {
+    type: "page",
+    title: "Insights",
+    description: "Perspectives, engineering, research and announcements.",
+    url: "/insights",
+  },
+  {
+    type: "page",
+    title: "About Qeet Group",
+    description: "Why Qeet Group exists and how it is organised.",
+    url: "/company/about",
+  },
+  {
+    type: "page",
+    title: "Principles",
+    description: "The standards we hold ourselves to.",
+    url: "/company/principles",
+  },
+  {
+    type: "page",
+    title: "Leadership",
+    description: "The people running the group.",
+    url: "/company/leadership",
   },
   {
     type: "page",
@@ -76,27 +94,20 @@ export const STATIC_PAGES: ReadonlyArray<Omit<SearchEntry, "haystack">> = [
   },
   {
     type: "page",
-    title: "Contact",
-    description: "Partnerships, press, general inquiries.",
-    url: "/contact",
+    title: "Developers",
+    description: "Documentation, API reference and the design system.",
+    url: "/developers",
   },
   {
     type: "page",
     title: "Press",
-    description: "Brand assets and press contact.",
-    url: "/press",
+    description: "Brand assets, facts and press contact.",
+    url: "/company/press",
   },
   {
     type: "page",
-    title: "FAQ",
-    description:
-      "Frequently asked questions — what we back, how we work, whether we take outside capital.",
-    url: "/faq",
-  },
-  {
-    type: "page",
-    title: "Now",
-    description: "What Qeet Group is focused on right now.",
-    url: "/now",
+    title: "Contact",
+    description: "Partnerships, press, general enquiries.",
+    url: "/contact",
   },
 ];

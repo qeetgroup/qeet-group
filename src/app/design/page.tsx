@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
 import { Link } from "@/components/ui/Link";
 import { Stat } from "@/components/ui/Stat";
-import { StatusPill } from "@/components/ui/StatusPill";
+import { StatusChip } from "@/components/ui/StatusChip";
 import {
   Activity,
   ArrowRight,
@@ -88,12 +88,12 @@ export default function DesignPage() {
           Ramps
         </Heading>
         <Text size="body-s" className="mt-4 max-w-prose">
-          Both ramps are OKLCH, so the steps are perceptually even. Neutrals are
-          pure achromatic; the brand ramp is anchored at hue 47.16 — the exact
-          hue of Qeet orange — with 500 being precisely{" "}
-          <code className="font-mono">#f26d0e</code>, matching the{" "}
-          <code className="font-mono">@qeetrix/ui</code> brand ramp. Both are
-          theme-independent: semantic tokens point at them.
+          Both ramps are OKLCH, so the steps are perceptually even. Neutrals
+          carry a faint cool cast (hue 248); the signal ramp is anchored at{" "}
+          <code className="font-mono">#e8ff47</code> and drifts toward gold as
+          it darkens, because holding a yellow-green&rsquo;s hue while darkening
+          it produces olive. Both are theme-independent: semantic tokens point
+          at them.
         </Text>
 
         <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
@@ -103,7 +103,7 @@ export default function DesignPage() {
         </div>
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           {BRAND.map((step) => (
-            <Swatch key={step} token={`--color-brand-${step}`} label={`brand-${step}`} />
+            <Swatch key={step} token={`--color-signal-${step}`} label={`signal-${step}`} />
           ))}
         </div>
       </Section>
@@ -190,7 +190,7 @@ export default function DesignPage() {
               <span className="text-body text-accent-text">Accent text (normal size)</span>
               <Contrast fg="--color-accent-text" bg="--color-canvas" />
               <Text size="caption" tone="subtle">
-                Needs 4.5:1. brand-700 in light; the true brand orange in dark.
+                Needs 4.5:1. signal-800 in light (a deep gold); the true signal in dark.
               </Text>
             </div>
             <div className="flex flex-wrap items-center gap-4">
@@ -245,8 +245,9 @@ export default function DesignPage() {
           Every step is a <code className="font-mono">clamp()</code>, so type is
           continuous across viewports instead of jumping at breakpoints — resize
           the window to check. Line-height and tracking travel with the token.
-          Display is Fraunces with its optical-size axis driven; body and UI are
-          Cal Sans; mono is Geist Mono.
+          Two Qeet faces from @qeetrix/ui. Qeet UI carries headings and chrome;
+          Qeet Text carries body copy. Hierarchy comes from weight, size and
+          space rather than from switching typeface.
         </Text>
 
         <div className="mt-12 space-y-10">
@@ -279,10 +280,10 @@ export default function DesignPage() {
 
         <Row label="faces">
           <div className="space-y-3">
-            <p className="font-display text-heading-l text-ink">Fraunces — display</p>
-            <p className="font-sans text-body text-ink">Cal Sans Text — body</p>
-            <p className="font-ui text-body text-ink">Cal Sans UI — controls</p>
-            <p className="font-mono text-body text-ink">Geist Mono — data and IDs</p>
+            <p className="font-display text-heading-l text-ink">Qeet UI — headings, 600</p>
+            <p className="font-ui text-body text-ink">Qeet UI — controls, 500</p>
+            <p className="font-sans text-body text-ink">Qeet Text — body copy, 400</p>
+            <p className="font-mono text-body text-ink">Fira Code — data and IDs</p>
           </div>
         </Row>
 
@@ -440,19 +441,12 @@ export default function DesignPage() {
           </div>
         </Row>
 
-        <Row label="StatusPill — the closed stage vocabulary">
-          <div className="flex flex-wrap items-center gap-3">
-            {["Generally available", "Early access", "Preview", "Coming soon", "Planned"].map(
-              (stage) => (
-                <StatusPill key={stage} stage={stage} />
-              ),
-            )}
+        <Row label="StatusChip — the closed lifecycle vocabulary">
+          <div className="flex flex-wrap items-center gap-6">
+            {(["available", "development", "planned"] as const).map((status) => (
+              <StatusChip key={status} status={status} />
+            ))}
           </div>
-          <Text size="caption" tone="subtle" className="mt-4">
-            Product status must trace to a verified source, so an unrecognised
-            stage falls back to the most conservative tone rather than inventing
-            one.
-          </Text>
         </Row>
 
         <Row label="Card">
@@ -473,7 +467,7 @@ export default function DesignPage() {
                 interactive — hover and tab me
               </p>
             </Card>
-            <Card padding="sm" interactive spotlight={false}>
+            <Card padding="sm" interactive>
               <p className="font-sans text-body-s text-ink">interactive, no spotlight</p>
             </Card>
           </div>
@@ -524,7 +518,7 @@ export default function DesignPage() {
           block freezes any animation so each degrades to a static wash.
         </Text>
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {["bg-mesh", "bg-grid", "glass-panel", "bg-cta-glow"].map((cls) => (
+          {["bg-grid", "glass-panel"].map((cls) => (
             <div key={cls}>
               <div className={`h-40 rounded-lg border border-rule ${cls}`} />
               <p className="mt-3 font-mono text-caption text-ink-subtle">.{cls}</p>

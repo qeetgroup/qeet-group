@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Fraunces, Geist_Mono } from "next/font/google";
+import { Fira_Code } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Nav } from "@/components/layout/Nav";
@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo/structured-data";
 import { CommandPalette } from "@/components/sections/CommandPalette";
-import { listProductSummaries } from "@/lib/content";
+import { listInsightTopics, listProductSummaries } from "@/lib/content";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -17,51 +17,75 @@ import {
 } from "@/config/site";
 
 /*
- * Type system:
- *   • Display / headings → Fraunces (expressive variable serif — editorial-premium)
- *   • Body               → Cal Sans Text (self-hosted; same body face as the Qeet products)
- *   • UI / controls      → Cal Sans UI (the UI-optimised cut)
- *   • Mono               → Geist Mono (technical detail)
- * Serif display + the products' body face: premium headlines, consistent body.
- * Each role resolves to its own CSS variable (see globals.css @theme inline), so
- * swapping any face is a one-line change here.
+ * ============================================================================
+ * Type system
+ * ============================================================================
+ *
+ *   Qeet UI     headings, display type, navigation, controls, labels
+ *   Qeet Text   body copy
+ *   Fira Code   data, metrics, timestamps
+ *
+ * Two Qeet faces, not three. Qeet Display — the geometric cut Qeetrix maps to
+ * `--font-display` — is deliberately unused here: at the display sizes this
+ * site sets, its geometry reads as styling rather than as voice, which is the
+ * wrong register for a corporate page. Qeet UI is the more neutral drawing and
+ * it holds up from a 12px label to a 96px headline, so it carries both.
+ *
+ * The consequence is that hierarchy comes from WEIGHT, SIZE and SPACE rather
+ * than from switching typeface — the harder system to build and the steadier
+ * one, and the one nearly every large technology organisation actually ships.
+ *
+ * ---------------------------------------------------------------------------
+ * Why the files are copied in rather than imported from the package
+ * ---------------------------------------------------------------------------
+ * qeet.in is deliberately self-contained (see CLAUDE.md) — it does not consume
+ * `@qeetrix/ui`, whose stylesheet also restyles every heading and button in the
+ * host document and would fight this site's own token layer. Taking the faces
+ * and matching Qeetrix's own @font-face weights exactly gets the shared
+ * typography without inheriting a component library's opinions about the rest
+ * of the page.
+ *
+ * next/font/local self-hosts and preloads them, so there is no third-party font
+ * request and no layout shift on first paint. Every weight declared below is
+ * preloaded at roughly 54KB, so the list is kept to what the site actually
+ * sets — see globals.css for where each weight is used.
  */
-const display = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-  fallback: ["ui-serif", "Georgia", "serif"],
-});
-
-const body = localFont({
-  variable: "--font-body",
+const ui = localFont({
+  variable: "--font-ui-face",
   display: "swap",
   preload: true,
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+  /*
+   * 400 for chrome, 500 for emphasis, 600 for headings. No 700 — `font-bold`
+   * has zero call sites, and every weight declared here is preloaded at ~55KB,
+   * so an unused one is pure cost on the critical path.
+   */
   src: [
-    { path: "./fonts/CalSansText-Regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/CalSansText-Medium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/CalSansText-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/QeetUI-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/QeetUI-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/QeetUI-SemiBold.woff2", weight: "600", style: "normal" },
   ],
 });
 
-const ui = localFont({
-  variable: "--font-ui",
+const body = localFont({
+  variable: "--font-body-face",
   display: "swap",
-  preload: false,
+  preload: true,
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+  // 400 for body, 500 for emphasis — the only two the site sets.
   src: [
-    { path: "./fonts/CalSansUI-UIRegular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/CalSansUI-UIMedium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/CalSansUI-UISemiBold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/QeetText-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/QeetText-Medium.woff2", weight: "500", style: "normal" },
   ],
 });
 
-const mono = Geist_Mono({
+/** Qeetrix's mono. Google-hosted rather than vendored — it is not a Qeet face. */
+const mono = Fira_Code({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-mono-face",
   display: "swap",
   preload: false,
+  fallback: ["ui-monospace", "SFMono-Regular", "monospace"],
 });
 
 export const metadata: Metadata = {
@@ -78,12 +102,13 @@ export const metadata: Metadata = {
   publisher: SITE_NAME,
   keywords: [
     "Qeet Group",
-    "holding company",
+    "technology organisation",
     "identity platform",
     "design systems",
     "observability",
     "notification infrastructure",
     "payments",
+    "product ecosystem",
   ],
   formatDetection: { telephone: false },
   // Canonicals are set per page (every route owns its own path); only the
@@ -92,7 +117,7 @@ export const metadata: Metadata = {
   alternates: {
     types: {
       "application/rss+xml": [
-        { url: "/newsroom/rss.xml", title: "Qeet Group — Newsroom" },
+        { url: "/insights/rss.xml", title: "Qeet Group — Insights" },
       ],
     },
   },
@@ -123,8 +148,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   // Matches --color-canvas in each theme. Dark leads because it is the default.
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0A0A0A" },
-    { media: "(prefers-color-scheme: light)", color: "#FCFCFC" },
+    { media: "(prefers-color-scheme: dark)", color: "#101214" },
+    { media: "(prefers-color-scheme: light)", color: "#FAFBFC" },
   ],
   colorScheme: "dark light",
 };
@@ -148,11 +173,14 @@ export default async function RootLayout({
   const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
   // Single source of truth for the chrome's product links — scales with the
   // portfolio (add an MDX product and it appears in the nav + footer).
-  const products = await listProductSummaries();
+  const [products, topics] = await Promise.all([
+    listProductSummaries(),
+    listInsightTopics(),
+  ]);
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${ui.variable} ${mono.variable} h-full`}
+      className={`${ui.variable} ${body.variable} ${mono.variable} h-full`}
       suppressHydrationWarning
     >
       <head>
@@ -166,11 +194,11 @@ export default async function RootLayout({
         >
           Skip to content
         </a>
-        <Nav products={products} />
+        <Nav products={products} topics={topics} />
         <main id="main" className="flex-1">
           {children}
         </main>
-        <Footer products={products} />
+        <Footer products={products} topics={topics} />
         <CommandPalette />
         {plausibleDomain && (
           <Script

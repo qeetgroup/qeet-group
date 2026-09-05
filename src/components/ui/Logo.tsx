@@ -9,6 +9,20 @@ type LogoProps = Omit<SVGProps<SVGSVGElement>, "ref"> & {
    * useful when the logo sits next to a "Qeet" wordmark that already names it.
    */
   label?: string;
+  /**
+   * `duo` renders the mark as drawn: the bowl in the current text colour and
+   * the two accent strokes in the accent. `mono` flattens everything to
+   * currentColor.
+   *
+   * Duotone is the default because it is what the mark actually is — the
+   * accent strokes are a distinct element of the drawing, not a colour
+   * variation of the bowl. Flattening them loses the form.
+   *
+   * `mono` exists for surfaces where the accent cannot be trusted to read: a
+   * favicon raster, a press asset that will be printed, or anywhere the mark
+   * sits on the accent colour itself.
+   */
+  tone?: "duo" | "mono";
 };
 
 const MASK_PATH = `M669.964722,338.242981
@@ -88,9 +102,11 @@ const DEEP_ORANGE_NICK_PATH = `M1019.828918,577.584717
 C1019.590332,576.503357 1019.448914,575.015015 1019.526367,573.272095
 C1019.805603,574.404175 1019.865845,575.791016 1019.828918,577.584717 z`;
 
-export function Logo({ className, label, ...rest }: LogoProps) {
+export function Logo({ className, label, tone = "duo", ...rest }: LogoProps) {
   const maskId = useId();
   const decorative = !label;
+  // text-accent on the strokes; both inherit through fill="currentColor".
+  const accent = tone === "duo" ? "text-accent" : undefined;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -110,9 +126,11 @@ export function Logo({ className, label, ...rest }: LogoProps) {
         </mask>
       </defs>
       <path mask={`url(#${maskId})`} fill="currentColor" d={BOWL_PATH} />
-      <path fill="currentColor" d={ORANGE_PATH} />
-      <path fill="currentColor" d={DEEP_ORANGE_PATH} />
-      <path fill="currentColor" d={DEEP_ORANGE_NICK_PATH} />
+      <g className={accent}>
+        <path fill="currentColor" d={ORANGE_PATH} />
+        <path fill="currentColor" d={DEEP_ORANGE_PATH} />
+        <path fill="currentColor" d={DEEP_ORANGE_NICK_PATH} />
+      </g>
     </svg>
   );
 }

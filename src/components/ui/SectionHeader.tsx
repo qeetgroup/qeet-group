@@ -13,9 +13,9 @@ type SectionHeaderProps = {
 };
 
 /**
- * Consistent section intro used across the homepage for rhythm: a numbered
- * eyebrow ("01 — Products"), an optional serif title, and an optional lede.
- * Pure layout — wrap in <FadeRise> at the call site for entrance motion.
+ * Consistent section intro used across the site for rhythm: a numbered eyebrow
+ * ("01 — Products"), an optional title, and an optional lede. Pure layout —
+ * wrap in <FadeRise> at the call site for entrance motion.
  */
 export function SectionHeader({
   index,
@@ -48,7 +48,7 @@ export function SectionHeader({
         {eyebrow}
       </Eyebrow>
       {title && (
-        <h2 className="text-balance font-display font-normal text-ink text-display-m">
+        <h2 className="text-balance font-display text-ink text-display-m">
           {title}
         </h2>
       )}

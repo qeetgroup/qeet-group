@@ -31,7 +31,7 @@ export function ContactForm() {
       <div className="max-w-2xl">
         <p
           role="status"
-          className="font-display font-normal text-balance text-ink text-heading-xl"
+          className="font-display text-balance text-ink text-heading-xl"
         >
           Got it. We&rsquo;ll get back to you within a few days.
         </p>

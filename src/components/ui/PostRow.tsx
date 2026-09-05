@@ -1,4 +1,5 @@
 import { Anchor } from "./Anchor";
+import { DemoBadge } from "./DemoBadge";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,12 @@ type PostRowProps = {
   /** Minutes. Shown in the listing layout only. */
   readingTime?: number;
   layout?: PostRowLayout;
+  /**
+   * Marks the row as demonstration content. Shown on the LISTING as well as on
+   * the article, because a reader scanning an index forms an impression before
+   * they ever open the piece — labelling only the destination is too late.
+   */
+  demo?: boolean;
   className?: string;
 };
 
@@ -32,9 +39,10 @@ function Meta({
   date,
   category,
   readingTime,
-}: Pick<PostRowProps, "date" | "category" | "readingTime">) {
+  demo,
+}: Pick<PostRowProps, "date" | "category" | "readingTime" | "demo">) {
   return (
-    <p className="font-sans text-label font-medium uppercase text-ink-subtle">
+    <p className="flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-label uppercase text-ink-subtle">
       <time dateTime={date}>{formatDate(date)}</time>
       {category ? (
         <>
@@ -48,6 +56,7 @@ function Meta({
           <span>{readingTime} min read</span>
         </>
       ) : null}
+      {demo && <DemoBadge />}
     </p>
   );
 }
@@ -79,6 +88,7 @@ export function PostRow({
   category,
   readingTime,
   layout = "card",
+  demo,
   className,
 }: PostRowProps) {
   if (layout === "listing") {
@@ -89,10 +99,10 @@ export function PostRow({
           className="group/post grid grid-cols-1 gap-4 rounded-sm focus-ring md:grid-cols-12 md:gap-10"
         >
           <div className="md:col-span-3">
-            <Meta date={date} category={category} readingTime={readingTime} />
+            <Meta date={date} category={category} readingTime={readingTime} demo={demo} />
           </div>
           <div className="md:col-span-9">
-            <h2 className="text-balance font-display font-normal text-ink text-heading-xl">
+            <h2 className="text-balance font-display text-ink text-heading-xl">
               {title}
             </h2>
             <p className="mt-3 max-w-prose text-body text-ink-muted md:mt-4">{dek}</p>
@@ -106,8 +116,8 @@ export function PostRow({
   return (
     <Anchor href={href} className={cn("group/post block rounded-sm focus-ring", className)}>
       <article className="flex flex-col gap-3">
-        <Meta date={date} category={category} />
-        <h3 className="text-balance font-display font-normal text-ink text-heading-l">
+        <Meta date={date} category={category} demo={demo} />
+        <h3 className="text-balance font-display text-ink text-heading-l">
           {title}
         </h3>
         <p className="text-body-s text-ink-muted">{dek}</p>

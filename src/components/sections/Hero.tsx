@@ -2,121 +2,115 @@ import { Container } from "../layout/Container";
 import { Eyebrow } from "../ui/Eyebrow";
 import { Link } from "../ui/Link";
 import { Button } from "../ui/Button";
-import { IdentityGraph } from "../ui/IdentityGraph";
 import { FadeRise } from "../motion/FadeRise";
-import { WordReveal } from "../motion/WordReveal";
-import { Magnetic } from "../motion/Magnetic";
-import { listProductSummaries } from "@/lib/content";
+import { RevealLines } from "../motion/RevealLines";
+import { VideoFigure } from "../media/VideoFigure";
+import { portfolioCounts } from "@/lib/content";
 
 /**
- * The thesis. A confident two-column opening: the group's defining statement on
- * the left, the identity-graph signature as a real figure on the right. The
- * figure is deliberately abstract — it never encodes the product count — while
- * the monospace fact line below the CTAs derives the real number from the live
- * product list. Orange appears only at the graph's core.
+ * ============================================================================
+ * The hero
+ * ============================================================================
+ *
+ * The previous hero was the shape the brief rules out: eyebrow, huge gradient
+ * headline, two buttons, a floating figure. Every startup landing page in the
+ * category is that arrangement.
+ *
+ * What the reference set does instead is lead with a STATEMENT over media, at
+ * scale, with a single onward path. Accenture's "Together We Reinvented",
+ * Cognizant's "We're an AI Builder", LTM's positioning line — none of them
+ * sells a product above the fold. They say what the organisation is and let
+ * the navigation handle everything else.
+ *
+ * Two details are doing more work than they look:
+ *
+ *   ONE CTA, NOT TWO. A second button of equal weight is an admission that we
+ *   do not know what the visitor should do next. The secondary path is a text
+ *   link, which is a hierarchy rather than a choice.
+ *
+ *   THE FACT LINE IS DERIVED. Counts come from the content collection at build
+ *   time, so the hero cannot claim a portfolio size the site does not contain.
+ *   That is a real risk here: hero copy is exactly where a stale number
+ *   survives longest, because nobody re-reads it.
  */
 export async function Hero() {
-  const products = await listProductSummaries();
+  const counts = await portfolioCounts();
+
   return (
-    <section className="relative flex min-h-[92svh] items-center overflow-hidden pb-20 pt-28 md:pb-28 md:pt-32">
-      {/* Ambient orbs: slowly-drifting colour blobs that add depth to the hero
-          background. Purely decorative; aria-hidden and pointer-events-none.
-          The reduced-motion CSS block in globals.css collapses all animation
-          durations to 0.01ms for users who request it. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div
-          className="absolute -left-32 -top-24 h-[420px] w-[580px] rounded-full bg-accent opacity-[0.10] blur-[120px] animate-blob"
-          style={{ animationDelay: "0s" }}
-        />
-        <div
-          className="absolute -bottom-16 -right-24 h-[380px] w-[460px] rounded-full bg-brand-700 opacity-[0.07] blur-[100px] animate-blob-slow"
-          style={{ animationDelay: "-8s" }}
-        />
-        <div
-          className="absolute left-1/2 top-1/2 h-[280px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink opacity-[0.05] blur-[80px] animate-blob"
-          style={{ animationDelay: "-16s" }}
+    // `on-dark`: this hero sits on a scrimmed photograph in BOTH themes, so its
+    // accent tokens must not follow the light theme. See globals.css.
+    <section className="on-dark relative isolate overflow-hidden">
+      {/*
+        Full-bleed media behind the type. `scrim-full` guarantees the contrast
+        rather than hoping the footage is dark enough — the scrim floor is
+        measured against a blown-out white frame, so the headline holds no
+        matter what the media does.
+      */}
+      <div className="absolute inset-0 -z-10">
+        <VideoFigure
+          slot="homeHero"
+          aspect="free"
+          scrim="full"
+          priority
+          sizes="100vw"
+          className="h-full [&_figure]:h-full [&_figure>div]:h-full"
         />
       </div>
-      {/* Fine grain texture over the blobs. */}
-      <div aria-hidden="true" className="bg-grain pointer-events-none absolute inset-0 -z-10" />
 
-      <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-7">
-            <FadeRise>
-              <Eyebrow className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 md:mb-10">
-                <span>Qeet Group</span>
-                <span aria-hidden="true" className="text-rule-strong">/</span>
-                <span className="glass-panel inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono normal-case tracking-normal text-ink-subtle">
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent" />
-                  Holding company · Est. 2026
-                </span>
-              </Eyebrow>
-            </FadeRise>
+      <Container width="wide">
+        <div className="flex min-h-[86svh] flex-col justify-end pb-20 pt-36 md:min-h-[92svh] md:pb-28 md:pt-40">
+          <FadeRise>
+            <Eyebrow className="mb-8 text-ink-inverse/70 md:mb-10">
+              Qeet Group
+            </Eyebrow>
+          </FadeRise>
 
-            <h1 className="text-balance font-display font-normal text-ink text-display-2xl">
-              <WordReveal text="We question, We explore, We envision, We" />{" "}
-              <span className="text-accent-text-display">
-                <WordReveal text="transform." initialDelay={0.57} />
-              </span>
-            </h1>
+          <RevealLines
+            as="h1"
+            lines={["Building the systems", "other systems", "are built on."]}
+            className="max-w-[18ch] text-balance font-display text-ink-inverse text-display-2xl"
+          />
 
-            <FadeRise delay={0.7} className="mt-8 max-w-xl md:mt-10">
-              <p className="text-body-l text-ink-muted">
-                Qeet Group is a multi-company holding built on a single philosophy: that meaningful
-                progress begins with the right question.
-              </p>
-            </FadeRise>
+          <FadeRise delay={0.5} className="mt-10 max-w-xl md:mt-12">
+            <p className="text-body-l text-ink-inverse/75">
+              One organisation, one identity layer, one design foundation — and a
+              portfolio of products that compose each other rather than compete
+              for the same desk.
+            </p>
+          </FadeRise>
 
-            <FadeRise delay={0.9} className="mt-9 md:mt-11">
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
-                <Button href="/products" size="lg" magnetic>
-                  Explore products
-                </Button>
-                <Magnetic strength={0.4}>
-                  <Link href="#philosophy" variant="arrow" className="text-body text-ink">
-                    Read our philosophy
-                  </Link>
-                </Magnetic>
-              </div>
-            </FadeRise>
+          <FadeRise delay={0.65} className="mt-10 md:mt-12">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+              <Button href="/ecosystem" size="lg" variant="accent">
+                See the ecosystem
+              </Button>
+              <Link href="/company/about" variant="arrow" className="text-body text-ink-inverse">
+                What Qeet Group is
+              </Link>
+            </div>
+          </FadeRise>
 
-            <FadeRise delay={1.05} className="mt-11 md:mt-14">
-              <p className="font-mono text-caption uppercase tracking-[0.18em] text-ink-subtle">
-                <span className="text-ink">{products.length}</span> platforms
-                <span aria-hidden="true" className="px-2 text-rule-strong">·</span>
-                <span className="text-ink">1</span> identity graph
-                <span aria-hidden="true" className="px-2 text-rule-strong">·</span>
-                built for the long term
-              </p>
-            </FadeRise>
-          </div>
-
-          {/* Signature figure. Decorative=false → it's a real diagram of the
-              thesis: an abstract orbital system around one identity core. */}
-          <FadeRise delay={0.3} className="lg:col-span-5">
-            <IdentityGraph
-              coreLabel
-              decorative={false}
-              className="mx-auto max-w-sm sm:max-w-md lg:max-w-none"
-            />
+          <FadeRise delay={0.8} className="mt-14 md:mt-20">
+            <dl className="flex flex-wrap gap-x-12 gap-y-6 border-t border-ink-inverse/20 pt-8">
+              {[
+                { n: counts.total, label: "Products" },
+                { n: counts.available, label: "Available today" },
+                { n: counts.development, label: "In development" },
+                { n: counts.planned, label: "Planned" },
+              ].map((s) => (
+                <div key={s.label}>
+                  <dd className="font-display text-ink-inverse text-heading-xl tabular-figures">
+                    {s.n}
+                  </dd>
+                  <dt className="mt-1 font-mono text-label uppercase text-ink-inverse/60">
+                    {s.label}
+                  </dt>
+                </div>
+              ))}
+            </dl>
           </FadeRise>
         </div>
       </Container>
-
-      {/* Scroll cue — a hairline with a slow-falling dot. Decorative; frozen by
-          the global reduced-motion block. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex"
-      >
-        <span className="font-mono text-caption uppercase tracking-[0.18em] text-ink-subtle">
-          Scroll
-        </span>
-        <span className="relative block h-10 w-px overflow-hidden bg-rule">
-          <span className="absolute left-0 top-0 h-3 w-px animate-scroll-cue bg-ink" />
-        </span>
-      </div>
     </section>
   );
 }

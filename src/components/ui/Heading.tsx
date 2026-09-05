@@ -12,8 +12,17 @@ export type HeadingSize =
   | "heading-s";
 
 /**
- * `display` is Fraunces — the editorial serif voice, and the default.
- * `sans` is Cal Sans, for headings that should recede rather than announce.
+ * Both variants are Qeet UI — the site sets headings in one face. What differs
+ * is WEIGHT, which is where hierarchy comes from once the typeface stops
+ * changing:
+ *
+ *   `display`  600. The announcing voice, and the default.
+ *   `sans`     500. For headings that should structure a page without claiming
+ *              it — a card title, a sidebar label, the second heading in a
+ *              section that already has a display headline.
+ *
+ * Two headings at 600 competing in one viewport is the most common way a
+ * single-face hierarchy collapses; `sans` is the escape hatch for that.
  */
 export type HeadingVariant = "display" | "sans";
 
@@ -37,8 +46,10 @@ const sizeMap: Record<HeadingSize, string> = {
 };
 
 const variantMap: Record<HeadingVariant, string> = {
-  display: "font-display font-normal",
-  sans: "font-sans font-medium",
+  // `font-display` carries weight 600 from the base layer; `sans` is the same
+  // face stepped down to 500 rather than a different family.
+  display: "font-display",
+  sans: "font-ui font-medium",
 };
 
 type HeadingProps = {

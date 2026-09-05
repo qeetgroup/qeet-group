@@ -26,7 +26,7 @@ export function LegalArticle({ doc }: { doc: LoadedLegal }) {
             <Eyebrow className="mb-8 md:mb-10">Legal</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1} className="max-w-3xl">
-            <h1 className="text-balance font-display font-normal text-ink text-display-l">
+            <h1 className="text-balance font-display text-ink text-display-l">
               {data.title}
             </h1>
             <p className="mt-8 font-sans text-body-s text-ink-subtle md:mt-10">

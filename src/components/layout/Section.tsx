@@ -25,7 +25,9 @@ const paddingMap = {
 
 const toneMap: Record<Tone, string> = {
   default: "bg-canvas text-ink",
-  inverse: "bg-inverse text-ink-inverse",
+  /* `on-dark` pins the accent tokens: an inverse band stays dark in the light
+   * theme too, so its accent must not follow the theme. */
+  inverse: "on-dark bg-inverse text-ink-inverse",
 };
 
 export function Section({

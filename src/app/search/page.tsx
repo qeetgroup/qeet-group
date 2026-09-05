@@ -10,7 +10,7 @@ import { buildPageMetadata } from "@/lib/seo/meta";
 export const metadata: Metadata = {
   ...buildPageMetadata({
     title: "Search",
-    description: "Search across Qeet Group pages, companies, and newsroom posts.",
+    description: "Search across Qeet Group products, technology, insights and company pages.",
     path: "/search",
   }),
   // The page is fine to index; a `?q=` result view is not.
@@ -26,7 +26,7 @@ export default function SearchPage() {
             <Eyebrow className="mb-10 md:mb-14">Search</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-display font-normal text-ink text-display-xl">
+            <h1 className="text-balance font-display text-ink text-display-xl">
               Find anything.
             </h1>
           </FadeRise>

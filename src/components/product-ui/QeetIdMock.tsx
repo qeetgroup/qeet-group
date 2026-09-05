@@ -42,7 +42,7 @@ export function QeetIdMock() {
 
         <div className="mt-2 grid grid-cols-4 gap-2">
           <ProviderTile>
-            <span className="text-[0.8125rem] font-semibold">G</span>
+            <span className="text-[0.8125rem] font-medium">G</span>
           </ProviderTile>
           <ProviderTile>
             <span className="grid grid-cols-2 gap-px">
@@ -58,7 +58,7 @@ export function QeetIdMock() {
             </svg>
           </ProviderTile>
           <ProviderTile>
-            <span className="text-[0.8125rem] font-semibold">SSO</span>
+            <span className="text-[0.8125rem] font-medium">SSO</span>
           </ProviderTile>
         </div>
 

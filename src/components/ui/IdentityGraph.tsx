@@ -11,7 +11,7 @@ import { EASE_OUT } from "@/lib/motion";
  * depth, a few satellites drift along the orbits, and a slow brand-coloured
  * sweep plus inward identity pulses give it life — "a family of products on
  * one identity graph," rendered like a watch face rather than a network
- * diagram. Orange stays reserved for the core, the sweep and the pulses;
+ * diagram. The accent stays reserved for the core, the sweep and the pulses;
  * everything else is hairline-quiet.
  *
  * Deliberately abstract: the satellites are a fixed decorative few, NOT
@@ -138,9 +138,9 @@ export function IdentityGraph({
     >
       <defs>
         <radialGradient id="ig-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0.55" />
-          <stop offset="50%" stopColor="var(--color-brand)" stopOpacity="0.14" />
-          <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.55" />
+          <stop offset="50%" stopColor="var(--color-accent)" stopOpacity="0.14" />
+          <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
         </radialGradient>
         <linearGradient
           id="ig-sweep"
@@ -150,8 +150,8 @@ export function IdentityGraph({
           x2={sweepEnd.x}
           y2={sweepEnd.y}
         >
-          <stop offset="0%" stopColor="var(--color-brand)" stopOpacity="0" />
-          <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0.85" />
+          <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0" />
+          <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0.85" />
         </linearGradient>
       </defs>
 
@@ -231,7 +231,7 @@ export function IdentityGraph({
             />
           )}
           <path d={sweepPath} stroke="url(#ig-sweep)" strokeWidth="1.5" strokeLinecap="round" />
-          <circle cx={sweepEnd.x} cy={sweepEnd.y} r="3" fill="var(--color-brand)" opacity="0.9" />
+          <circle cx={sweepEnd.x} cy={sweepEnd.y} r="3" fill="var(--color-accent)" opacity="0.9" />
         </g>
       </motion.g>
 
@@ -241,7 +241,7 @@ export function IdentityGraph({
           <motion.circle
             key={`pulse-${i}`}
             r="3"
-            fill="var(--color-brand)"
+            fill="var(--color-accent)"
             initial={{ cx: p.x, cy: p.y, opacity: 0 }}
             animate={{ cx: [p.x, CENTER.x], cy: [p.y, CENTER.y], opacity: [0, 0.9, 0] }}
             transition={{
@@ -308,14 +308,14 @@ export function IdentityGraph({
 
       {/* Identity core. */}
       <motion.g {...pop(0.4)} style={origin}>
-        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="var(--color-brand)" />
+        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="var(--color-accent)" />
         {/* Outer halo — a second ring that pulses out and fades */}
-        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-brand)" strokeWidth="0.75" opacity="0.2">
+        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-accent)" strokeWidth="0.75" opacity="0.2">
           {!reduce && <animate attributeName="r" values="16;38;16" dur="3.4s" repeatCount="indefinite" />}
           {!reduce && <animate attributeName="opacity" values="0.2;0;0.2" dur="3.4s" repeatCount="indefinite" />}
         </circle>
         {/* Inner pulse ring */}
-        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-brand)" strokeWidth="1" opacity="0.4">
+        <circle cx={CENTER.x} cy={CENTER.y} r="16" fill="none" stroke="var(--color-accent)" strokeWidth="1" opacity="0.4">
           {!reduce && <animate attributeName="r" values="16;26;16" dur="3.4s" repeatCount="indefinite" />}
         </circle>
         {coreLabel && (

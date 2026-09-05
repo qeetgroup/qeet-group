@@ -10,7 +10,7 @@ import { SITE_NAME, TWITTER_HANDLE } from "@/config/site";
 export function buildPageMetadata(args: {
   title: string;
   description: string;
-  /** Site-relative canonical path, e.g. "/about" or "/newsroom/hello". */
+  /** Site-relative canonical path, e.g. "/company/about" or "/insights/hello". */
   path: string;
   ogType?: "website" | "article";
   /**

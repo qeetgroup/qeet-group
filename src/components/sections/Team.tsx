@@ -2,7 +2,6 @@ import { Section } from "../layout/Section";
 import { SectionHeader } from "../ui/SectionHeader";
 import { Link } from "../ui/Link";
 import { FadeRise } from "../motion/FadeRise";
-import { Magnetic } from "../motion/Magnetic";
 
 /**
  * Group-level team teaser. Honest for a young, pre-launch holding — the team
@@ -25,16 +24,16 @@ export function Team() {
             operator who thinks in decades, there&rsquo;s room to build here.
           </p>
           <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:gap-10">
-            <Magnetic strength={0.4}>
-              <Link href="/team" variant="arrow" className="text-body text-ink">
+            
+              <Link href="/company/leadership" variant="arrow" className="text-body text-ink">
                 Meet the team
               </Link>
-            </Magnetic>
-            <Magnetic strength={0.4}>
+            
+            
               <Link href="/careers" variant="arrow" className="text-body text-ink">
                 See open roles
               </Link>
-            </Magnetic>
+            
           </div>
         </FadeRise>
       </div>

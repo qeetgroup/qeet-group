@@ -6,10 +6,17 @@
  * threshold — in BOTH themes. Run with `bun run check:contrast`.
  *
  * This exists because contrast is arithmetic and should not be a judgement
- * call. Two of the palette's stranger-looking tokens are here because the
- * numbers demanded them: brand-500 is 2.94:1 on the light canvas (so accent
- * text needs its own token), and white on a brand-500 fill is 3.01:1 (so
- * labels on accent need a near-black).
+ * call, and because the palette's stranger-looking decisions are all arithmetic
+ * in origin:
+ *
+ *   - brand-500 measures ~2.9:1 on the light canvas, so accent TEXT needs its
+ *     own token and splits again by size.
+ *   - White on a brand-500 fill is ~3:1, so labels on an accent fill use a
+ *     near-black instead.
+ *   - The light theme's accent drifts toward gold as it darkens, because
+ *     holding a yellow-green's hue while darkening it produces olive.
+ *
+ * None of those is visible by inspection. All of them are caught here.
  */
 
 import { readFileSync } from "node:fs";
@@ -149,6 +156,26 @@ const CHECKS: Check[] = [
   { fg: "--color-error", bg: "--color-canvas", min: 4.5, why: "error text" },
   { fg: "--color-success", bg: "--color-canvas", min: 4.5, why: "success text" },
   { fg: "--color-warning", bg: "--color-canvas", min: 4.5, why: "warning text" },
+  /*
+   * Lifecycle. These are the load-bearing ones for the ecosystem map: status is
+   * encoded in colour, so each step must be independently distinguishable from
+   * the surface it sits on — 3:1 as a non-text graphic (WCAG 1.4.11), and 4.5:1
+   * where the same token also colours the status label's text, which it does on
+   * every StatusChip. `planned` is the tight one by construction: it is the
+   * faintest rung of a ladder whose whole point is that it fades.
+   */
+  { fg: "--color-status-available", bg: "--color-canvas", min: 4.5, why: "available status" },
+  { fg: "--color-status-available", bg: "--color-surface", min: 4.5, why: "available on cards" },
+  { fg: "--color-status-development", bg: "--color-canvas", min: 4.5, why: "in-development status" },
+  { fg: "--color-status-development", bg: "--color-surface", min: 4.5, why: "in-development on cards" },
+  { fg: "--color-status-planned", bg: "--color-canvas", min: 4.5, why: "planned status" },
+  { fg: "--color-status-planned", bg: "--color-surface", min: 4.5, why: "planned on cards" },
+  /*
+   * Text over a scrimmed photograph. The scrim is the guarantee that this
+   * pairing holds regardless of what the image underneath does, so it is the
+   * scrim floor — not the image — that has to be measured.
+   */
+  { fg: "--color-ink-inverse", bg: "--scrim-floor-solid", min: 4.5, why: "text over scrimmed media" },
 ];
 
 const THEMES: Array<[string, Record<string, string>]> = [

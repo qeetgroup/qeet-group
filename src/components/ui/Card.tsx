@@ -1,17 +1,16 @@
 import NextLink from "next/link";
 import type { ElementType, HTMLAttributes, ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Spotlight } from "@/components/motion/Spotlight";
 import { cn, isExternalHref } from "@/lib/utils";
 
 /*
  * One card. This replaces three separate implementations of the same
- * Spotlight + glass + hover-lift pattern that had drifted to three radii
+ * Glass + hover-lift pattern that had drifted to three radii
  * (2xl / 3xl / 2xl), three hover-border alphas (25% / 30% / 25%) and three
  * padding scales. Differences between call sites are now variants, so they
  * cannot drift again.
  *
- * `interactive` also mounts the cursor Spotlight, so call sites stop repeating
+ * `interactive` carries the hover treatment, so call sites stop repeating
  * the wrapper and its magic colour string.
  */
 const card = cva(
@@ -58,8 +57,6 @@ type CardProps = CardVariants & {
   href?: string;
   /** Element to render when there is no href. */
   as?: ElementType;
-  /** Wrap in a cursor-following glow. Defaults on when `interactive`. */
-  spotlight?: boolean;
   // Element-agnostic, because the card renders as div, a, or NextLink.
 } & Omit<HTMLAttributes<HTMLElement>, "className" | "children">;
 
@@ -72,11 +69,9 @@ export function Card({
   radius,
   padding,
   interactive,
-  spotlight,
   ...rest
 }: CardProps) {
   const isInteractive = interactive ?? Boolean(href);
-  const showSpotlight = spotlight ?? isInteractive;
   const classes = cn(
     card({ variant, radius, padding, interactive: isInteractive }),
     className,
@@ -103,14 +98,5 @@ export function Card({
     })()
   );
 
-  if (!showSpotlight) return content;
-
-  return (
-    <Spotlight
-      color="color-mix(in oklab, var(--color-accent) 12%, transparent)"
-      className={cn("h-full", radius === "lg" ? "rounded-lg" : radius === "md" ? "rounded-md" : "rounded-xl")}
-    >
-      {content}
-    </Spotlight>
-  );
+  return content;
 }

@@ -1,17 +1,28 @@
 import NextLink from "next/link";
+import { Logo } from "./Logo";
 import { cn } from "@/lib/utils";
 import { SITE_NAME } from "@/config/site";
 
 /*
- * The brand lockup: the identity-core dot — a small echo of the hero's graph
- * signature — followed by the group name in the display face.
+ * The brand lockup: the Qeet mark followed by the group name.
  *
- * Nav and Footer each carried their own copy, which had already drifted on
- * hover behaviour (the footer tinted the text, the nav did not). One component
- * means the lockup can only change in one place.
+ * This used to render a plain accent-coloured DOT in place of the mark, with a
+ * note that ui/Logo held the real SVG "which the press kit and brand-asset work
+ * will adopt". Nothing adopted it — Logo sat unused in the tree while the
+ * header and footer of a corporate site showed a circle. The mark is the single
+ * most-repeated brand element on the site; it should be the actual mark.
  *
- * Note this is the *wordmark*, not the Qeet mark itself: ui/Logo holds the real
- * SVG mark, which the press kit and brand-asset work will adopt.
+ * The logo is INLINE SVG rather than an <img> pointing at public/qeet-mark.svg,
+ * and that is load-bearing. That file carries its own `prefers-color-scheme`
+ * block to swap the bowl between black and white — but this site's theme is
+ * driven by a `.light` class and deliberately ignores the OS preference (see
+ * the theme script in app/layout.tsx). An <img> would therefore colour itself
+ * from the OS while the page coloured itself from the class, and the two
+ * disagree the moment anyone uses the theme toggle. Inline, the mark inherits
+ * `currentColor` and simply cannot drift.
+ *
+ * Nav and Footer each carried their own copy of this lockup, which had already
+ * drifted on hover behaviour. One component means it can only change once.
  */
 type WordmarkProps = {
   /** Link destination. Pass null to render as plain text (e.g. inside a heading). */
@@ -24,10 +35,9 @@ type WordmarkProps = {
 export function Wordmark({ href = "/", tintOnHover = false, className }: WordmarkProps) {
   const inner = (
     <>
-      <span
-        aria-hidden="true"
-        className="h-2.5 w-2.5 shrink-0 rounded-full bg-accent transition-transform duration-base group-hover:scale-125"
-      />
+      {/* Decorative: the wordmark beside it already names the organisation, and
+          the link carries its own aria-label. Announcing "Qeet" twice is noise. */}
+      <Logo className="h-[1.15em] w-[1.15em] transition-transform duration-base group-hover:scale-110" />
       {SITE_NAME}
     </>
   );

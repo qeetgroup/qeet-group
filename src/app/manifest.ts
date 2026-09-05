@@ -5,11 +5,14 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Qeet Group",
     short_name: "Qeet",
     description:
-      "A multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
+      "One technology organisation building a connected ecosystem of products on shared identity and design foundations.",
     start_url: "/",
     display: "standalone",
-    background_color: "#FCFCFC",
-    theme_color: "#0A0A0A",
+    // Both mirror --color-canvas in the DARK theme, which is the site default.
+    // These were split across themes before — a light splash screen followed by
+    // a dark app is a visible flash on every launch.
+    background_color: "#101214",
+    theme_color: "#101214",
     icons: [
       {
         src: "/qeet-mark.svg",

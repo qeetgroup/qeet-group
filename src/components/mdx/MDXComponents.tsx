@@ -23,7 +23,7 @@ function MdxLink({ href = "#", children, ...props }: ComponentPropsWithoutRef<"a
 export const mdxComponents = {
   h2: (props: ComponentPropsWithoutRef<"h2">) => (
     <h2
-      className="mt-16 mb-6 font-display font-normal text-balance text-ink text-heading-xl"
+      className="mt-16 mb-6 font-display text-balance text-ink text-heading-xl"
       {...props}
     />
   ),
@@ -74,7 +74,7 @@ export const mdxComponents = {
    */
   h1: (props: ComponentPropsWithoutRef<"h1">) => (
     <h1
-      className="mt-0 mb-8 font-display font-normal text-balance text-ink text-display-m"
+      className="mt-0 mb-8 font-display text-balance text-ink text-display-m"
       {...props}
     />
   ),

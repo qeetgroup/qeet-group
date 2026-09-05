@@ -1,11 +1,16 @@
 import { ImageResponse } from "next/og";
-import { loadSerifFont } from "@/lib/seo/og-fonts";
+import { loadOgFonts } from "@/lib/seo/og-fonts";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
+/**
+ * The home-screen icon. A single letter on the canvas colour — at 180px on a
+ * cluttered springboard, the mark has to survive being 1cm wide, and anything
+ * more than one glyph does not.
+ */
 export default async function AppleIcon() {
-  const serif = await loadSerifFont();
+  const fonts = await loadOgFonts();
 
   return new ImageResponse(
     (
@@ -16,13 +21,14 @@ export default async function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0A0A0A",
-          color: "#FCFCFC",
-          fontFamily: serif ? "Instrument Serif" : "serif",
-          fontSize: 132,
-          letterSpacing: "-0.02em",
+          // Mirrors --color-canvas / --color-ink; Satori cannot read tokens.
+          background: "#101214",
+          color: "#F5F6F7",
+          fontFamily: fonts.length > 0 ? "Qeet UI" : "sans-serif",
+          fontSize: 118,
+          fontWeight: 600,
+          letterSpacing: "-0.04em",
           lineHeight: 1,
-          paddingBottom: 14,
         }}
       >
         Q
@@ -30,9 +36,12 @@ export default async function AppleIcon() {
     ),
     {
       ...size,
-      fonts: serif
-        ? [{ name: "Instrument Serif", data: serif, style: "normal", weight: 400 }]
-        : undefined,
+      fonts: fonts.map((f) => ({
+        name: f.name,
+        data: f.data,
+        style: "normal" as const,
+        weight: f.weight,
+      })),
     },
   );
 }

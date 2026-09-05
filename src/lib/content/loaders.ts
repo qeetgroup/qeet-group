@@ -2,16 +2,22 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { cache } from "react";
 import matter from "gray-matter";
+import { publishableOnly, visibleOnly } from "@/config/content-mode";
+import { statusLabel } from "./types";
 import type {
+  CompanyFrontmatter,
+  InsightFrontmatter,
   LegalFrontmatter,
+  LoadedCompany,
+  LoadedInsight,
   LoadedLegal,
-  LoadedMemo,
-  LoadedPost,
   LoadedProduct,
-  MemoFrontmatter,
-  PostFrontmatter,
+  LoadedTechnology,
+  PortfolioCounts,
   ProductFrontmatter,
+  ProductStatus,
   ProductSummary,
+  TechnologyFrontmatter,
 } from "./types";
 
 const CONTENT_ROOT = path.join(process.cwd(), "src", "content");
@@ -24,11 +30,12 @@ function computeReadingTime(content: string): number {
 type RawDoc = { slug: string; data: Record<string, unknown>; content: string };
 
 /*
- * Disk reads are memoized per render pass with React.cache. listProducts() alone
- * is called from the root layout, ProofBand, ProductsBento, the sitemap,
- * llms.txt, /products and generateStaticParams — without this, the same six MDX
- * files get read and parsed a dozen times to render one page. The cache is
- * request-scoped, so editing content in dev still shows up on the next render.
+ * Disk reads are memoized per render pass with React.cache. listProducts()
+ * alone is called from the root layout, the nav, the footer, the ecosystem
+ * map, the sitemap, llms.txt, /products and generateStaticParams — without
+ * this, the same MDX files get read and parsed a dozen times to render one
+ * page. The cache is request-scoped, so editing content in dev still shows up
+ * on the next render.
  *
  * Caching happens at the file/directory level rather than on the public
  * loaders, because readMdx is generic and cache() cannot preserve a type
@@ -82,31 +89,44 @@ function normalizeDate(value: unknown): string {
   return String(value ?? "");
 }
 
+/* ==========================================================================
+ * Products
+ * ======================================================================= */
+
 export const loadProduct = (slug: string): Promise<LoadedProduct | null> =>
   readMdx<ProductFrontmatter>("products", slug);
 
+/**
+ * Sorted by explicit `order`, then by status, then alphabetically.
+ *
+ * Status is the secondary key rather than the primary one so that the flagship
+ * still leads by `order`, but a planned product can never float above a
+ * shipped one by accident of alphabet — which is exactly the impression the
+ * lifecycle system exists to prevent.
+ */
+const STATUS_RANK: Record<ProductStatus, number> = {
+  available: 0,
+  development: 1,
+  planned: 2,
+};
+
 export const listProducts = cache(async (): Promise<LoadedProduct[]> => {
-  const items = await listMdx<ProductFrontmatter>("products");
-  // Explicit `order` drives the home-page feature order and the listing.
-  // Products without an order sort last, then alphabetically by name, so
-  // the flagship leads rather than whatever the filesystem happens to return.
+  const items = visibleOnly(await listMdx<ProductFrontmatter>("products"));
   return items.sort((a, b) => {
     const ao = a.data.order ?? Number.MAX_SAFE_INTEGER;
     const bo = b.data.order ?? Number.MAX_SAFE_INTEGER;
     if (ao !== bo) return ao - bo;
+    const ar = STATUS_RANK[a.data.status] ?? 9;
+    const br = STATUS_RANK[b.data.status] ?? 9;
+    if (ar !== br) return ar - br;
     return a.data.name.localeCompare(b.data.name);
   });
 });
 
-/**
- * Compact, serializable product list for chrome and the identity graph —
- * see ProductSummary in ./types.
- */
-const STATUS_LABEL: Record<string, string> = {
-  "Generally available": "Live",
-  "Early access": "Early access",
-  "Coming soon": "Coming soon",
-};
+/** Products that may appear in sitemap.xml and structured data. */
+export const listPublishableProducts = cache(async (): Promise<LoadedProduct[]> =>
+  publishableOnly(await listProducts()),
+);
 
 export const listProductSummaries = cache(async (): Promise<ProductSummary[]> => {
   const products = await listProducts();
@@ -114,16 +134,41 @@ export const listProductSummaries = cache(async (): Promise<ProductSummary[]> =>
     slug,
     name: data.name,
     short: data.name.replace(/^Qeet\s+/i, ""),
+    oneLiner: data.oneLiner,
     sector: data.sector,
+    group: data.group,
     href: `/products/${slug}`,
-    statusLabel: STATUS_LABEL[data.stage] ?? data.stage,
-    live: data.stage === "Generally available",
+    status: data.status,
+    statusLabel: statusLabel(data.status),
+    // A planned product has nowhere to send anyone. Dropping the field here
+    // means no component further downstream has to remember that rule.
+    externalUrl: data.status === "planned" ? undefined : data.externalUrl,
   }));
 });
 
-export async function loadPost(slug: string): Promise<LoadedPost | null> {
-  const item = await readMdx<PostFrontmatter>("newsroom", slug);
-  if (!item) return null;
+/**
+ * Counts for the metric band, derived from the collection rather than stated.
+ * See config/metrics.ts for why that distinction is not pedantry.
+ */
+export const portfolioCounts = cache(async (): Promise<PortfolioCounts> => {
+  const products = await listProducts();
+  return {
+    total: products.length,
+    available: products.filter((p) => p.data.status === "available").length,
+    development: products.filter((p) => p.data.status === "development").length,
+    planned: products.filter((p) => p.data.status === "planned").length,
+  };
+});
+
+/* ==========================================================================
+ * Insights
+ * ======================================================================= */
+
+function hydrateInsight(item: {
+  slug: string;
+  data: InsightFrontmatter;
+  content: string;
+}): LoadedInsight {
   return {
     ...item,
     data: { ...item.data, date: normalizeDate(item.data.date) },
@@ -131,16 +176,69 @@ export async function loadPost(slug: string): Promise<LoadedPost | null> {
   };
 }
 
-export async function listPosts(): Promise<LoadedPost[]> {
-  const items = await listMdx<PostFrontmatter>("newsroom");
-  return items
-    .map((item) => ({
-      ...item,
-      data: { ...item.data, date: normalizeDate(item.data.date) },
-      readingTime: computeReadingTime(item.content),
-    }))
-    .sort((a, b) => b.data.date.localeCompare(a.data.date));
+export async function loadInsight(slug: string): Promise<LoadedInsight | null> {
+  const item = await readMdx<InsightFrontmatter>("insights", slug);
+  return item ? hydrateInsight(item) : null;
 }
+
+export const listInsights = cache(async (): Promise<LoadedInsight[]> => {
+  const items = visibleOnly(await listMdx<InsightFrontmatter>("insights"));
+  return items.map(hydrateInsight).sort((a, b) => b.data.date.localeCompare(a.data.date));
+});
+
+/** Insights that may appear in RSS, sitemap.xml and Article structured data. */
+export const listPublishableInsights = cache(async (): Promise<LoadedInsight[]> =>
+  publishableOnly(await listInsights()),
+);
+
+/**
+ * The hub's lead story. Prefers an explicit `featured: true`, falls back to
+ * the most recent — so the hub is never empty and never depends on someone
+ * remembering to move a flag.
+ */
+export async function leadInsight(): Promise<LoadedInsight | null> {
+  const all = await listInsights();
+  return all.find((i) => i.data.featured) ?? all[0] ?? null;
+}
+
+export async function listInsightsByTopic(topic: string): Promise<LoadedInsight[]> {
+  const all = await listInsights();
+  return all.filter((i) => i.data.topic.toLowerCase() === topic.toLowerCase());
+}
+
+export async function listInsightTopics(): Promise<string[]> {
+  const all = await listInsights();
+  return [...new Set(all.map((i) => i.data.topic))].sort();
+}
+
+/* ==========================================================================
+ * Technology and company
+ * ======================================================================= */
+
+export const loadTechnology = (slug: string): Promise<LoadedTechnology | null> =>
+  readMdx<TechnologyFrontmatter>("technology", slug);
+
+export const listTechnology = cache(async (): Promise<LoadedTechnology[]> => {
+  const items = visibleOnly(await listMdx<TechnologyFrontmatter>("technology"));
+  return items.sort((a, b) => {
+    const ao = a.data.order ?? Number.MAX_SAFE_INTEGER;
+    const bo = b.data.order ?? Number.MAX_SAFE_INTEGER;
+    if (ao !== bo) return ao - bo;
+    return a.data.title.localeCompare(b.data.title);
+  });
+});
+
+export const loadCompany = (slug: string): Promise<LoadedCompany | null> =>
+  readMdx<CompanyFrontmatter>("company", slug);
+
+export const listCompany = cache(async (): Promise<LoadedCompany[]> => {
+  const items = visibleOnly(await listMdx<CompanyFrontmatter>("company"));
+  return items.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+});
+
+/* ==========================================================================
+ * Legal
+ * ======================================================================= */
 
 export async function loadLegal(slug: string): Promise<LoadedLegal | null> {
   const item = await readMdx<LegalFrontmatter>("legal", slug);
@@ -151,23 +249,6 @@ export async function loadLegal(slug: string): Promise<LoadedLegal | null> {
   };
 }
 
-export async function loadMemo(slug: string): Promise<LoadedMemo | null> {
-  const item = await readMdx<MemoFrontmatter>("memos", slug);
-  if (!item) return null;
-  return {
-    ...item,
-    data: { ...item.data, date: normalizeDate(item.data.date) },
-    readingTime: computeReadingTime(item.content),
-  };
-}
-
-export async function listMemos(): Promise<LoadedMemo[]> {
-  const items = await listMdx<MemoFrontmatter>("memos");
-  return items
-    .map((item) => ({
-      ...item,
-      data: { ...item.data, date: normalizeDate(item.data.date) },
-      readingTime: computeReadingTime(item.content),
-    }))
-    .sort((a, b) => b.data.date.localeCompare(a.data.date));
-}
+export const listLegal = cache(async (): Promise<LoadedLegal[]> =>
+  listMdx<LegalFrontmatter>("legal"),
+);

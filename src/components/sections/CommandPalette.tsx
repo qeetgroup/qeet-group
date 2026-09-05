@@ -178,7 +178,7 @@ export function CommandPalette() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKeyDown}
-            placeholder="Search pages, products, newsroom, memos…"
+            placeholder="Search products, technology, insights…"
             autoComplete="off"
             spellCheck={false}
             aria-label="Search"

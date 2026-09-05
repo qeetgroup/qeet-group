@@ -4,7 +4,7 @@ import { Link } from "@/components/ui/Link";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { PostRow } from "@/components/ui/PostRow";
 import { FadeRise } from "@/components/motion/FadeRise";
-import { listPosts } from "@/lib/content";
+import { listInsights } from "@/lib/content";
 
 const FALLBACK_ROUTES: Array<{ label: string; href: string; description: string }> = [
   {
@@ -25,7 +25,7 @@ const FALLBACK_ROUTES: Array<{ label: string; href: string; description: string 
 ];
 
 export default async function NotFound() {
-  const posts = await listPosts();
+  const posts = await listInsights();
   const latest = posts.slice(0, 2);
 
   return (
@@ -36,7 +36,7 @@ export default async function NotFound() {
             <Eyebrow className="mb-10 md:mb-12">404</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-display font-normal text-ink text-display-2xl">
+            <h1 className="text-balance font-display text-ink text-display-2xl">
               Nothing here.
             </h1>
           </FadeRise>
@@ -77,17 +77,17 @@ export default async function NotFound() {
       {latest.length > 0 && (
         <Section className="border-t border-rule" padding="tight">
           <FadeRise>
-            <Eyebrow className="mb-10 md:mb-14">From the newsroom</Eyebrow>
+            <Eyebrow className="mb-10 md:mb-14">From insights</Eyebrow>
           </FadeRise>
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-10 lg:gap-16">
             {latest.map((p, i) => (
               <FadeRise key={p.slug} delay={i * 0.06}>
                 <PostRow
                   date={p.data.date}
-                  category={p.data.category}
+                  category={p.data.topic}
                   title={p.data.title}
                   dek={p.data.dek}
-                  href={`/newsroom/${p.slug}`}
+                  href={`/insights/${p.slug}`}
                 />
               </FadeRise>
             ))}
