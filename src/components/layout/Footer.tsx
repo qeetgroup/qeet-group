@@ -3,6 +3,7 @@ import { Container } from "./Container";
 import { Eyebrow } from "../ui/Eyebrow";
 import { NewsletterForm } from "../forms/NewsletterForm";
 import { SocialIcons } from "../ui/SocialIcons";
+import { CurrentYear } from "../ui/CurrentYear";
 import { FadeRise } from "../motion/FadeRise";
 import { isExternalHref } from "@/lib/utils";
 import { CONTACT } from "@/config/site";
@@ -115,7 +116,9 @@ export function Footer({ products }: { products: ProductSummary[] }) {
           <SocialIcons />
         </div>
         <div className="flex flex-col gap-4 border-t border-rule py-8 text-body-s text-ink-subtle md:flex-row md:items-center md:justify-between">
-          <p>© {year} Qeet Group. All rights reserved.</p>
+          <p>
+            © <CurrentYear buildYear={year} /> Qeet Group. All rights reserved.
+          </p>
           <div className="flex items-center gap-6">
             <NextLink href="/legal/privacy" className="transition-colors duration-200 hover:text-ink">
               Privacy

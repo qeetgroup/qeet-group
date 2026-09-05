@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -9,13 +8,14 @@ import { FadeRise } from "@/components/motion/FadeRise";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { faqPageSchema } from "@/lib/seo/structured-data";
 import { cn } from "@/lib/utils";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "FAQ",
   description:
     "Frequently asked questions about Qeet Group — what we back, how we work, whether we take outside capital, and how to reach the right inbox.",
-  alternates: { canonical: "/faq" },
-};
+  path: "/faq",
+});
 
 type FaqGroup = {
   heading: string;

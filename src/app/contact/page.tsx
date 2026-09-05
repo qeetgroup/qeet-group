@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -9,12 +8,13 @@ import { Spotlight } from "@/components/motion/Spotlight";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { TrackedMailto } from "@/components/ui/TrackedMailto";
 import { SocialIcons } from "@/components/ui/SocialIcons";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Contact",
   description: "Get in touch with Qeet Group — partnerships, press, or general inquiries.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 const channels = [
   {

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -6,6 +5,7 @@ import { Lede } from "@/components/ui/Lede";
 import { Link } from "@/components/ui/Link";
 import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
 /*
  * The /now page follows the nownownow.com convention: a short, dated
@@ -38,11 +38,11 @@ const notRightNow: string[] = [
   "Public events or conference appearances.",
 ];
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Now",
   description: `What Qeet Group is focused on right now (as of ${lastUpdated}).`,
-  alternates: { canonical: "/now" },
-};
+  path: "/now",
+});
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {

@@ -7,8 +7,14 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/seo/structured-data";
-import { CommandPaletteShell } from "@/components/sections/CommandPaletteShell";
+import { CommandPalette } from "@/components/sections/CommandPalette";
 import { listProductSummaries } from "@/lib/content";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_ORIGIN,
+  SITE_TITLE,
+} from "@/config/site";
 
 /*
  * Type system:
@@ -60,15 +66,16 @@ const mono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Qeet Group — Question, Explore, Envision, Transform",
-    template: "%s — Qeet Group",
+    default: SITE_TITLE,
+    template: `%s — ${SITE_NAME}`,
   },
-  description:
-    "Qeet Group is a multi-company holding building software products on one identity graph — identity, design systems, observability, people, notifications, and payments.",
-  metadataBase: new URL("https://qeet.in"),
-  applicationName: "Qeet Group",
+  description: SITE_DESCRIPTION,
+  // Derived from SITE_ORIGIN so preview and staging deploys resolve their own
+  // absolute URLs instead of silently emitting production canonicals.
+  metadataBase: new URL(SITE_ORIGIN),
+  applicationName: SITE_NAME,
   category: "technology",
-  publisher: "Qeet Group",
+  publisher: SITE_NAME,
   keywords: [
     "Qeet Group",
     "holding company",
@@ -160,7 +167,7 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer products={products} />
-        <CommandPaletteShell />
+        <CommandPalette />
         {plausibleDomain && (
           <Script
             defer

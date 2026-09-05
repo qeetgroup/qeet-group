@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { cache } from "react";
 import matter from "gray-matter";
 import type {
   LegalFrontmatter,
@@ -20,33 +21,53 @@ function computeReadingTime(content: string): number {
   return Math.max(1, Math.round(words / 220));
 }
 
+type RawDoc = { slug: string; data: Record<string, unknown>; content: string };
+
+/*
+ * Disk reads are memoized per render pass with React.cache. listProducts() alone
+ * is called from the root layout, ProofBand, ProductsBento, the sitemap,
+ * llms.txt, /products and generateStaticParams — without this, the same six MDX
+ * files get read and parsed a dozen times to render one page. The cache is
+ * request-scoped, so editing content in dev still shows up on the next render.
+ *
+ * Caching happens at the file/directory level rather than on the public
+ * loaders, because readMdx is generic and cache() cannot preserve a type
+ * parameter.
+ */
+const readMdxFile = cache(
+  async (subdir: string, slug: string): Promise<RawDoc | null> => {
+    const filePath = path.join(CONTENT_ROOT, subdir, `${slug}.mdx`);
+    try {
+      const raw = await fs.readFile(filePath, "utf-8");
+      const { data, content } = matter(raw);
+      return { slug, data: data as Record<string, unknown>, content };
+    } catch {
+      return null;
+    }
+  },
+);
+
+const listMdxSlugs = cache(async (subdir: string): Promise<string[]> => {
+  try {
+    const files = await fs.readdir(path.join(CONTENT_ROOT, subdir));
+    return files.filter((f) => f.endsWith(".mdx")).map((f) => f.replace(/\.mdx$/, ""));
+  } catch {
+    return [];
+  }
+});
+
 async function readMdx<T>(
   subdir: string,
   slug: string,
 ): Promise<{ slug: string; data: T; content: string } | null> {
-  const filePath = path.join(CONTENT_ROOT, subdir, `${slug}.mdx`);
-  try {
-    const raw = await fs.readFile(filePath, "utf-8");
-    const { data, content } = matter(raw);
-    return { slug, data: data as T, content };
-  } catch {
-    return null;
-  }
+  const doc = await readMdxFile(subdir, slug);
+  return doc ? { ...doc, data: doc.data as T } : null;
 }
 
 async function listMdx<T>(
   subdir: string,
 ): Promise<Array<{ slug: string; data: T; content: string }>> {
-  const dirPath = path.join(CONTENT_ROOT, subdir);
-  let files: string[];
-  try {
-    files = await fs.readdir(dirPath);
-  } catch {
-    return [];
-  }
-  const slugs = files
-    .filter((f) => f.endsWith(".mdx"))
-    .map((f) => f.replace(/\.mdx$/, ""));
+  const slugs = await listMdxSlugs(subdir);
   const items = await Promise.all(slugs.map((s) => readMdx<T>(subdir, s)));
   return items.filter((i): i is { slug: string; data: T; content: string } => i !== null);
 }
@@ -64,7 +85,7 @@ function normalizeDate(value: unknown): string {
 export const loadProduct = (slug: string): Promise<LoadedProduct | null> =>
   readMdx<ProductFrontmatter>("products", slug);
 
-export async function listProducts(): Promise<LoadedProduct[]> {
+export const listProducts = cache(async (): Promise<LoadedProduct[]> => {
   const items = await listMdx<ProductFrontmatter>("products");
   // Explicit `order` drives the home-page feature order and the listing.
   // Products without an order sort last, then alphabetically by name, so
@@ -75,7 +96,7 @@ export async function listProducts(): Promise<LoadedProduct[]> {
     if (ao !== bo) return ao - bo;
     return a.data.name.localeCompare(b.data.name);
   });
-}
+});
 
 /**
  * Compact, serializable product list for chrome and the identity graph —
@@ -87,7 +108,7 @@ const STATUS_LABEL: Record<string, string> = {
   "Coming soon": "Coming soon",
 };
 
-export async function listProductSummaries(): Promise<ProductSummary[]> {
+export const listProductSummaries = cache(async (): Promise<ProductSummary[]> => {
   const products = await listProducts();
   return products.map(({ slug, data }) => ({
     slug,
@@ -98,7 +119,7 @@ export async function listProductSummaries(): Promise<ProductSummary[]> {
     statusLabel: STATUS_LABEL[data.stage] ?? data.stage,
     live: data.stage === "Generally available",
   }));
-}
+});
 
 export async function loadPost(slug: string): Promise<LoadedPost | null> {
   const item = await readMdx<PostFrontmatter>("newsroom", slug);

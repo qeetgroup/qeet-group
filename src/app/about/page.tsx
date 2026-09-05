@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -8,13 +7,14 @@ import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { Spotlight } from "@/components/motion/Spotlight";
 import { cn } from "@/lib/utils";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "About",
   description:
     "Qeet Group is a multi-company holding built to start, support, and grow companies that take long-term bets on questions worth answering.",
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 const principles = [
   {

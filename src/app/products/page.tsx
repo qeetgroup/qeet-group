@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -9,13 +8,14 @@ import { FadeRise } from "@/components/motion/FadeRise";
 import { listProducts } from "@/lib/content";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { productsListSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Products",
   description:
     "Explore Qeet Group's products — Qeet ID, Qeetrix, Qeet Logs, Qeet People, Qeet Notify, and Qeet Pay. Built on one identity graph.",
-  alternates: { canonical: "/products" },
-};
+  path: "/products",
+});
 
 export default async function ProductsPage() {
   const products = await listProducts();

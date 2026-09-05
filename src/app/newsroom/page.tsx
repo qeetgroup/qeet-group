@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -8,12 +7,13 @@ import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { NewsroomList } from "@/components/sections/NewsroomList";
 import { listPosts } from "@/lib/content";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Newsroom",
   description: "Announcements and milestones from Qeet Group and its companies.",
-  alternates: { canonical: "/newsroom" },
-};
+  path: "/newsroom",
+});
 
 export default async function NewsroomPage() {
   const posts = await listPosts();

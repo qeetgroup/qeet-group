@@ -13,12 +13,24 @@ export function buildPageMetadata(args: {
   /** Site-relative canonical path, e.g. "/about" or "/newsroom/hello". */
   path: string;
   ogType?: "website" | "article";
+  /**
+   * Bypass the root layout's `%s — Qeet Group` title template. Only the home
+   * page needs this: its title already ends in the site name.
+   */
+  titleAbsolute?: boolean;
   /** Only meaningful when ogType is "article". */
   article?: { publishedTime: string; authors?: string[] };
 }): Metadata {
-  const { title, description, path, ogType = "website", article } = args;
-  return {
+  const {
     title,
+    description,
+    path,
+    ogType = "website",
+    titleAbsolute = false,
+    article,
+  } = args;
+  return {
+    title: titleAbsolute ? { absolute: title } : title,
     description,
     alternates: { canonical: path },
     openGraph: {

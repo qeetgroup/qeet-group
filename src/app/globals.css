@@ -249,14 +249,6 @@
   }
 }
 
-/* Drives the infinite <Marquee> track. The component renders two copies, so
- * a -100% shift loops seamlessly. */
-@keyframes marquee {
-  to {
-    transform: translateX(-100%);
-  }
-}
-
 /* Hero scroll cue: a short dash falling down its hairline track. */
 @keyframes scroll-cue {
   0% {
@@ -355,18 +347,6 @@
     }
   }
 
-  /* Lifted interactive card — consistent hover elevation across product cards,
-   * newsroom cards, and any other tappable card surface. */
-  .interactive-card {
-    transition:
-      transform 200ms var(--ease-out-expo),
-      box-shadow 200ms var(--ease-out-expo);
-  }
-  .interactive-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
-  }
-
   /*
    * Closing-CTA glow: a slow-breathing brand aura anchored to the band's
    * bottom edge, over the inverse surface. Decorative — carriers must be
@@ -386,22 +366,6 @@
         transparent 60%
       );
   }
-
-  /*
-   * Premium headline treatment: ink fading toward muted at the tail. Use on
-   * one display headline per view, never on body copy — it reads as texture,
-   * not colour, and stays monochrome in both themes.
-   */
-  .text-gradient-ink {
-    background-image: linear-gradient(
-      135deg,
-      var(--color-ink) 55%,
-      color-mix(in oklab, var(--color-ink) 62%, transparent)
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
 }
 
 /* Infinite marquee loop. The inner track must use `w-max` and contain two
@@ -415,12 +379,4 @@
 
 @utility animate-marquee {
   animation: marquee-loop 40s linear infinite;
-}
-
-@utility animate-marquee-slow {
-  animation: marquee-loop 60s linear infinite;
-}
-
-@utility animate-marquee-reverse {
-  animation: marquee-loop 40s linear infinite reverse;
 }

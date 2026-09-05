@@ -2,26 +2,33 @@
 
 import { useMemo, useState } from "react";
 import NextLink from "next/link";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
-import {
-  SEARCH_TYPE_LABEL,
-  scoreEntry,
-  type SearchEntry,
-} from "@/lib/search";
+import { SEARCH_TYPE_LABEL, scoreEntry, type SearchEntry } from "@/lib/search";
+import { useSearchIndex } from "@/lib/search/use-search-index";
 
-export function SearchBox({ index }: { index: SearchEntry[] }) {
-  const [query, setQuery] = useState("");
+export function SearchBox() {
+  // Same static /search-index.json the palette uses. Fetched on mount here,
+  // since search is this page's entire purpose.
+  const index = useSearchIndex(true);
+  // Seeded from `?q=` so the SearchAction contract that websiteSchema()
+  // advertises to Google actually resolves. Read on the client rather than
+  // from server searchParams so the route stays static — scoring happens in
+  // the browser either way, so server-rendering it buys nothing.
+  const seed = useSearchParams().get("q")?.slice(0, 128) ?? "";
+  const [query, setQuery] = useState(seed);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (q.length < 2) return [] as Array<SearchEntry & { score: number }>;
+    if (q.length < 2 || !index) return [] as Array<SearchEntry & { score: number }>;
     return index
       .map((e) => ({ ...e, score: scoreEntry(e, q) }))
       .filter((e) => e.score > 0)
       .sort((a, b) => b.score - a.score);
   }, [index, query]);
 
-  const showEmpty = query.trim().length >= 2 && results.length === 0;
+  const loading = index === null;
+  const showEmpty = query.trim().length >= 2 && results.length === 0 && !loading;
 
   return (
     <div className="max-w-2xl">

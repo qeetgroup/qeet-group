@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -7,13 +6,14 @@ import { Link } from "@/components/ui/Link";
 import { SocialIcons } from "@/components/ui/SocialIcons";
 import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Press",
   description:
     "Brand assets, fact sheet, and press contact for Qeet Group and its companies.",
-  alternates: { canonical: "/press" },
-};
+  path: "/press",
+});
 
 const assets = [
   {
@@ -29,7 +29,7 @@ const assets = [
   {
     label: "Mark",
     note: "SVG · square icon",
-    href: "/icon.svg",
+    href: "/qeet-mark.svg",
   },
 ];
 

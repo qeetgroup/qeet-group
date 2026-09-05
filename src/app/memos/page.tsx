@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -6,13 +5,14 @@ import { Lede } from "@/components/ui/Lede";
 import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { listMemos } from "@/lib/content";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Memos",
   description:
     "Long-form notes from Qeet Group — questions we're working through, ideas worth writing down.",
-  alternates: { canonical: "/memos" },
-};
+  path: "/memos",
+});
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {

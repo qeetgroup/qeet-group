@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
 import { ProofBand } from "@/components/sections/ProofBand";
 import { Philosophy } from "@/components/sections/Philosophy";
@@ -9,10 +8,15 @@ import { Team } from "@/components/sections/Team";
 import { HomeFaq } from "@/components/sections/HomeFaq";
 import { NewsroomPreview } from "@/components/sections/NewsroomPreview";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
+import { buildPageMetadata } from "@/lib/seo/meta";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/config/site";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-};
+export const metadata = buildPageMetadata({
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  path: "/",
+  titleAbsolute: true,
+});
 
 /**
  * Ten sections, one argument: thesis (Hero) → proof (ProofBand) → doctrine

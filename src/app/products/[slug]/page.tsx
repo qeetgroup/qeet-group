@@ -15,6 +15,7 @@ import { PRODUCT_UI } from "@/components/product-ui/registry";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { productSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
 import { listProducts, loadProduct } from "@/lib/content";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
 export const dynamicParams = false;
 
@@ -33,11 +34,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await loadProduct(slug);
   if (!product) return {};
-  return {
+  return buildPageMetadata({
     title: product.data.name,
     description: product.data.description,
-    alternates: { canonical: `/products/${slug}` },
-  };
+    path: `/products/${slug}`,
+  });
 }
 
 export default async function ProductPage({
