@@ -8,6 +8,7 @@ import {
 } from "@/app/newsletter/actions";
 import { Events, track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { HoneypotField } from "./HoneypotField";
 
 const initialState: NewsletterFormState = { status: "idle" };
 
@@ -34,19 +35,7 @@ export function NewsletterForm({ className }: { className?: string }) {
 
   return (
     <form action={formAction} className={cn("max-w-sm", className)} noValidate>
-      <div className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
-        <label htmlFor="nl-website">
-          Website (leave blank)
-          <input
-            id="nl-website"
-            name="website"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            defaultValue=""
-          />
-        </label>
-      </div>
+      <HoneypotField id="nl-website" />
       <label htmlFor="nl-email" className="sr-only">
         Email address
       </label>

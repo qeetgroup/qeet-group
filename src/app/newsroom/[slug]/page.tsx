@@ -14,6 +14,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
 import { buildPageMetadata } from "@/lib/seo/meta";
 import { SITE_ORIGIN } from "@/config/site";
+import { formatDate } from "@/lib/format";
 
 export const dynamicParams = false;
 
@@ -41,14 +42,6 @@ export async function generateMetadata({
       publishedTime: post.data.date,
       authors: [post.data.author ?? "Qeet Group"],
     },
-  });
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
   });
 }
 

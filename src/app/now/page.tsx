@@ -6,6 +6,7 @@ import { Link } from "@/components/ui/Link";
 import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { formatDate } from "@/lib/format";
 
 /*
  * The /now page follows the nownownow.com convention: a short, dated
@@ -43,14 +44,6 @@ export const metadata = buildPageMetadata({
   description: `What Qeet Group is focused on right now (as of ${lastUpdated}).`,
   path: "/now",
 });
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
 
 export default function NowPage() {
   return (

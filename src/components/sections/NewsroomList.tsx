@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PostListingRow } from "@/components/ui/PostListingRow";
+import { PostRow } from "@/components/ui/PostRow";
 import { CategoryFilter, type CategoryChip } from "@/components/ui/CategoryFilter";
 import { FadeRise } from "@/components/motion/FadeRise";
 
@@ -44,19 +44,21 @@ export function NewsroomList({ posts }: { posts: NewsroomListItem[] }) {
       {visible.length === 0 ? (
         <p className="font-sans text-body text-ink-muted">No posts in this category.</p>
       ) : (
-        visible.map((post, i) => (
-          <FadeRise key={post.slug}>
-            <PostListingRow
-              date={post.date}
-              category={post.category}
-              title={post.title}
-              dek={post.dek}
-              readingTime={post.readingTime}
-              href={`/newsroom/${post.slug}`}
-              isFirst={i === 0}
-            />
-          </FadeRise>
-        ))
+        <div className="divide-y divide-rule">
+          {visible.map((post) => (
+            <FadeRise key={post.slug}>
+              <PostRow
+                layout="listing"
+                date={post.date}
+                category={post.category}
+                title={post.title}
+                dek={post.dek}
+                readingTime={post.readingTime}
+                href={`/newsroom/${post.slug}`}
+              />
+            </FadeRise>
+          ))}
+        </div>
       )}
     </>
   );

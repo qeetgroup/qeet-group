@@ -6,6 +6,7 @@ import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
 import { listMemos } from "@/lib/content";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { PostRow } from "@/components/ui/PostRow";
 
 export const metadata = buildPageMetadata({
   title: "Memos",
@@ -13,14 +14,6 @@ export const metadata = buildPageMetadata({
     "Long-form notes from Qeet Group — questions we're working through, ideas worth writing down.",
   path: "/memos",
 });
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
 
 export default async function MemosPage() {
   const memos = await listMemos();
@@ -52,38 +45,20 @@ export default async function MemosPage() {
             The first memo is being written. Check back soon.
           </p>
         ) : (
-          memos.map((m, i) => (
-            <FadeRise key={m.slug}>
-              <article
-                className={
-                  i === 0
-                    ? "py-10 md:py-12 lg:py-14"
-                    : "border-t border-rule py-10 md:py-12 lg:py-14"
-                }
-              >
-                <a
+          <div className="divide-y divide-rule">
+            {memos.map((m) => (
+              <FadeRise key={m.slug}>
+                <PostRow
+                  layout="listing"
+                  date={m.data.date}
+                  title={m.data.title}
+                  dek={m.data.dek}
+                  readingTime={m.readingTime}
                   href={`/memos/${m.slug}`}
-                  className="group/memo grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-10 focus-ring rounded-sm"
-                >
-                  <div className="md:col-span-3 lg:col-span-3">
-                    <p className="font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle">
-                      <time dateTime={m.data.date}>{formatDate(m.data.date)}</time>
-                      <span aria-hidden="true"> · </span>
-                      <span>{m.readingTime} min read</span>
-                    </p>
-                  </div>
-                  <div className="md:col-span-9 lg:col-span-9">
-                    <h2 className="text-balance font-display font-normal text-ink text-heading-xl">
-                      {m.data.title}
-                    </h2>
-                    <p className="mt-3 max-w-[40rem] text-body text-ink-muted md:mt-4">
-                      {m.data.dek}
-                    </p>
-                  </div>
-                </a>
-              </article>
-            </FadeRise>
-          ))
+                />
+              </FadeRise>
+            ))}
+          </div>
         )}
       </Section>
     </>

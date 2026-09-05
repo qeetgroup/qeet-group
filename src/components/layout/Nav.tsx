@@ -5,6 +5,7 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Wordmark } from "@/components/ui/Wordmark";
 import { COMMAND_PALETTE_OPEN_EVENT } from "@/components/sections/CommandPalette";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
@@ -63,18 +64,7 @@ export function Nav({ products }: { products: ProductSummary[] }) {
       >
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 md:px-10 lg:h-20 lg:px-16">
           <Magnetic strength={0.3}>
-            <NextLink
-              href="/"
-              aria-label="Qeet Group home"
-              className="group flex items-center gap-2.5 font-display text-[clamp(1.375rem,1.2rem+0.6vw,1.625rem)] font-semibold leading-none tracking-[-0.03em] text-ink"
-            >
-              {/* Identity-core dot — a small echo of the graph signature. */}
-              <span
-                aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-125"
-              />
-              Qeet Group
-            </NextLink>
+            <Wordmark className="flex" />
           </Magnetic>
 
           <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">

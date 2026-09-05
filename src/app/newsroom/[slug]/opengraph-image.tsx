@@ -1,18 +1,11 @@
 import { ImageResponse } from "next/og";
 import { loadPost } from "@/lib/content";
 import { loadSerifFont } from "@/lib/seo/og-fonts";
+import { formatDate } from "@/lib/format";
 
 export const alt = "Qeet Group newsroom";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
 
 export default async function Image({
   params,

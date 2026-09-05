@@ -1,5 +1,5 @@
-import NextLink from "next/link";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { Anchor } from "./Anchor";
 import { cn, isExternalHref } from "@/lib/utils";
 
 type Variant = "default" | "arrow" | "external";
@@ -93,23 +93,9 @@ export function Link({
     </>
   );
 
-  if (isExternal) {
-    return (
-      <a
-        href={href}
-        className={baseClass}
-        target={href.startsWith("http") ? "_blank" : undefined}
-        rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-        {...rest}
-      >
-        {content}
-      </a>
-    );
-  }
-
   return (
-    <NextLink href={href} className={baseClass} {...rest}>
+    <Anchor href={href} className={baseClass} {...rest}>
       {content}
-    </NextLink>
+    </Anchor>
   );
 }

@@ -143,7 +143,10 @@
    */
   --color-accent: var(--color-brand-500);
   --color-accent-hover: var(--color-brand-400);
-  --color-accent-text: var(--color-brand-400);
+  /* The real brand orange, #f26d0e — 6.57:1 on the dark canvas and 6.19:1 on a
+   * raised surface, so it comfortably clears AA. It is only the LIGHT canvas
+   * (2.94:1) that forces a different value, which is what .light overrides. */
+  --color-accent-text: var(--color-brand-500);
   --color-accent-contrast: var(--color-brand-950);
   --color-accent-soft: color-mix(in oklab, var(--color-accent) 14%, transparent);
   --color-accent-faint: color-mix(in oklab, var(--color-accent) 7%, transparent);
@@ -322,8 +325,9 @@
   --color-rule-interactive: oklch(0.64 0 0);
 
   /* The accent FILL does not change, but brand-500 is only 2.94:1 on this
-   * canvas, so accent text drops to brand-700 (5.16:1) and the focus ring to
-   * brand-600 (3.72:1 — clears the 3:1 that non-text UI needs). */
+   * canvas — so here, and only here, accent text drops to brand-700 (5.16:1)
+   * and the focus ring to brand-600 (3.72:1, clearing the 3:1 non-text UI
+   * needs). In dark mode accent text stays the true brand orange. */
   --color-accent-text: var(--color-brand-700);
   --color-accent-hover: var(--color-brand-600);
   --color-focus: var(--color-brand-600);

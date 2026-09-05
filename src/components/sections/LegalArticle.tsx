@@ -8,14 +8,7 @@ import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/structured-data";
 import type { LoadedLegal } from "@/lib/content";
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/lib/format";
 
 export function LegalArticle({ doc }: { doc: LoadedLegal }) {
   const { data, content } = doc;

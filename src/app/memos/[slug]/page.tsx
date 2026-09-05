@@ -10,6 +10,7 @@ import { listMemos, loadMemo } from "@/lib/content";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { articleSchema, breadcrumbSchema } from "@/lib/seo/structured-data";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { formatDate } from "@/lib/format";
 
 export const dynamicParams = false;
 
@@ -37,14 +38,6 @@ export async function generateMetadata({
       publishedTime: memo.data.date,
       authors: [memo.data.author ?? "Qeet Group"],
     },
-  });
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
   });
 }
 
