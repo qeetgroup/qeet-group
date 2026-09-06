@@ -2,19 +2,18 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { HoneypotField } from "./HoneypotField";
 import { submitContact, type ContactFormState } from "@/app/contact/actions";
 import { Events, track } from "@/lib/analytics";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 const initialState: ContactFormState = { status: "idle" };
 
 const TOPICS = ["Partnerships", "Press", "Hiring", "General", "Other"];
 
-const honeypotWrapCls =
-  "absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden opacity-0";
-
 const inputCls =
-  "w-full appearance-none border-0 border-b border-rule-strong bg-transparent py-3 font-sans text-body text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none transition-colors duration-200 aria-[invalid=true]:border-error";
+  "w-full appearance-none border-0 border-b border-rule-strong bg-transparent py-3 font-sans text-body text-ink placeholder:text-ink-subtle focus:border-ink transition-colors duration-200 aria-[invalid=true]:border-error focus-field";
 
 const labelCls = "block font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle";
 
@@ -33,7 +32,7 @@ export function ContactForm() {
       <div className="max-w-2xl">
         <p
           role="status"
-          className="font-serif font-normal text-balance text-ink text-[1.75rem] leading-[1.18] md:text-[2.25rem] md:leading-[1.18]"
+          className="font-display text-balance text-ink text-heading-xl"
         >
           Got it. We&rsquo;ll get back to you within a few days.
         </p>
@@ -50,19 +49,7 @@ export function ContactForm() {
   return (
     <form action={formAction} className="max-w-2xl" noValidate>
       {/* Anti-spam: hidden honeypot + render timestamp. */}
-      <div className={honeypotWrapCls} aria-hidden="true">
-        <label htmlFor="website">
-          Website (leave blank)
-          <input
-            id="website"
-            name="website"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            defaultValue=""
-          />
-        </label>
-      </div>
+      <HoneypotField />
       <input type="hidden" name="started_at" value={startedAt} />
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10">
@@ -177,19 +164,19 @@ export function ContactForm() {
   );
 }
 
+/**
+ * The form's primary action.
+ *
+ * Uses the Button primitive rather than a hand-rolled <button>. The previous
+ * version reimplemented the pill shape, height, padding and hover here, and had
+ * already drifted from Button's own values — which is the whole reason Button
+ * exists. It also meant this control missed the designed loading state.
+ */
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={cn(
-        "inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-7 font-sans text-body font-medium text-canvas",
-        "transition-opacity duration-200 hover:bg-ink/90 disabled:opacity-60 disabled:cursor-not-allowed",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
-      )}
-    >
+    <Button type="submit" variant="accent" size="lg" loading={pending}>
       {pending ? "Sending…" : "Send message"}
-    </button>
+    </Button>
   );
 }

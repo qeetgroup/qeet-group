@@ -1,31 +1,35 @@
-import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Lede } from "@/components/ui/Lede";
 import { PageAmbient } from "@/components/ui/PageAmbient";
 import { FadeRise } from "@/components/motion/FadeRise";
-import { Spotlight } from "@/components/motion/Spotlight";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { TrackedMailto } from "@/components/ui/TrackedMailto";
 import { SocialIcons } from "@/components/ui/SocialIcons";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Contact",
   description: "Get in touch with Qeet Group — partnerships, press, or general inquiries.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 const channels = [
   {
     label: "Partnerships",
     email: "partnerships@qeet.in",
-    description: "Working with one of our subsidiaries, or exploring a new company together.",
+    description: "Integrations, distribution, or building something with us.",
   },
   {
     label: "Press",
     email: "press@qeet.in",
     description: "Interviews, comments, and media inquiries.",
+  },
+  {
+    label: "Security",
+    email: "security@qeet.in",
+    description: "Vulnerability reports. We would rather hear it early than read it later.",
   },
   {
     label: "General",
@@ -45,7 +49,7 @@ export default function ContactPage() {
             <Eyebrow className="mb-10 md:mb-14">Contact</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1}>
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.75rem] leading-[1.04] sm:text-[3.5rem] md:text-[5rem] md:leading-[1.03] lg:text-[6rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display text-ink text-display-xl">
               Get in touch.
             </h1>
           </FadeRise>
@@ -65,12 +69,9 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
           {channels.map((c, i) => (
             <FadeRise key={c.label} delay={i * 0.06} className="h-full">
-              <Spotlight
-                color="color-mix(in oklab, var(--color-brand) 12%, transparent)"
-                className="h-full rounded-3xl"
-              >
-                <div className="glass-panel flex h-full flex-col rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg md:p-8">
-                  <h2 className="font-serif font-normal text-balance tracking-[-0.01em] text-ink text-[1.75rem] leading-[1.16] md:text-[2rem]">
+              
+                <div className="glass-panel flex h-full flex-col rounded-3xl p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg md:p-8">
+                  <h2 className="font-display text-balance text-ink text-heading-xl">
                     {c.label}
                   </h2>
                   <p className="mt-4 text-body text-ink-muted">{c.description}</p>
@@ -84,7 +85,7 @@ export default function ContactPage() {
                     </TrackedMailto>
                   </div>
                 </div>
-              </Spotlight>
+              
             </FadeRise>
           ))}
         </div>
@@ -100,7 +101,7 @@ export default function ContactPage() {
             <p className="text-body-l text-ink">
               We&rsquo;re also on the platforms below.
             </p>
-            <p className="mt-5 max-w-[28rem] text-body text-ink-muted">
+            <p className="mt-5 max-w-md text-body text-ink-muted">
               Email is the fastest way to reach us. Social is where we share
               shorter notes and respond when we can.
             </p>
@@ -116,7 +117,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
           <FadeRise className="md:col-span-4">
             <Eyebrow>Or send a message</Eyebrow>
-            <p className="mt-6 max-w-[28rem] text-body text-ink-muted">
+            <p className="mt-6 max-w-md text-body text-ink-muted">
               We&rsquo;ll route it to the right person and respond within a few days.
             </p>
           </FadeRise>

@@ -8,6 +8,7 @@ import {
 } from "@/app/newsletter/actions";
 import { Events, track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { HoneypotField } from "./HoneypotField";
 
 const initialState: NewsletterFormState = { status: "idle" };
 
@@ -34,19 +35,7 @@ export function NewsletterForm({ className }: { className?: string }) {
 
   return (
     <form action={formAction} className={cn("max-w-sm", className)} noValidate>
-      <div className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
-        <label htmlFor="nl-website">
-          Website (leave blank)
-          <input
-            id="nl-website"
-            name="website"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            defaultValue=""
-          />
-        </label>
-      </div>
+      <HoneypotField id="nl-website" />
       <label htmlFor="nl-email" className="sr-only">
         Email address
       </label>
@@ -59,7 +48,7 @@ export function NewsletterForm({ className }: { className?: string }) {
           required
           placeholder="you@example.com"
           aria-invalid={state.status === "error" || undefined}
-          className="min-w-0 flex-1 appearance-none border-0 bg-transparent py-2 font-sans text-body-s text-ink placeholder:text-ink-subtle focus:outline-none"
+          className="min-w-0 flex-1 appearance-none border-0 bg-transparent py-2 font-sans text-body-s text-ink placeholder:text-ink-subtle focus-field"
         />
         <SubmitButton />
       </div>
@@ -80,8 +69,8 @@ function SubmitButton() {
       disabled={pending}
       className={cn(
         "shrink-0 py-2 font-sans text-body-s text-ink underline decoration-current/30 decoration-1 underline-offset-[5px]",
-        "transition-[text-decoration-color,opacity] duration-200 hover:decoration-brand disabled:opacity-60 disabled:cursor-not-allowed",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+        "transition-[text-decoration-color,opacity] duration-200 hover:decoration-accent-hover disabled:opacity-60 disabled:cursor-not-allowed",
+        "focus-ring",
       )}
     >
       {pending ? "Subscribing…" : "Subscribe"}

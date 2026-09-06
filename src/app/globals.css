@@ -1,147 +1,435 @@
 @import "tailwindcss";
 
 /*
- * Register the `dark:` variant so utilities like `dark:bg-foo` apply when
- * `.dark` is present on (or above) the element. The `:where()` keeps
- * specificity flat.
+ * ============================================================================
+ * qeet.in design tokens
+ * ============================================================================
+ *
+ * Dark is the default. `:root` carries the dark palette and `.light` opts out,
+ * so a visitor with JavaScript disabled still gets the intended brand surface
+ * and there is no class to add before first paint.
+ *
+ * Components consume SEMANTIC tokens only — `bg-surface`, `text-ink-muted`,
+ * `border-rule`. A component must never contain a literal hex, a raw oklch(),
+ * or a `dark:` colour override: theming happens here and nowhere else. That is
+ * what keeps the light/dark switch a one-file change rather than a site-wide
+ * audit, and it mirrors the Qeetrix rule that a hex code in product code is a
+ * bug.
+ *
+ * ---------------------------------------------------------------------------
+ * The palette
+ * ---------------------------------------------------------------------------
+ *
+ * A near-achromatic surface system carrying ONE signal colour at low coverage.
+ * That restraint is the finding from auditing what large technology
+ * organisations actually ship — Siemens, NVIDIA, Salesforce, IBM, SAP all work
+ * this way. The multi-hue gradient palette is a SaaS marker, not a corporate
+ * one, and it is what this palette exists to avoid.
+ *
+ *   Neutrals   a faintly COOL grey ramp (hue 248, chroma <= 0.009). Not pure
+ *              achromatic: a whisper of blue is what separates an expensive
+ *              grey from a flat one.
+ *   Signal     one high-chroma yellow-green, #e8ff47, anchored at signal-400.
+ *              Budgeted to roughly 2% of any given viewport: live status, the
+ *              active nav rule, diagram connections, one CTA. If a page has two
+ *              signal-coloured surfaces competing, one of them is wrong.
+ *
+ * The hue has no incumbent in enterprise technology, where blue is saturated,
+ * purple belongs to Accenture and TCS, red to Oracle and Adobe, and green to
+ * Deloitte, NVIDIA and Siemens.
+ *
+ * There is no product-colour system. Colour encodes LIFECYCLE instead — see the
+ * --color-status-* tokens. A shipped product carries the signal; one in
+ * development is dimmed ink; one merely planned is achromatic. Colour is earned
+ * by shipping, the ecosystem map reads as lifecycle without a single label, and
+ * adding the seventeenth product requires no new colour decision.
+ *
+ * Colour is OKLCH so the ramps are perceptually even and computable rather than
+ * hand-picked. Every step of the signal ramp was solved against the sRGB gamut
+ * boundary at its own lightness, so nothing silently clips.
+ *
+ * Every pairing below is measured by `bun run check:contrast`, not eyeballed.
+ * Three results are load-bearing and explain tokens that would otherwise look
+ * redundant:
+ *   • The signal is a LIGHT colour — near-white in lightness terms. On the light
+ *     canvas it is effectively invisible as text, so accent TEXT goes through
+ *     --color-accent-text (a deep olive), never --color-accent.
+ *   • Conversely, white on a signal fill is unreadable. A label sitting ON the
+ *     accent uses --color-accent-contrast, a near-black.
+ *   • Hairlines sit far below 3:1 by design, so borders that carry MEANING
+ *     (inputs, selected states) use --color-rule-interactive instead.
  */
-@custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Type system. Display + headings use Fraunces (var(--font-display)); body uses
- * Cal Sans Text (var(--font-body)); UI/controls use Cal Sans UI (var(--font-ui));
- * mono is Geist Mono. All faces are loaded in app/layout.tsx — swapping any is a
- * one-line change there. `--font-serif` is a legacy alias → display so any
- * remaining `font-serif` call sites render in the display (serif) face.
+ * `dark:` applies whenever the document has NOT opted into light. `:where()`
+ * keeps specificity flat so utilities still win by source order.
+ */
+@custom-variant dark (&:where(:root:not(.light), :root:not(.light) *));
+@custom-variant light (&:where(.light, .light *));
+
+/*
+ * ---------------------------------------------------------------------------
+ * Type roles — the Qeet typefaces.
+ * ---------------------------------------------------------------------------
+ *
+ *   display   Qeet UI      headings and display type
+ *   ui        Qeet UI      controls, navigation, labels
+ *   sans      Qeet Text    body copy
+ *   mono      Fira Code    data, metrics, timestamps
+ *
+ * Two faces, from `@qeetrix/ui`, so this site is set in the same type as the
+ * products it describes.
+ *
+ * NO SERIF. A serif display face was introduced here at one point — the
+ * headings then read as the editorial voice of a publication rather than the
+ * voice of a technology organisation, and it was indistinguishable from the
+ * Fraunces pairing this identity replaced. `--font-display` and `--font-ui`
+ * resolve to the same family deliberately; they stay distinct ROLES so display
+ * type can later diverge in weight or tracking without touching call sites.
+ *
+ * With one face doing headings and chrome, hierarchy comes from weight, size
+ * and space alone. That is the harder system to build and the steadier one, and
+ * it is what nearly every large technology organisation actually ships.
  */
 @theme inline {
-  --font-display: var(--font-display);
-  --font-heading: var(--font-display);
-  --font-sans: var(--font-body);
-  --font-ui: var(--font-ui);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-display);
+  --font-display: var(--font-ui-face);
+  --font-sans: var(--font-body-face);
+  --font-ui: var(--font-ui-face);
+  --font-mono: var(--font-mono-face);
+}
+
+/*
+ * `static` because Tailwind tree-shakes unused @theme variables. The ramps are
+ * referenced by the semantic tokens below rather than by utilities directly,
+ * so without this only the handful of steps that happen to be aliased would be
+ * emitted — and the /design reference would render empty swatches for the rest.
+ */
+@theme static {
+  /* ==========================================================================
+   * Ramps — theme-independent. Semantic tokens point at these.
+   * ======================================================================= */
+
+  /*
+   * Neutral. The original qeet.in greys, hand-picked rather than computed —
+   * pure achromatic, no cool or warm cast. Kept as hex so they are the exact
+   * values the site shipped with.
+   */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #fcfcfc;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #c8c8c8;
+  --color-neutral-400: #929292;
+  --color-neutral-500: #7e7e7e;
+  --color-neutral-600: #6e6e6e;
+  --color-neutral-700: #4a4a4a;
+  --color-neutral-800: #3d3d3d;
+  --color-neutral-850: #262626;
+  --color-neutral-900: #181818;
+  --color-neutral-950: #141414;
+  --color-neutral-1000: #0a0a0a;
+
+  /*
+   * Brand — Qeet orange. 500 is #ff6900, the value @qeetrix/ui ships, so an
+   * orange here is the same orange the products render.
+   *
+   * The whole ramp is Qeetrix's, converted from its OKLCH definitions. Note the
+   * hue drifts as it darkens (56 -> 38): a straight lightness ramp does not
+   * preserve perceived warmth, so the deep steps rotate toward red rather than
+   * going brown.
+   *
+   * ---------------------------------------------------------------------------
+   * What each step can and cannot do — measured, not guessed.
+   * ---------------------------------------------------------------------------
+   *                on light   on dark   white label on it
+   *   400 #ff8904    2.32      8.33          2.38
+   *   500 #ff6900    2.81      6.86          2.89   <- the brand
+   *   600 #f54900    3.51      5.50          3.60
+   *   700 #ca3500    5.09      3.79          5.22
+   *   800 #9f2d00    7.18      2.69          7.37
+   *
+   * The consequence worth stating plainly: #ff6900 CANNOT be text on the light
+   * canvas. At 2.81:1 it fails AA for body text and also fails the relaxed 3:1
+   * bar for display type — there is no size at which it is compliant on white.
+   * On the dark canvas it is 6.86:1 and needs no help at all.
+   *
+   * So the brand appears at full strength everywhere except light-mode TEXT,
+   * where it steps to 600 for display and 700 for body. Those are the lightest
+   * steps that pass, chosen to stay as close to #ff6900 as the arithmetic
+   * allows rather than defaulting to something safely dark.
+   */
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #ffb086;
+  --color-brand-400: #ff8904;
+  --color-brand-500: #ff6900;
+  --color-brand-600: #f54900;
+  --color-brand-700: #ca3500;
+  --color-brand-800: #9f2d00;
+  --color-brand-900: #7e2a0c;
+
 }
 
 @theme {
-  /*
-   * A mostly-monochrome palette. Surfaces, ink, and rules carry the layout;
-   * emphasis comes from typography, scale, and whitespace first. Brand
-   * orange is the single accent — lifted from the Qeet logo — and is used
-   * sparingly for interactive moments (hover, focus, active states) and
-   * nowhere else. If you find yourself reaching for it for decoration,
-   * pause.
-   */
-
-  /* Surfaces */
-  --color-canvas: #fcfcfc;
-  --color-surface: #ffffff;
-  --color-inverse: #0a0a0a;
-
-  /* Text */
-  --color-ink: #0a0a0a;
-  --color-ink-muted: #4a4a4a;
-  --color-ink-subtle: #6e6e6e;
-  --color-ink-inverse: #fcfcfc;
-
-  /* Borders & rules */
-  --color-rule: #e5e5e5;
-  --color-rule-strong: #c8c8c8;
-
-  /* Brand accent — the warm colour outside the monochrome stack, lifted from
-   * the Qeet logo. The site now leans bolder: brand orange is used
-   * expressively in the gradient mesh, glows, and hover fills (not only
-   * hover/focus/active), while ink/canvas still carry the bulk of the layout
-   * so it never becomes the dominant surface. Same value in dark mode. */
-  --color-brand: #f26d0e;
-  --color-brand-deep: #d85301;
-  /* Low-alpha brand tints for washes and hover fills. */
-  --color-brand-soft: color-mix(in oklab, var(--color-brand) 12%, transparent);
-  --color-brand-faint: color-mix(in oklab, var(--color-brand) 6%, transparent);
-
-  /* Functional (form state only — used sparingly) */
-  --color-success: #2f6b3e;
-  --color-warning: #8b5a1c;
-  --color-error: #8b2f2f;
-
-  /* Body type scale. Display + heading sizes are responsive and live in the Heading component. */
-  --text-body-l: 1.25rem;
-  --text-body-l--line-height: 2rem;
-  --text-body: 1.0625rem;
-  --text-body--line-height: 1.75rem;
-  --text-body-s: 0.9375rem;
-  --text-body-s--line-height: 1.5rem;
-  --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.25rem;
+  /* ==========================================================================
+   * Semantic colour — DARK values (the default). `.light` overrides these.
+   * ======================================================================= */
 
   /*
-   * Elevation. The editorial base is flat (hairline rules); these soft,
-   * low-alpha shadows are reserved for lifted surfaces — glass cards, hover
-   * states, the elevated nav. Tuned against light canvas; the `.dark` block
-   * redefines them (a near-black drop reads as nothing on a dark surface, so
-   * dark elevation leans on a faint top highlight + deeper drop).
+   * Surfaces. In dark, elevation is carried by lightness; in light it is
+   * carried by shadow. Named by role rather than by number, so a component
+   * asks for what it is instead of how bright it should be.
    */
-  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, var(--color-ink) 6%, transparent);
-  --shadow-md:
-    0 4px 16px -4px color-mix(in oklab, var(--color-ink) 12%, transparent),
-    0 2px 6px -2px color-mix(in oklab, var(--color-ink) 8%, transparent);
-  --shadow-lg:
-    0 18px 56px -12px color-mix(in oklab, var(--color-ink) 20%, transparent),
-    0 6px 16px -6px color-mix(in oklab, var(--color-ink) 10%, transparent);
-  /* Hero-grade elevation — reserved for the single most-lifted surface per
-   * view (featured bento cell, story panel). If two surfaces carry it, one
-   * of them is wrong. */
-  --shadow-xl:
-    0 32px 88px -20px color-mix(in oklab, var(--color-ink) 26%, transparent),
-    0 12px 28px -10px color-mix(in oklab, var(--color-ink) 12%, transparent);
-  /* Brand-tinted glow — the expressive accent for primary CTAs / featured
-   * cards. Same value in both themes (the brand colour doesn't flip). */
-  --shadow-glow: 0 10px 44px -10px color-mix(in oklab, var(--color-brand) 40%, transparent);
-
-  /*
-   * Glass surfaces. Translucent fills meant to sit over the gradient mesh /
-   * content, paired with `backdrop-blur-*` utilities. `glass` is the panel
-   * fill; `glass-border` is the hairline that gives the pane an edge.
-   */
-  --color-glass: color-mix(in oklab, var(--color-surface) 62%, transparent);
-  --color-glass-strong: color-mix(in oklab, var(--color-surface) 82%, transparent);
-  --color-glass-border: color-mix(in oklab, var(--color-ink) 8%, transparent);
-
-  /* The signature ease used throughout the motion system, exposed to CSS
-   * transitions/animations as `ease-out-expo`. Mirrors EASE_OUT in lib/motion. */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Ambient hero blob drift. Disabled wholesale by the reduced-motion block. */
-  --animate-blob: blob-float 22s var(--ease-out-expo) infinite;
-  --animate-blob-slow: blob-float 32s var(--ease-out-expo) infinite;
-}
-
-/*
- * Dark mode overrides the design tokens at runtime. Because every Tailwind
- * color utility resolves through `var(--color-…)`, redefining the variables
- * under `.dark` repaints the entire surface without recompiling utilities.
- *
- * Inverse-tone sections (the Closing CTA) become a slightly-elevated dark
- * surface rather than flipping to light — preserves the dark aesthetic
- * while keeping the section visually distinct from the canvas.
- */
-.dark {
   --color-canvas: #0a0a0a;
   --color-surface: #141414;
+  --color-surface-raised: #1c1c1c;
+  --color-surface-overlay: #242424;
+  --color-surface-sunken: #050505;
+  /* Inverse-tone bands (the closing CTA) read as a lifted dark panel rather
+   * than flipping to light, so the dark aesthetic survives the whole page. */
   --color-inverse: #181818;
 
+  /* Text. Measured on the dark canvas: 18.96 / 9.72 / 5.44 — all clear AA. */
   --color-ink: #fcfcfc;
   --color-ink-muted: #b5b5b5;
-  --color-ink-subtle: #7a7a7a;
+  --color-ink-subtle: #7e7e7e;
   --color-ink-inverse: #fcfcfc;
 
+  /*
+   * Rules. `rule` is a decorative hairline and `rule-strong` a visible divider
+   * — both sit intentionally below 3:1, because they carry no meaning the
+   * layout does not already convey. `rule-interactive` is for borders that DO
+   * carry meaning (inputs, toggles, selected states) and is the only one held
+   * to WCAG 1.4.11: 3.59:1 on canvas, 3.38:1 on a raised surface.
+   */
   --color-rule: #262626;
   --color-rule-strong: #3d3d3d;
+  --color-rule-interactive: #6b6b6b;
 
+  /*
+   * Accent — three distinct jobs. Conflating them is how accessible palettes
+   * go wrong, so they stay separate tokens even where values coincide:
+   *   accent               fills, graphics, glows. Never text.
+   *   accent-text          accent-coloured TEXT at normal size (needs 4.5:1).
+   *   accent-text-display  the same, but only for large display type, which
+   *                        WCAG lets sit at 3:1. On the light canvas that
+   *                        difference is what keeps a headline vivid: brand-600
+   *                        clears 3:1 and still reads as the brand orange,
+   *                        where brand-700 visibly darkens toward rust.
+   *   accent-contrast      a label sitting ON an accent fill.
+   *
+   * In dark mode all three text tokens are the true brand orange — it is only the
+   * light canvas that forces them apart.
+   */
+  --color-accent: var(--color-brand-500);
+  /*
+   * Hover is the BRAND, not a lighter or darker relative of it — in both
+   * themes. It previously stepped to brand-400 in dark and brand-600 in light,
+   * which meant hovering something changed which orange you were looking at.
+   *
+   * This token is for NON-TEXT hover only: borders, underlines, washes, marks.
+   * Those need 3:1 as graphics, which #ff6900 clears on both canvases, so the
+   * true brand can appear at full strength on hover everywhere.
+   *
+   * Hover on TEXT goes through --color-accent-text instead, and has to: at
+   * body size on the light canvas #ff6900 is 2.81:1 and fails, so light-mode
+   * text hover steps to brand-700 — the lightest step that passes. On dark it
+   * is already the brand at 6.86:1 and does not move.
+   */
+  --color-accent-hover: var(--color-brand-500);
+  /*
+   * Dark mode uses the held-back accent for all three text roles — see
+   * the note on the accent ramp above for why. The LIGHT canvas has the opposite
+   * problem and splits by size instead, because there the same orange drops to
+   * roughly 3:1 and has to darken to stay readable.
+   */
+  --color-accent-text: var(--color-brand-500);
+  --color-accent-text-display: var(--color-brand-500);
+  /*
+   * ==========================================================================
+   * Hover text — the true brand, in both themes.
+   * ==========================================================================
+   *
+   * A deliberate, recorded exception. #ff6900 measures 2.81:1 on the LIGHT
+   * canvas, which fails WCAG AA for body text (4.5:1) and also fails the
+   * relaxed large-text bar (3:1). There is no size at which it is compliant on
+   * white.
+   *
+   * It is used anyway, on hover only, because the brand reading as one colour
+   * everywhere was judged to matter more than the hover state alone meeting AA.
+   * That is a legitimate call to make and it is recorded here rather than
+   * quietly absorbed — `bun run check:contrast` prints it as an ACCEPTED
+   * exception on every run, so it stays visible.
+   *
+   * The exposure is deliberately narrow, and that narrowness is the mitigation:
+   *
+   *   - It applies to HOVER ONLY. Static accent text still goes through
+   *     --color-accent-text, which passes in both themes. Nothing a visitor
+   *     reads at rest is affected.
+   *   - Hover requires a pointer. Keyboard and touch users never reach this
+   *     state; they get the focus ring, which does pass.
+   *   - Colour is never the only affordance on these elements. Every one is a
+   *     link with its own underline, arrow or border movement, so the hover is
+   *     legible without perceiving the colour change at all.
+   *
+   * On the dark canvas it is 6.86:1 and compliant — the exception is
+   * light-mode only.
+   */
+  --color-accent-text-hover: var(--color-brand-500);
+  /* A label sitting ON an accent fill. Near-black, not white — white on
+   * brand-500 measures about 3:1 and fails for normal text. */
+  --color-accent-contrast: #0a0a0a;
+
+  /*
+   * ==========================================================================
+   * Filled controls — a separate fill from the graphic accent, on purpose.
+   * ==========================================================================
+   *
+   * A button's label must be WHITE, and white is only legible from brand-700
+   * down:
+   *
+   *     white on brand-500 #ff6900   2.89:1   FAIL
+   *     white on brand-600 #f54900   3.60:1   FAIL
+   *     white on brand-700 #ca3500   5.22:1   ok
+   *
+   * qeet-id-website reaches the same conclusion and sets `--primary` to
+   * brand-700 for exactly this reason.
+   *
+   * The important part is that this is a SECOND token rather than a change to
+   * --color-accent. The accent is also a status dot, a nav rule, a diagram
+   * connection and a focus ring — graphics with no label on them, which want
+   * the bright brand-500 and would go dull and muddy if darkened to 700 just to
+   * satisfy a button. One token cannot serve both jobs; pretending otherwise is
+   * how an accent ends up either unreadable or lifeless.
+   *
+   * Identical in both themes: brand-700 separates from the light canvas at
+   * 5.09:1 and from the dark canvas at 3.79:1, so the same fill works on both
+   * and the button is recognisably the same control.
+   */
+  --color-accent-solid: var(--color-brand-700);
+  /* Hover DARKENS in both themes rather than lightening in dark mode. Lifting
+   * toward brand-600 would take the white label to 3.56:1 — the hover state is
+   * not the place to lose the label. */
+  --color-accent-solid-hover: var(--color-brand-800);
+  --color-accent-solid-contrast: #ffffff;
+  --color-accent-soft: color-mix(in oklab, var(--color-accent) 14%, transparent);
+  --color-accent-faint: color-mix(in oklab, var(--color-accent) 7%, transparent);
+
+  /* Focus lifts one step above the accent, so the ring stays visible on an
+   * accent-filled control it might be sitting on. */
+  --color-focus: var(--color-brand-400);
+
+  /*
+   * Functional. Form and status states only, and deliberately desaturated
+   * relative to the accent: nothing in the palette may compete with the brand
+   * for attention. Warning sits at hue 70 rather than closer to the accent's
+   * 47.6, far enough that an amber notice is never mistaken for brand orange —
+   * which is the one collision this particular brand hue makes easy.
+   */
+  --color-success: #5fb87a;
+  --color-warning: #e0a458;
   --color-error: #f08585;
 
-  /* Dark elevation: a black drop is invisible on a dark canvas, so depth comes
-   * from a deeper drop plus a faint top highlight that catches the light. */
+  /*
+   * ==========================================================================
+   * Lifecycle. This replaces the usual per-product colour system.
+   * ==========================================================================
+   *
+   * There are 16 products and there will be more. A hue per product does not
+   * survive that — the arc runs out around eight, and every addition becomes a
+   * colour argument. Encoding STATUS instead scales indefinitely and carries
+   * more useful information: a visitor scanning the ecosystem map learns what
+   * has shipped before reading a single word.
+   *
+   * The ordering is the message. Signal → dimmed ink → faint ink is a ladder of
+   * presence, so a planned product cannot accidentally look as real as a live
+   * one, which is the failure mode the whole lifecycle system exists to prevent.
+   */
+  --color-status-available: var(--color-brand-500);
+  --color-status-development: var(--color-ink-muted);
+  --color-status-planned: var(--color-ink-subtle);
+
+  /* Glass: a lifted dark pane, not a frosted-white one. */
+  --color-glass: color-mix(in oklab, var(--color-surface) 62%, transparent);
+  --color-glass-strong: color-mix(in oklab, var(--color-surface) 86%, transparent);
+  --color-glass-border: color-mix(in oklab, var(--color-ink) 12%, transparent);
+
+  /* ==========================================================================
+   * Type scale — fluid, so headlines are continuous across viewports instead
+   * of stepping at breakpoints. Enforced through ui/Heading and ui/Text; a
+   * bare `text-[Nrem]` on a headline is drift.
+   * ======================================================================= */
+
+  --text-display-2xl: clamp(2.75rem, 1.4rem + 6vw, 6.5rem);
+  --text-display-2xl--line-height: 0.98;
+  --text-display-2xl--letter-spacing: -0.035em;
+
+  --text-display-xl: clamp(2.5rem, 1.5rem + 4.4vw, 5rem);
+  --text-display-xl--line-height: 1.02;
+  --text-display-xl--letter-spacing: -0.032em;
+
+  --text-display-l: clamp(2.125rem, 1.5rem + 2.8vw, 3.75rem);
+  --text-display-l--line-height: 1.06;
+  --text-display-l--letter-spacing: -0.028em;
+
+  --text-display-m: clamp(1.875rem, 1.45rem + 1.9vw, 2.875rem);
+  --text-display-m--line-height: 1.1;
+  --text-display-m--letter-spacing: -0.024em;
+
+  --text-heading-xl: clamp(1.625rem, 1.35rem + 1.2vw, 2.25rem);
+  --text-heading-xl--line-height: 1.18;
+  --text-heading-xl--letter-spacing: -0.02em;
+
+  --text-heading-l: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --text-heading-l--line-height: 1.26;
+  --text-heading-l--letter-spacing: -0.016em;
+
+  --text-heading-m: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
+  --text-heading-m--line-height: 1.36;
+  --text-heading-m--letter-spacing: -0.012em;
+
+  --text-heading-s: 1.0625rem;
+  --text-heading-s--line-height: 1.45;
+  --text-heading-s--letter-spacing: -0.008em;
+
+  --text-body-l: 1.1875rem;
+  --text-body-l--line-height: 1.7;
+  --text-body-l--letter-spacing: -0.004em;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-body--letter-spacing: 0em;
+
+  --text-body-s: 0.9375rem;
+  --text-body-s--line-height: 1.6;
+  --text-body-s--letter-spacing: 0em;
+
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0.004em;
+
+  /* Uppercase eyebrows and mono labels — tracking does the work at this size. */
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.14em;
+
+  /* ==========================================================================
+   * Radii — three deliberate steps plus pill. Replaces six ad-hoc card radii.
+   * ======================================================================= */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2rem;
+
+  /* ==========================================================================
+   * Elevation. The editorial base is flat — hairlines carry structure. These
+   * are for genuinely lifted surfaces. On a dark canvas a black drop reads as
+   * nothing, so depth comes from a deeper drop plus a faint top highlight.
+   * ======================================================================= */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
   --shadow-md:
     0 4px 18px -4px rgb(0 0 0 / 0.6),
@@ -149,20 +437,221 @@
   --shadow-lg:
     0 24px 64px -16px rgb(0 0 0 / 0.7),
     inset 0 1px 0 0 color-mix(in oklab, var(--color-ink) 8%, transparent);
+  /* Hero-grade. Reserved for the single most-lifted surface in a view — if two
+   * surfaces carry it, one of them is wrong. */
   --shadow-xl:
     0 36px 96px -20px rgb(0 0 0 / 0.75),
     inset 0 1px 0 0 color-mix(in oklab, var(--color-ink) 10%, transparent);
+  --shadow-glow: 0 10px 44px -10px color-mix(in oklab, var(--color-accent) 45%, transparent);
 
-  /* Glass reads as a lifted-dark pane rather than a frosted-white one. */
-  --color-glass: color-mix(in oklab, var(--color-surface) 56%, transparent);
-  --color-glass-strong: color-mix(in oklab, var(--color-surface) 80%, transparent);
-  --color-glass-border: color-mix(in oklab, var(--color-ink) 12%, transparent);
+  /* ==========================================================================
+   * Motion. One vocabulary, mirrored by lib/motion.ts so CSS and the `motion`
+   * primitives cannot drift apart.
+   * ======================================================================= */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-entrance: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Retained alias — some call sites still say ease-out-expo. */
+  --ease-out-expo: var(--ease-expo);
 
-  color-scheme: dark;
+  --duration-instant: 120ms;
+  --duration-fast: 200ms;
+  --duration-base: 320ms;
+  --duration-slow: 520ms;
+  --duration-slower: 900ms;
+  /*
+   * The corporate register. Everything above this is UI feedback — a button
+   * acknowledging a press. `cinematic` is for CONTENT: a headline arriving, a
+   * photograph settling, a diagram assembling itself. The difference between a
+   * site that feels like a product and one that feels like an institution is
+   * mostly that its content motion is measured in seconds, not milliseconds.
+   */
+  --duration-cinematic: 1200ms;
+
+  --animate-blob: blob-float 22s var(--ease-expo) infinite;
+  --animate-blob-slow: blob-float 32s var(--ease-expo) infinite;
+
+  /* ==========================================================================
+   * Layout. Container widths become `max-w-*`, so a page needing a narrower
+   * measure asks for `max-w-prose` instead of an inline `max-w-2xl`.
+   * ======================================================================= */
+  --container-prose: 46rem;
+  /*
+   * Text measures, named.
+   *
+   * Three inline values had drifted into the codebase doing this job —
+   * max-w-[42rem] (6 uses), max-w-[40rem] (3) and max-w-[34rem] (7). The first
+   * two are 2rem apart and visually indistinguishable, which is the tell: they
+   * were not two decisions, they were one decision made twice. Container's own
+   * doc comment warns about exactly this.
+   *
+   *   measure  the reading measure, ~70 characters. Article bodies, section
+   *            descriptions, leads. The single most consequential typographic
+   *            number on a page whose purpose is being read.
+   *   note     short supporting copy beside something else — a caption-length
+   *            paragraph that should not run as wide as body text.
+   */
+  --container-measure: 42rem;
+  --container-note: 34rem;
+  --container-narrow: 62rem;
+  --container-default: 80rem;
+  --container-wide: 96rem;
+
+  /* Fluid vertical rhythm, so Section stops hardcoding py-24 md:py-32 lg:py-40. */
+  --space-section: clamp(4.5rem, 2rem + 8vw, 10rem);
+  --space-section-tight: clamp(3rem, 1.5rem + 5vw, 5.5rem);
+  --space-gutter: clamp(1.5rem, 0.75rem + 2.4vw, 4rem);
+
+  /* ==========================================================================
+   * Media. A closed set of crops — every photograph on the site is one of
+   * these five ratios. With the duotone grade retired, this consistent crop
+   * set is what holds assorted photography together as one visual system.
+   * ======================================================================= */
+  --aspect-hero: 21 / 9;
+  --aspect-editorial: 16 / 9;
+  --aspect-portrait: 4 / 5;
+  --aspect-rail: 3 / 4;
+  --aspect-still: 1 / 1;
+
+  /*
+   * Scrim floor. Text over a photograph needs a MEASURED darkening, not an
+   * eyeballed black overlay — that is how image captions end up at 2:1.
+   *
+   * The number that matters is not the scrim's own colour but what it composites
+   * to over the WORST CASE — a blown-out white frame. At 72% the composite lands
+   * at oklch(0.419 …), which puts ink-inverse at 7.87:1: clear AA with room to
+   * spare, and light enough that the photograph is still a photograph. Heavier
+   * scrims measure better and look like a black box with type on it.
+   *
+   * --scrim-floor-solid IS that worst-case composite, extracted as its own token
+   * purely so the contrast gate can resolve and assert it — an rgba value with
+   * alpha cannot be measured against anything on its own.
+   */
+  --scrim-floor: rgb(10 10 10 / 0.72);
+  --scrim-floor-solid: #545454;
+
+  /*
+   * The LIGHT hero's scrim. Same principle, opposite direction.
+   *
+   * On dark the backdrop is a shader and the type over it is near-white, so
+   * the scrim darkens. On light the backdrop is a photograph of a building and
+   * the type is near-black, so the scrim LIGHTENS — and the worst case flips
+   * with it: not a blown-out white frame but a black one.
+   *
+   * canvas at 75% over pure black composites to #bdbdbd, which holds
+   * ink-muted at 4.72:1 — AA for body copy against the darkest pixel the
+   * photograph could contain, whatever photograph it ends up being. 72%
+   * looked marginally better and measured 4.32:1, which is the kind of miss
+   * that is invisible to the eye and obvious to the gate.
+   *
+   * --scrim-hero-light-solid IS that composite, tokenised for the same reason
+   * as its dark counterpart: an rgba value cannot be measured on its own.
+   */
+  --scrim-hero-light: rgb(252 252 252 / 0.75);
+  --scrim-hero-light-solid: #bdbdbd;
+
+  /* Stacking order. Hand-picked z-indexes are how overlays end up behind navs. */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 20;
+  --z-nav: 40;
+  --z-dropdown: 50;
+  --z-overlay: 60;
+  --z-modal: 70;
+  --z-toast: 80;
+}
+
+/*
+ * ============================================================================
+ * Light theme. Only the tokens that must flip are redefined — ramps, type,
+ * radii, motion and layout are theme-independent by construction.
+ * ============================================================================
+ */
+.light {
+  --color-canvas: #fcfcfc;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-overlay: #ffffff;
+  --color-surface-sunken: #f5f5f5;
+  --color-inverse: #0a0a0a;
+
+  --color-ink: #0a0a0a;
+  --color-ink-muted: #4a4a4a;
+  --color-ink-subtle: #6e6e6e;
+  /* Stays light: it is the text colour for inverse-tone bands, which remain
+   * dark in both themes. */
+  --color-ink-inverse: oklch(0.985 0 0);
+
+  --color-rule: #e5e5e5;
+  --color-rule-strong: #c8c8c8;
+  --color-rule-interactive: #8f8f8f;
+
+  /*
+   * On the light canvas the accent splits by SIZE. Brand-500 measures about
+   * 3:1 here — below AA for normal text and marginal even for large — so
+   * accent text drops to brand-700, and display type takes brand-600, which
+   * clears the 3:1 large-text bar while staying visibly the brand orange
+   * rather than a darker rust.
+   *
+   * The FILL does not move. Brand-500 with a near-black label on it is
+   * readable on any canvas, which is why --color-accent-contrast is shared
+   * across both themes.
+   */
+  --color-accent-text: var(--color-brand-700);
+  --color-accent-text-display: var(--color-brand-600);
+  /*
+   * brand-600, not 500. #ff6900 measures 2.81:1 on this canvas — it fails the
+   * 3:1 that WCAG 1.4.11 requires of a border or mark that carries meaning, so
+   * the true brand cannot be a hover border on white either. brand-600
+   * (#f54900) is 3.51:1: the lightest step that passes, and near enough to the
+   * brand that the hover still reads as orange rather than as rust.
+   *
+   * On the dark canvas this token stays at the true brand — see the dark block.
+   */
+  --color-accent-hover: var(--color-brand-600);
+  --color-focus: var(--color-brand-700);
+  /*
+   * The FILL does not move. A near-white yellow works on a white page the way a
+   * highlighter does — as a block with dark ink on it — which is why
+   * --color-accent stays at signal-400 and --color-accent-contrast is a
+   * near-black shared by both themes. It is only accent TEXT that has to
+   * travel down to the gold end to be readable.
+   */
+
+  /* Lifecycle follows the accent: the ladder is presence, so on a light canvas
+   * "available" must be the darkest and most present of the three, not the
+   * lightest. Inheriting the dark-theme values would invert the whole meaning. */
+  --color-status-available: var(--color-brand-700);
+
+  --color-status-development: var(--color-ink-muted);
+  --color-status-planned: var(--color-ink-subtle);
+
+  --color-success: #2f6b3e;
+  --color-warning: #8b5a1c;
+  --color-error: #8b2f2f;
+
+  /* Light elevation is carried by shadow, not by surface lightness. */
+  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, var(--color-ink) 6%, transparent);
+  --shadow-md:
+    0 4px 16px -4px color-mix(in oklab, var(--color-ink) 12%, transparent),
+    0 2px 6px -2px color-mix(in oklab, var(--color-ink) 8%, transparent);
+  --shadow-lg:
+    0 18px 56px -12px color-mix(in oklab, var(--color-ink) 20%, transparent),
+    0 6px 16px -6px color-mix(in oklab, var(--color-ink) 10%, transparent);
+  --shadow-xl:
+    0 32px 88px -20px color-mix(in oklab, var(--color-ink) 26%, transparent),
+    0 12px 28px -10px color-mix(in oklab, var(--color-ink) 12%, transparent);
+
+  --color-glass: color-mix(in oklab, var(--color-surface) 62%, transparent);
+  --color-glass-strong: color-mix(in oklab, var(--color-surface) 82%, transparent);
+  --color-glass-border: color-mix(in oklab, var(--color-ink) 8%, transparent);
+
+  color-scheme: light;
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 @layer base {
@@ -170,6 +659,10 @@
     background: var(--color-canvas);
     color: var(--color-ink);
     -webkit-text-size-adjust: 100%;
+    /* Required by the `full-bleed` utility — see the note there. `clip` and not
+     * `hidden`: `hidden` would make html a scroll container and kill every
+     * position:sticky element the motion system depends on. */
+    overflow-x: clip;
   }
 
   body {
@@ -177,26 +670,90 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Stops a ragged right edge stranding a single word on its own line. */
+    text-wrap: pretty;
+  }
+
+  /* Headings balance instead — at this size, even line lengths matter more
+   * than orphan control. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
   }
 
   /*
-   * Selection: invert ink and canvas. We use --color-canvas (not
-   * --color-ink-inverse) because canvas flips with ink in dark mode,
-   * guaranteeing contrast in both themes. --color-ink-inverse stays
-   * light in dark mode so that inverse-tone sections (ClosingCTA) keep
-   * light text on a dark surface — fine for that, but it would make
-   * selected text invisible (white on white) in dark mode.
+   * Display type carries its own weight, and this is where that decision lives.
+   *
+   * Qeet UI is drawn for interface sizes, where a face needs to stay open and
+   * legible small. Scaled up to a headline it reads light, so display type
+   * takes 600 — a UI face has to be weighted INTO presence in a way a display
+   * face does not. 500 looks tentative at 96px; 700 closes up the counters.
+   *
+   * Declared here rather than at 61 call sites, and with `:where()` so
+   * specificity stays at zero — a headline that genuinely needs 700 can still
+   * say `font-bold` and win.
+   *
+   * Tracking tightens too. A UI face is spaced for small sizes, so at display
+   * scale the default letter-spacing reads loose; the type scale already
+   * applies negative tracking per step, and this is the face-level baseline
+   * that assumes it.
+   */
+  :where(.font-display) {
+    font-weight: 600;
+  }
+
+  /*
+   * Selection inverts ink and canvas. Deliberately --color-canvas rather than
+   * --color-ink-inverse: canvas flips with ink so contrast is guaranteed in
+   * both themes, whereas ink-inverse stays light and would render selected
+   * text white-on-white in dark mode.
    */
   ::selection {
     background: var(--color-ink);
     color: var(--color-canvas);
   }
 
+  /*
+   * A designed default focus ring. The previous blanket
+   * `:focus-visible { outline: none }` meant any component that forgot its own
+   * ring became completely un-focusable — a WCAG 2.4.7 failure waiting to
+   * happen. Everything now falls back to this; `focus-ring` opts into the
+   * fuller treatment.
+   */
   :focus-visible {
-    outline: none;
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
   }
 }
 
+/*
+ * No-JavaScript safety net. The `motion` primitives render their `initial`
+ * state as inline styles during SSR, so ~46 elements ship `opacity: 0` and only
+ * become visible once JS animates them — a visitor without scripting sees a
+ * half-empty page.
+ *
+ * This is a backstop, not the fix. `scripting: none` only applies where the UA
+ * genuinely has no scripting support (Chrome's --disable-javascript flag still
+ * reports `enabled`, so it cannot be verified that way), and it does nothing
+ * for a crawler that runs JS but snapshots early. The real fix is to render the
+ * settled state on the server and animate from it on the client — Phase 3,
+ * where the motion primitives are rebuilt.
+ */
+@media (scripting: none) {
+  [style*="opacity:0"],
+  [style*="opacity: 0"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/*
+ * Reduced motion, layer one of three. The others are useReducedMotion() guards
+ * inside the motion primitives and motion-safe:/motion-reduce: at call sites.
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -209,10 +766,9 @@
 }
 
 /*
- * Cross-document view transitions for browsers that support them. The
- * Next.js experimental.viewTransition flag handles soft (client-side)
- * navs by wrapping them in document.startViewTransition(); this rule
- * covers hard navs and direct loads via browser back/forward.
+ * Cross-document view transitions. Next's experimental.viewTransition flag
+ * wraps soft navs in document.startViewTransition(); this covers hard navs and
+ * browser back/forward.
  */
 @view-transition {
   navigation: auto;
@@ -220,8 +776,8 @@
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 240ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-expo);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -231,11 +787,196 @@
   }
 }
 
+/* ===========================================================================
+ * Utilities
+ * ======================================================================== */
+
 /*
- * Bolder ambient surfaces. All decorative — the elements that carry these
- * classes must be aria-hidden. The reduced-motion block above already freezes
- * any animation, so the mesh degrades to a static wash for those users.
+ * The one focus treatment: an accent ring plus a soft halo, so it stays
+ * legible on every surface in the elevation ladder — including over glass and
+ * imagery, where a plain outline can disappear.
  */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-focus) 22%, transparent);
+  }
+}
+
+/*
+ * ============================================================================
+ * focus-field — the focus indicator for underline inputs
+ * ============================================================================
+ *
+ * Every text control on this site is an EDITORIAL UNDERLINE: `border-0
+ * border-b`, transparent background, no box. `focus-ring` and the global
+ * :focus-visible fallback both draw a rounded 2px rectangle at a 2px offset,
+ * which is right for a button and wrong for these — on /search the field is
+ * 672x74, so keyboard focus drew a large rounded orange box around a control
+ * whose only visible edge is a hairline underneath it. Correct, and ugly.
+ *
+ * So the indicator follows the SHAPE OF THE CONTROL instead:
+ *
+ *   - a 2px underline in the focus colour, drawn as an inset shadow. Inset,
+ *     because thickening the real border-bottom would move every following
+ *     line by a pixel on focus.
+ *   - a faint wash of the same colour across the field, so the active input is
+ *     identifiable at a glance and not just at its bottom edge.
+ *
+ * The wash is on :focus rather than :focus-visible on purpose. A text input
+ * that has been clicked into is genuinely active and should look it; the
+ * heavier keyboard indicator stays scoped to :focus-visible so a mouse user
+ * does not get a hard orange rule they never asked for.
+ *
+ * `outline: 2px solid transparent` rather than `outline: none` is the part
+ * that is easy to get wrong. Forced-colors modes repaint transparent
+ * outlines, so this keeps a real indicator for Windows High Contrast users,
+ * where a box-shadow is discarded entirely and `none` would leave them with
+ * nothing at all.
+ *
+ * --color-focus is already measured against canvas and surface at 3:1 in
+ * scripts/check-contrast.ts, so the underline inherits a checked contrast.
+ */
+@utility focus-field {
+  &:focus {
+    background-color: color-mix(in oklab, var(--color-focus) 6%, transparent);
+  }
+  &:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 0;
+    box-shadow: inset 0 -2px 0 var(--color-focus);
+    border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  }
+}
+
+/* Durations, since Tailwind has no --duration-* theme namespace. */
+@utility duration-instant {
+  transition-duration: var(--duration-instant);
+}
+@utility duration-fast {
+  transition-duration: var(--duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--duration-base);
+}
+@utility duration-slow {
+  transition-duration: var(--duration-slow);
+}
+@utility duration-slower {
+  transition-duration: var(--duration-slower);
+}
+@utility duration-cinematic {
+  transition-duration: var(--duration-cinematic);
+}
+
+/* Stacking, so overlays stop being hand-numbered. */
+@utility z-nav {
+  z-index: var(--z-nav);
+}
+@utility z-dropdown {
+  z-index: var(--z-dropdown);
+}
+@utility z-overlay {
+  z-index: var(--z-overlay);
+}
+@utility z-modal {
+  z-index: var(--z-modal);
+}
+@utility z-toast {
+  z-index: var(--z-toast);
+}
+
+/* Section rhythm. */
+@utility py-section {
+  padding-block: var(--space-section);
+}
+@utility py-section-tight {
+  padding-block: var(--space-section-tight);
+}
+
+/*
+ * The four named editorial rhythms. Each collapses to the full width on small
+ * screens, so mobile is a single column by construction rather than by a
+ * remembered override at every call site.
+ */
+@utility col-lede {
+  grid-column: span 4 / span 4;
+  @media (width >= 48rem) {
+    grid-column: span 8 / span 8;
+  }
+  @media (width >= 64rem) {
+    grid-column: span 6 / span 6;
+  }
+}
+
+@utility col-figure {
+  grid-column: span 4 / span 4;
+  @media (width >= 48rem) {
+    grid-column: span 8 / span 8;
+  }
+  @media (width >= 64rem) {
+    grid-column: span 6 / span 6;
+  }
+}
+
+/* The off-centre measure: wide enough to carry a section, narrow enough that
+ * the eye still reads it as a column rather than as the page. */
+@utility col-wide {
+  grid-column: span 4 / span 4;
+  @media (width >= 48rem) {
+    grid-column: span 8 / span 8;
+  }
+  @media (width >= 64rem) {
+    grid-column: span 8 / span 8;
+  }
+}
+
+@utility col-aside {
+  grid-column: span 4 / span 4;
+  @media (width >= 48rem) {
+    grid-column: span 3 / span 3;
+  }
+  @media (width >= 64rem) {
+    grid-column: span 4 / span 4;
+  }
+}
+
+/*
+ * Break the container and run edge to edge. Paired with `overflow-x: clip` on
+ * html — without it, 100vw includes the scrollbar gutter and every full-bleed
+ * section adds a few pixels of horizontal scroll. `clip` rather than `hidden`
+ * because `hidden` silently creates a scroll container and breaks every
+ * `position: sticky` element on the page, which is most of the motion system.
+ */
+@utility full-bleed {
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/*
+ * Pins the accent tokens to their DARK-theme values for a subtree.
+ *
+ * Some surfaces are dark in BOTH themes — the hero, which sits on a scrimmed
+ * photograph, and any `Section tone="inverse"`. Those regions must not follow
+ * the light theme's accent, which drifts to a deep gold specifically so it
+ * reads on white; on a dark surface that gold disappears.
+ *
+ * So the rule is: a region that is always dark declares itself, and the tokens
+ * stop flipping underneath it.
+ */
+@utility on-dark {
+  --color-accent-text-display: var(--color-brand-500);
+  --color-accent-text: var(--color-brand-500);
+}
+
+/* Numbers in tables, metrics and timestamps must not jitter as they change. */
+@utility tabular-figures {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
 @keyframes blob-float {
   0%,
   100% {
@@ -246,14 +987,6 @@
   }
   66% {
     transform: translate3d(-5%, 4%, 0) scale(0.94);
-  }
-}
-
-/* Drives the infinite <Marquee> track. The component renders two copies, so
- * a -100% shift loops seamlessly. */
-@keyframes marquee {
-  to {
-    transform: translateX(-100%);
   }
 }
 
@@ -273,56 +1006,31 @@
 }
 
 @utility animate-scroll-cue {
-  animation: scroll-cue 2.2s var(--ease-out-expo) infinite;
+  animation: scroll-cue 2.2s var(--ease-expo) infinite;
 }
 
+/* Infinite marquee. The track must use `w-max` and contain two identical
+ * copies of the items; -50% is exactly one copy width, so the loop is seamless. */
+@keyframes marquee-loop {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee-loop 40s linear infinite;
+}
+
+/* ===========================================================================
+ * Ambient surfaces. All decorative — carriers must be aria-hidden. The
+ * reduced-motion block above freezes any animation, so each degrades to a
+ * static wash rather than disappearing.
+ * ======================================================================== */
 @layer components {
   /*
-   * Gradient mesh: warm brand + ink radial blobs over the canvas. Used as a
-   * static fallback layer; animated hero blobs are separate positioned
-   * elements (see Hero) that reuse the same colour vocabulary.
-   */
-  .bg-mesh {
-    background-image:
-      radial-gradient(
-        40rem 40rem at 12% -10%,
-        color-mix(in oklab, var(--color-brand) 9%, transparent),
-        transparent 60%
-      ),
-      radial-gradient(
-        34rem 34rem at 96% 6%,
-        color-mix(in oklab, var(--color-ink) 6%, transparent),
-        transparent 55%
-      ),
-      radial-gradient(
-        48rem 30rem at 50% 118%,
-        color-mix(in oklab, var(--color-brand-deep) 6%, transparent),
-        transparent 60%
-      );
-  }
-  .dark .bg-mesh {
-    background-image:
-      radial-gradient(
-        40rem 40rem at 12% -10%,
-        color-mix(in oklab, var(--color-brand) 15%, transparent),
-        transparent 60%
-      ),
-      radial-gradient(
-        34rem 34rem at 96% 6%,
-        color-mix(in oklab, var(--color-ink) 9%, transparent),
-        transparent 55%
-      ),
-      radial-gradient(
-        48rem 30rem at 50% 118%,
-        color-mix(in oklab, var(--color-brand-deep) 10%, transparent),
-        transparent 60%
-      );
-  }
-
-  /*
-   * Architectural hairline grid — the Confident-Enterprise structural motif.
-   * Quiet, regular, and aligned to the layout (vs. the soft organic mesh). Pair
-   * with a radial mask so it fades into the canvas instead of tiling edge-to-edge.
+   * Architectural hairline grid — the structural motif, aligned to the layout
+   * (versus the soft organic mesh). Pair with a radial mask so it fades into
+   * the canvas instead of tiling edge to edge.
    */
   .bg-grid {
     background-image:
@@ -331,18 +1039,18 @@
     background-size: 64px 64px;
   }
 
-  /* Fine film grain (SVG fractal noise data-URI). Sits above the mesh at very
-   * low opacity to kill banding and add a tactile, premium texture. */
+  /* Fine film grain. Sits above the mesh at very low opacity to kill gradient
+   * banding and add a tactile, premium texture. */
   .bg-grain {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.035;
-  }
-  .dark .bg-grain {
     opacity: 0.06;
   }
+  .light .bg-grain {
+    opacity: 0.035;
+  }
 
-  /* Reusable glass pane: translucent fill + hairline edge + blur + soft lift.
-   * Pair on a relatively/absolutely positioned element so the blur composites. */
+  /* Translucent pane + hairline edge + blur + soft lift. Apply to a positioned
+   * element so the backdrop-filter composites. */
   .glass-panel {
     background-color: var(--color-glass);
     border: 1px solid var(--color-glass-border);
@@ -355,72 +1063,113 @@
     }
   }
 
-  /* Lifted interactive card — consistent hover elevation across product cards,
-   * newsroom cards, and any other tappable card surface. */
-  .interactive-card {
-    transition:
-      transform 200ms var(--ease-out-expo),
-      box-shadow 200ms var(--ease-out-expo);
+  /*
+   * ==========================================================================
+   * The figure frame.
+   * ==========================================================================
+   *
+   * This used to carry a duotone grade — strip every photograph to luminance,
+   * then push one hue back through it with `mix-blend-mode: color` — so that
+   * assorted stock read as a single commissioned set.
+   *
+   * IT NO LONGER GRADES. Photography renders at its own colour, in both
+   * themes. The grade was solving a sourcing problem (mismatched stock) by
+   * making every image monochrome, which is a heavy price for a site that will
+   * eventually run commissioned photography, and it made the same image look
+   * like two different images across the theme toggle.
+   *
+   * What survives is the frame itself, and each line still earns its place:
+   *   - `overflow: hidden` clips the `mediaScale` zoom to the frame.
+   *   - `isolation: isolate` keeps the scrim's blending inside the figure.
+   *   - the sunken background holds the box while the image loads, so a slow
+   *     connection sees a deliberate surface rather than a white gap.
+   *
+   * Contrast for text over media is unaffected: it was never the grade that
+   * guaranteed it, it is the scrim below, which is measured against
+   * `--scrim-floor-solid` in scripts/check-contrast.ts and is independent of
+   * whatever the photograph does.
+   */
+  .figure-qeet {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background-color: var(--color-surface-sunken);
   }
-  .interactive-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+
+  /* Content placed inside a figure (captions, kickers, badges) must clear the
+   * scrim layer, which is painted at z-index 1. */
+  .figure-qeet > :not(img, video, picture) {
+    position: relative;
+    z-index: 2;
   }
 
   /*
-   * Closing-CTA glow: a slow-breathing brand aura anchored to the band's
-   * bottom edge, over the inverse surface. Decorative — carriers must be
-   * aria-hidden. Static for reduced-motion users (the global block freezes
-   * the animation).
+   * ==========================================================================
+   * Scrims. Applied to the media frame, never to the type — so the guarantee
+   * is "this region is dark enough", independent of what the photograph does.
+   * ==========================================================================
    */
-  .bg-cta-glow {
-    background-image:
-      radial-gradient(
-        52rem 26rem at 50% 118%,
-        color-mix(in oklab, var(--color-brand) 26%, transparent),
-        transparent 65%
-      ),
-      radial-gradient(
-        30rem 18rem at 14% -20%,
-        color-mix(in oklab, var(--color-brand-deep) 12%, transparent),
-        transparent 60%
-      );
+  .scrim-bottom::before,
+  .scrim-full::before,
+  .scrim-side::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
   }
 
-  /*
-   * Premium headline treatment: ink fading toward muted at the tail. Use on
-   * one display headline per view, never on body copy — it reads as texture,
-   * not colour, and stays monochrome in both themes.
-   */
-  .text-gradient-ink {
+  /* Type sits in the lower third — hero and feature stories. */
+  .scrim-bottom::before {
     background-image: linear-gradient(
-      135deg,
-      var(--color-ink) 55%,
-      color-mix(in oklab, var(--color-ink) 62%, transparent)
+      to top,
+      var(--scrim-floor) 0%,
+      color-mix(in oklab, var(--scrim-floor) 55%, transparent) 34%,
+      transparent 68%
     );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
   }
-}
 
-/* Infinite marquee loop. The inner track must use `w-max` and contain two
- * identical copies of the items; this keyframe shifts it by -50% (= one copy
- * width) so the second copy fills in seamlessly. */
-@keyframes marquee-loop {
-  to {
-    transform: translateX(-50%);
+  /* Type sits anywhere over the frame — full-bleed section backgrounds. */
+  .scrim-full::before {
+    background-color: color-mix(in oklab, var(--scrim-floor) 82%, transparent);
   }
-}
 
-@utility animate-marquee {
-  animation: marquee-loop 40s linear infinite;
-}
+  /* Type sits in a side column over the media — split heroes. */
+  .scrim-side::before {
+    background-image: linear-gradient(
+      to right,
+      var(--scrim-floor) 0%,
+      color-mix(in oklab, var(--scrim-floor) 40%, transparent) 52%,
+      transparent 88%
+    );
+  }
 
-@utility animate-marquee-slow {
-  animation: marquee-loop 60s linear infinite;
-}
+  /*
+   * ==========================================================================
+   * The editorial grid.
+   * ==========================================================================
+   *
+   * 4 → 8 → 12 columns. The point is not the column count; it is that
+   * asymmetric splits come from a NAMED set rather than from whatever
+   * `lg:col-span-7` a section happened to reach for. Four names cover every
+   * editorial rhythm on the site, and a fifth composition is a design decision
+   * that should be argued for, not typed.
+   */
+  .grid-editorial {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--space-gutter);
+    row-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  @media (width >= 48rem) {
+    .grid-editorial {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+  }
+  @media (width >= 64rem) {
+    .grid-editorial {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+  }
 
-@utility animate-marquee-reverse {
-  animation: marquee-loop 40s linear infinite reverse;
 }

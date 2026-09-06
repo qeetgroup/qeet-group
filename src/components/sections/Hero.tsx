@@ -2,121 +2,160 @@ import { Container } from "../layout/Container";
 import { Eyebrow } from "../ui/Eyebrow";
 import { Link } from "../ui/Link";
 import { Button } from "../ui/Button";
-import { IdentityGraph } from "../ui/IdentityGraph";
 import { FadeRise } from "../motion/FadeRise";
-import { WordReveal } from "../motion/WordReveal";
-import { Magnetic } from "../motion/Magnetic";
-import { listProductSummaries } from "@/lib/content";
+import { RevealLines } from "../motion/RevealLines";
+import { HeroBackdrop } from "./HeroBackdrop";
+import { portfolioCounts } from "@/lib/content";
 
 /**
- * The thesis. A confident two-column opening: the group's defining statement on
- * the left, the identity-graph signature as a real figure on the right. The
- * figure is deliberately abstract — it never encodes the product count — while
- * the monospace fact line below the CTAs derives the real number from the live
- * product list. Orange appears only at the graph's core.
+ * ============================================================================
+ * The hero
+ * ============================================================================
+ *
+ * The previous hero was the shape the brief rules out: eyebrow, huge gradient
+ * headline, two buttons, a floating figure. Every startup landing page in the
+ * category is that arrangement.
+ *
+ * What the reference set does instead is lead with a STATEMENT over media, at
+ * scale, with a single onward path. Accenture's "Together We Reinvented",
+ * Cognizant's "We're an AI Builder", LTM's positioning line — none of them
+ * sells a product above the fold. They say what the organisation is and let
+ * the navigation handle everything else.
+ *
+ * Two details are doing more work than they look:
+ *
+ *   ONE CTA, NOT TWO. A second button of equal weight is an admission that we
+ *   do not know what the visitor should do next. The secondary path is a text
+ *   link, which is a hierarchy rather than a choice.
+ *
+ *   THE FACT LINE IS DERIVED. Counts come from the content collection at build
+ *   time, so the hero cannot claim a portfolio size the site does not contain.
+ *   That is a real risk here: hero copy is exactly where a stale number
+ *   survives longest, because nobody re-reads it.
  */
 export async function Hero() {
-  const products = await listProductSummaries();
+  const counts = await portfolioCounts();
+
   return (
-    <section className="relative flex min-h-[92svh] items-center overflow-hidden pb-20 pt-28 md:pb-28 md:pt-32">
-      {/* Ambient orbs: slowly-drifting colour blobs that add depth to the hero
-          background. Purely decorative; aria-hidden and pointer-events-none.
-          The reduced-motion CSS block in globals.css collapses all animation
-          durations to 0.01ms for users who request it. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div
-          className="absolute -left-32 -top-24 h-[420px] w-[580px] rounded-full bg-brand opacity-[0.10] blur-[120px] animate-blob"
-          style={{ animationDelay: "0s" }}
-        />
-        <div
-          className="absolute -bottom-16 -right-24 h-[380px] w-[460px] rounded-full bg-brand-deep opacity-[0.07] blur-[100px] animate-blob-slow"
-          style={{ animationDelay: "-8s" }}
-        />
-        <div
-          className="absolute left-1/2 top-1/2 h-[280px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink opacity-[0.05] blur-[80px] animate-blob"
-          style={{ animationDelay: "-16s" }}
-        />
+    <section className="relative isolate overflow-hidden">
+      {/*
+        Full-bleed generated backdrop behind the type.
+
+        `bg-canvas` on the wrapper is not redundant — it is the no-JavaScript
+        and no-WebGL fallback. The shader paints into a canvas element that
+        only exists after hydration, so without this the hero would open as a
+        transparent gap; with it, it degrades to a flat brand surface and the
+        headline stays readable either way.
+
+        Both backdrops carry their own measured scrim, and each one owns it
+        rather than the hero applying a single scrim over the top — the dark
+        shader needs darkening only on phones, the light photograph needs
+        lightening everywhere, and stacking one blanket over both washed the
+        photograph out on a phone. See HeroBackdrop.
+      */}
+      <div className="absolute inset-0 -z-10 bg-canvas">
+        <HeroBackdrop />
       </div>
-      {/* Fine grain texture over the blobs. */}
-      <div aria-hidden="true" className="bg-grain pointer-events-none absolute inset-0 -z-10" />
 
-      <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-7">
-            <FadeRise>
-              <Eyebrow className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 md:mb-10">
-                <span>Qeet Group</span>
-                <span aria-hidden="true" className="text-rule-strong">/</span>
-                <span className="glass-panel inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono normal-case tracking-normal text-ink-subtle">
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-brand" />
-                  Holding company · Est. 2026
-                </span>
-              </Eyebrow>
-            </FadeRise>
+      <Container width="wide">
+        {/*
+          Centred vertically, and that is tied to the backdrop rather than to
+          taste: GhostFibers puts its brightest point at the exact centre of
+          the viewport and vignettes toward the edges, so bottom-aligned copy
+          sat in the darkest part of its own background while the glow went to
+          waste above it.
 
-            <h1 className="text-balance font-display font-semibold tracking-[-0.03em] text-ink text-[2.75rem] leading-[1.03] sm:text-[3.5rem] md:text-[4.25rem] md:leading-[1.02] lg:text-[5.25rem] lg:leading-[1.01]">
-              <WordReveal text="We question, We explore, We envision, We" />{" "}
-              <span className="text-brand">
-                <WordReveal text="transform." initialDelay={0.57} />
-              </span>
-            </h1>
+          Centred on both axes. `items-center` centres each block in the
+          column and `text-center` centres the text inside them — both are
+          needed, because centring the flex container alone leaves every child
+          still setting its own text flush left, which is what the first
+          attempt at this got wrong.
 
-            <FadeRise delay={0.7} className="mt-8 max-w-xl md:mt-10">
-              <p className="text-body-l text-ink-muted">
-                Qeet Group is a multi-company holding built on a single philosophy: that meaningful
-                progress begins with the right question.
-              </p>
-            </FadeRise>
+          The children each need help too: capped measures (`max-w-*`) become
+          `mx-auto` or they hug the left edge, and the button row and stat row
+          need their own `justify-center` since they are flex containers in
+          their own right.
 
-            <FadeRise delay={0.9} className="mt-9 md:mt-11">
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
-                <Button href="/products" size="lg" magnetic>
-                  Explore products
-                </Button>
-                <Magnetic strength={0.4}>
-                  <Link href="#philosophy" variant="arrow" className="text-body text-ink">
-                    Read our philosophy
-                  </Link>
-                </Magnetic>
-              </div>
-            </FadeRise>
+          `pt` still exceeds `pb` because the fixed nav overlays the top of
+          this section: equal padding would centre the block in the SECTION but
+          leave it visually low in the space a reader actually sees.
+        */}
+        <div className="flex min-h-[86svh] flex-col items-center justify-center pb-24 pt-36 text-center md:min-h-[92svh] md:pb-28 md:pt-44">
+          {/*
+            The eyebrow and the stat labels below override Eyebrow's and the
+            page's default ink-subtle for ink-muted, and it is the backdrop
+            that forces it: ink-subtle clears 4.5:1 on a bare canvas by a hair
+            (4.68:1) and drops to 2.71:1 over the light hero's scrimmed
+            photograph. ink-muted holds 4.72:1 against the same worst case.
+            One step darker, only in the one place that has a picture behind
+            the type.
+          */}
+          <FadeRise>
+            <Eyebrow className="mb-8 text-ink-muted md:mb-10">
+              Qeet Group
+            </Eyebrow>
+          </FadeRise>
 
-            <FadeRise delay={1.05} className="mt-11 md:mt-14">
-              <p className="font-mono text-caption uppercase tracking-[0.18em] text-ink-subtle">
-                <span className="text-ink">{products.length}</span> platforms
-                <span aria-hidden="true" className="px-2 text-rule-strong">·</span>
-                <span className="text-ink">1</span> identity graph
-                <span aria-hidden="true" className="px-2 text-rule-strong">·</span>
-                built for the long term
-              </p>
-            </FadeRise>
-          </div>
+          {/*
+            The headline is the name, expanded. Qeet is an acronym before it is
+            a word — question, explore, envision, transform — so the largest
+            type on the site says what the organisation is called and what it
+            does in the same four words. That is why it survives scrutiny where
+            the previous line did not: it is not a claim to be checked, it is
+            the company's own name read aloud.
 
-          {/* Signature figure. Decorative=false → it's a real diagram of the
-              thesis: an abstract orbital system around one identity core. */}
-          <FadeRise delay={0.3} className="lg:col-span-5">
-            <IdentityGraph
-              coreLabel
-              decorative={false}
-              className="mx-auto max-w-sm sm:max-w-md lg:max-w-none"
-            />
+            Two lines, split down the middle, so the four verbs pair off rather
+            than running as a list. The measure has to clear the longer of the
+            two — 27ch against a 26-character line — or the mask would clip a
+            wrapped fragment, since RevealLines gives each ENTRY one mask, not
+            each rendered row.
+          */}
+          <RevealLines
+            as="h1"
+            lines={["We question, We explore,", "We envision, We transform."]}
+            className="mx-auto max-w-[27ch] text-balance font-display text-ink text-display-2xl"
+          />
+
+          <FadeRise delay={0.5} className="mx-auto mt-10 max-w-xl md:mt-12">
+            <p className="text-body-l text-ink-muted">
+              Four words, one name. One organisation, one identity layer, one
+              design foundation — and a portfolio of products that compose each
+              other rather than compete for the same desk.
+            </p>
+          </FadeRise>
+
+          <FadeRise delay={0.65} className="mt-10 md:mt-12">
+            <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-8">
+              <Button href="/ecosystem" size="lg" variant="accent">
+                See the ecosystem
+              </Button>
+              <Link href="/company/about" variant="arrow" className="text-body text-ink">
+                What Qeet Group is
+              </Link>
+            </div>
+          </FadeRise>
+
+          <FadeRise delay={0.8} className="mt-14 md:mt-20">
+            <dl className="flex flex-wrap justify-center gap-x-12 gap-y-6 border-t border-rule pt-8">
+              {[
+                { n: counts.total, label: "Products" },
+                { n: counts.available, label: "Available today" },
+                { n: counts.development, label: "In development" },
+                { n: counts.planned, label: "Planned" },
+              ].map((s) => (
+                <div key={s.label}>
+                  <dd className="font-display text-ink text-heading-xl tabular-figures">
+                    {s.n}
+                  </dd>
+                  <dt className="mt-1 font-mono text-label uppercase text-ink-muted">
+                    {s.label}
+                  </dt>
+                </div>
+              ))}
+            </dl>
           </FadeRise>
         </div>
       </Container>
-
-      {/* Scroll cue — a hairline with a slow-falling dot. Decorative; frozen by
-          the global reduced-motion block. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex"
-      >
-        <span className="font-mono text-caption uppercase tracking-[0.18em] text-ink-subtle">
-          Scroll
-        </span>
-        <span className="relative block h-10 w-px overflow-hidden bg-rule">
-          <span className="absolute left-0 top-0 h-3 w-px animate-scroll-cue bg-ink" />
-        </span>
-      </div>
     </section>
   );
 }

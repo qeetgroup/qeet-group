@@ -29,9 +29,9 @@ export function CategoryFilter({ categories, active, onChange, className }: Prop
             onClick={() => onChange(c.value)}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-sans text-body-s transition-colors duration-200",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+              "focus-ring",
               isActive
-                ? "border-brand text-brand"
+                ? "border-accent text-accent-text"
                 : "border-rule text-ink-muted hover:border-rule-strong hover:text-ink",
             )}
           >

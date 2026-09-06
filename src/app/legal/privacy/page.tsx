@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LegalArticle } from "@/components/sections/LegalArticle";
 import { loadLegal } from "@/lib/content";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
 export async function generateMetadata(): Promise<Metadata> {
   const doc = await loadLegal("privacy");
   if (!doc) return {};
-  return {
+  return buildPageMetadata({
     title: doc.data.title,
     description: doc.data.description,
-    alternates: { canonical: "/legal/privacy" },
-  };
+    path: "/legal/privacy",
+  });
 }
 
 export default async function PrivacyPage() {

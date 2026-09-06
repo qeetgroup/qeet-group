@@ -1,95 +1,159 @@
-import NextLink from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { cn, isExternalHref } from "@/lib/utils";
-import { Magnetic } from "@/components/motion/Magnetic";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Anchor } from "./Anchor";
+import { cn } from "@/lib/utils";
 
-type Variant = "solid" | "outline" | "ghost";
-type Size = "md" | "lg";
+/*
+ * All six states are designed here rather than left to the browser: default,
+ * hover, focus-visible, active, disabled and loading. That completeness is
+ * most of what separates a premium control from a competent one — the previous
+ * version had only the first three.
+ *
+ * `active:` gives a real press response, the disabled styles remove the
+ * affordance rather than just dimming it, and loading keeps the button's width
+ * stable so a form does not reflow mid-submit.
+ */
+const button = cva(
+  [
+    "relative inline-flex items-center justify-center gap-2 rounded-full",
+    "font-ui font-medium tracking-tight whitespace-nowrap",
+    "transition-[transform,box-shadow,background-color,border-color,opacity] duration-fast",
+    "focus-ring",
+    "disabled:pointer-events-none disabled:opacity-50",
+    "aria-disabled:pointer-events-none aria-disabled:opacity-50",
+  ],
+  {
+    variants: {
+      variant: {
+        solid:
+          "bg-ink text-canvas hover:bg-ink/90 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 active:bg-ink/80",
+        // White label on a brand-700 fill — see --color-accent-solid in
+        // globals.css for why this is not the same fill as `bg-accent`.
+        accent:
+          "bg-accent-solid text-accent-solid-contrast hover:bg-accent-solid-hover hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0",
+        outline:
+          "border border-rule-interactive text-ink hover:border-accent-hover hover:bg-accent-soft active:bg-accent-soft/70",
+        ghost: "text-ink hover:bg-accent-soft active:bg-accent-soft/70",
+      },
+      size: {
+        sm: "h-9 px-4 text-body-s",
+        md: "h-10 px-5 text-body-s",
+        lg: "h-12 px-6 text-body",
+      },
+    },
+    defaultVariants: { variant: "solid", size: "md" },
+  },
+);
 
-const variantMap: Record<Variant, string> = {
-  solid: "bg-ink text-canvas hover:bg-ink/90 hover:-translate-y-0.5 hover:shadow-glow",
-  outline: "border border-rule-strong text-ink hover:border-brand/50 hover:bg-brand-soft",
-  ghost: "text-ink hover:bg-brand-soft",
-};
+export type ButtonVariants = VariantProps<typeof button>;
 
-const sizeMap: Record<Size, string> = {
-  md: "h-10 px-5 text-[0.9375rem]",
-  lg: "h-12 px-6 text-body",
-};
-
-type CommonProps = {
-  variant?: Variant;
-  size?: Size;
-  className?: string;
-  /** Wrap in a cursor-following magnetic shell (mouse-only, reduced-motion safe). */
-  magnetic?: boolean;
+type CommonProps = ButtonVariants & {
   children: ReactNode;
+  className?: string;
+  /** Rendered beside the label. Use ui/Icon. */
+  icon?: ReactNode;
+  iconPosition?: "start" | "end";
 };
 
 type ButtonAsButton = CommonProps & {
-  href?: undefined;
+  href?: never;
+  /** Swaps the label for a spinner and blocks interaction, width unchanged. */
+  loading?: boolean;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className" | "children">;
 
 type ButtonAsLink = CommonProps & {
   href: string;
+  loading?: never;
+  /** Anchors cannot be disabled; use this if a link must read as inert. */
+  "aria-disabled"?: boolean;
 };
 
-type ButtonProps = ButtonAsButton | ButtonAsLink;
-
-export function Button(props: ButtonProps) {
-  const { variant = "solid", size = "md", className, magnetic = false, children } = props;
-  const cls = cn(
-    "inline-flex items-center justify-center gap-2 rounded-full font-ui font-medium tracking-tight",
-    "transition-[transform,box-shadow,background-color,border-color] duration-200",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
-    variantMap[variant],
-    sizeMap[size],
-    className,
+function Spinner() {
+  return (
+    <span aria-hidden="true" className="absolute inset-0 grid place-items-center">
+      <span className="h-4 w-4 animate-spin rounded-full border-2 border-current/25 border-t-current motion-reduce:animate-none" />
+    </span>
   );
+}
 
-  const wrap = (el: ReactNode) => (magnetic ? <Magnetic>{el}</Magnetic> : el);
-
-  if ("href" in props && props.href !== undefined) {
-    const { href } = props;
-    const isExternal = isExternalHref(href);
-    if (isExternal) {
-      return wrap(
-        <a
-          href={href}
-          className={cls}
-          target={href.startsWith("http") ? "_blank" : undefined}
-          rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-        >
-          {children}
-        </a>,
-      );
-    }
-    return wrap(
-      <NextLink href={href} className={cls}>
+/**
+ * Label plus optional icon. While loading the label stays in flow but hidden,
+ * so the control keeps its width and the layout does not jump.
+ */
+function Content({
+  children,
+  icon,
+  iconPosition,
+  loading,
+}: Pick<CommonProps, "children" | "icon" | "iconPosition"> & { loading: boolean }) {
+  return (
+    <>
+      <span className={cn("inline-flex items-center gap-2", loading && "invisible")}>
+        {icon && iconPosition === "start" ? icon : null}
         {children}
-      </NextLink>,
-    );
-  }
+        {icon && iconPosition === "end" ? icon : null}
+      </span>
+      {loading ? <Spinner /> : null}
+    </>
+  );
+}
 
-  // Strip the custom props so only real button attributes reach the DOM.
-  const {
-    variant: _v,
-    size: _s,
-    className: _c,
-    magnetic: _m,
-    children: _ch,
-    href: _omit,
-    ...buttonRest
-  } = props as ButtonAsButton & { href?: undefined };
-  void _v;
-  void _s;
-  void _c;
-  void _m;
-  void _ch;
-  void _omit;
-  return wrap(
-    <button className={cls} {...buttonRest}>
-      {children}
-    </button>,
+/*
+ * Split into two components so each destructures its own props in its
+ * signature. The previous single-function version had to strip seven custom
+ * props out of a shared rest object and then `void` each one to satisfy the
+ * linter — noise that hid what the component actually did.
+ */
+function ButtonLink({
+  href,
+  children,
+  className,
+  variant,
+  size,
+  icon,
+  iconPosition = "start",
+  ...rest
+}: ButtonAsLink) {
+  return (
+    <Anchor href={href} className={cn(button({ variant, size }), className)} {...rest}>
+      <Content icon={icon} iconPosition={iconPosition} loading={false}>
+        {children}
+      </Content>
+    </Anchor>
+  );
+}
+
+function ButtonControl({
+  children,
+  className,
+  variant,
+  size,
+  icon,
+  iconPosition = "start",
+  loading = false,
+  disabled,
+  type = "button",
+  ...rest
+}: ButtonAsButton) {
+  return (
+    <button
+      type={type}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      className={cn(button({ variant, size }), loading && "cursor-progress", className)}
+      {...rest}
+    >
+      <Content icon={icon} iconPosition={iconPosition} loading={loading}>
+        {children}
+      </Content>
+    </button>
+  );
+}
+
+export function Button(props: ButtonAsButton | ButtonAsLink) {
+  return "href" in props && props.href ? (
+    <ButtonLink {...props} />
+  ) : (
+    <ButtonControl {...(props as ButtonAsButton)} />
   );
 }

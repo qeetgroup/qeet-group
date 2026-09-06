@@ -2,11 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  SEARCH_TYPE_LABEL,
-  scoreEntry,
-  type SearchEntry,
-} from "@/lib/search";
+import { SEARCH_TYPE_LABEL, scoreEntry, type SearchEntry } from "@/lib/search";
+import { useSearchIndex } from "@/lib/search/use-search-index";
 import { cn } from "@/lib/utils";
 
 /**
@@ -22,11 +19,13 @@ export const COMMAND_PALETTE_OPEN_EVENT = "qeet:command-palette:open";
  * "qeet:command-palette:open" window event so clickable triggers (the Nav
  * search icon) can request it open without importing this module.
  */
-export function CommandPalette({ index }: { index: SearchEntry[] }) {
+export function CommandPalette() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIdx, setActiveIdx] = useState(0);
+  // Fetched on first open, so a visitor who never presses ⌘K never pays for it.
+  const index = useSearchIndex(open);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -80,7 +79,7 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [] as Array<SearchEntry & { score: number }>;
-    if (q.length < 2) return [];
+    if (q.length < 2 || !index) return [];
     return index
       .map((e) => ({ ...e, score: scoreEntry(e, q) }))
       .filter((e) => e.score > 0)
@@ -134,7 +133,8 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
   if (!open) return null;
 
   const q = query.trim();
-  const showEmpty = q.length >= 2 && results.length === 0;
+  const loading = open && index === null;
+  const showEmpty = q.length >= 2 && results.length === 0 && !loading;
   const showHint = q.length === 0;
 
   return (
@@ -155,7 +155,7 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
 
       {/* Panel */}
       <div className="relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-rule bg-canvas shadow-2xl">
-        <div className="flex items-center gap-3 border-b border-rule px-5">
+        <div className="flex items-center gap-3 border-b border-rule px-5 mt-4">
           <svg
             width="18"
             height="18"
@@ -178,7 +178,7 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKeyDown}
-            placeholder="Search pages, products, newsroom, memos…"
+            placeholder="Search products, technology, insights…"
             autoComplete="off"
             spellCheck={false}
             aria-label="Search"
@@ -186,7 +186,7 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
             aria-activedescendant={
               results[activeIdx] ? `cmd-row-${activeIdx}` : undefined
             }
-            className="w-full appearance-none border-0 bg-transparent py-4 font-sans text-[1.0625rem] text-ink placeholder:text-ink-subtle focus:outline-none"
+            className="w-full appearance-none border-0 bg-transparent py-4 font-sans text-body text-ink placeholder:text-ink-subtle focus-field"
           />
           <kbd className="hidden shrink-0 rounded-sm border border-rule bg-canvas px-1.5 py-0.5 font-sans text-caption text-ink-subtle sm:inline-flex">
             Esc
@@ -197,6 +197,12 @@ export function CommandPalette({ index }: { index: SearchEntry[] }) {
           {showHint && (
             <p className="px-5 py-8 font-sans text-body-s text-ink-subtle">
               Start typing to search the site.
+            </p>
+          )}
+
+          {loading && q.length >= 2 && (
+            <p className="px-5 py-8 font-sans text-body-s text-ink-subtle">
+              Searching&hellip;
             </p>
           )}
 

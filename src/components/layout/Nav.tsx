@@ -1,25 +1,258 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Wordmark } from "@/components/ui/Wordmark";
+import { StatusChip } from "@/components/ui/StatusChip";
 import { COMMAND_PALETTE_OPEN_EVENT } from "@/components/sections/CommandPalette";
-import { Magnetic } from "@/components/motion/Magnetic";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { cn } from "@/lib/utils";
-import { EASE_OUT } from "@/lib/motion";
+import { chromeSettle, EASE_OUT } from "@/lib/motion";
 import type { ProductSummary } from "@/lib/content";
-import { NAV_LINKS } from "@/config/site";
+import { insightsGroups, PRIMARY_NAV, UTILITY_NAV, type NavGroup } from "@/config/nav";
 
-const navLinks = NAV_LINKS;
+/*
+ * ============================================================================
+ * Global navigation
+ * ============================================================================
+ *
+ * Navigation is the primary interface for a sixteen-product portfolio, so this
+ * is the component that decides whether the site is usable. Three things are
+ * load-bearing and none of them are visual:
+ *
+ * 1. THE PRODUCTS PANEL IS DERIVED, NOT AUTHORED. It is built from the live
+ *    MDX collection, grouped by domain and ordered by lifecycle. Adding a
+ *    product file puts it in the navigation. Nothing here lists products.
+ *
+ * 2. HOVER IS AN ENHANCEMENT, NOT THE MECHANISM. The panel opens on hover for
+ *    a pointer, and on click/Enter for everything else. A hover-only mega menu
+ *    is unusable by keyboard and hostile on touch, which is most visitors.
+ *
+ * 3. MOBILE IS ITS OWN INFORMATION ARCHITECTURE. Not this menu, narrower. The
+ *    desktop panel is a wide multi-column layout that cannot shrink into a
+ *    phone; mobile gets an accordion where each destination expands in place.
+ */
 
-export function Nav({ products }: { products: ProductSummary[] }) {
+type PanelId = string | null;
+
+/** Products are grouped by domain, in a fixed order that reads as a hierarchy. */
+const GROUP_ORDER = [
+  "identity",
+  "foundation",
+  "business",
+  "intelligence",
+  "visibility",
+  "communications",
+  "media",
+  "productivity",
+] as const;
+
+const GROUP_LABEL: Record<string, string> = {
+  identity: "Identity",
+  foundation: "Foundation",
+  business: "Business",
+  intelligence: "Intelligence",
+  visibility: "Visibility",
+  communications: "Communications",
+  media: "Media",
+  productivity: "Productivity",
+};
+
+function groupProducts(products: ProductSummary[]) {
+  return GROUP_ORDER.map((group) => ({
+    group,
+    label: GROUP_LABEL[group] ?? group,
+    items: products.filter((p) => p.group === group),
+  })).filter((g) => g.items.length > 0);
+}
+
+/* -------------------------------------------------------------------------- */
+
+function useHoverIntent(onOpen: (id: string) => void, onClose: () => void) {
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clear = () => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null;
+  };
+  useEffect(() => clear, []);
+  return {
+    // Opening is delayed so that sweeping the cursor across the bar on the way
+    // somewhere else does not flash three panels open behind it.
+    enter: (id: string) => {
+      clear();
+      timer.current = setTimeout(() => onOpen(id), 90);
+    },
+    // Closing is delayed more generously: the cursor has to cross a gap between
+    // the trigger and the panel, and a panel that closes mid-traverse is the
+    // single most irritating mega-menu failure.
+    leave: () => {
+      clear();
+      timer.current = setTimeout(onClose, 180);
+    },
+    cancel: clear,
+  };
+}
+
+function PanelColumns({ groups }: { groups: NavGroup[] }) {
+  return (
+    <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2">
+      {groups.map((g) => (
+        <div key={g.heading}>
+          <p className="font-mono text-label uppercase text-ink-subtle">{g.heading}</p>
+          <ul className="mt-4 space-y-1">
+            {g.items.map((item) => (
+              <li key={item.href}>
+                <NextLink
+                  href={item.href}
+                  className="group/item -mx-3 block rounded-md px-3 py-2 transition-colors duration-fast hover:bg-accent-faint focus-ring"
+                >
+                  <span className="block font-sans text-body-s font-medium text-ink">
+                    {item.label}
+                  </span>
+                  {item.description && (
+                    <span className="mt-0.5 block text-caption text-ink-subtle">
+                      {item.description}
+                    </span>
+                  )}
+                </NextLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProductPanel({ products }: { products: ProductSummary[] }) {
+  const groups = groupProducts(products);
+  return (
+    <>
+      <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        {groups.map((g) => (
+          <div key={g.group}>
+            <p className="font-mono text-label uppercase text-ink-subtle">{g.label}</p>
+            <ul className="mt-4 space-y-1">
+              {g.items.map((p) => (
+                <li key={p.href}>
+                  <NextLink
+                    href={p.href}
+                    className="-mx-3 block rounded-md px-3 py-2 transition-colors duration-fast hover:bg-accent-faint focus-ring"
+                  >
+                    <span className="flex items-baseline justify-between gap-4">
+                      <span className="font-sans text-body-s font-medium text-ink">
+                        {p.name}
+                      </span>
+                      <StatusChip status={p.status} showDot={false} className="shrink-0" />
+                    </span>
+                    <span className="mt-0.5 block text-caption text-ink-subtle">
+                      {p.oneLiner}
+                    </span>
+                  </NextLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <NextLink
+        href="/ecosystem"
+        className="mt-8 flex items-center justify-between border-t border-rule pt-5 text-body-s text-ink transition-colors duration-fast hover:text-accent-text-hover focus-ring"
+      >
+        See how the products fit together
+        <span aria-hidden="true">→</span>
+      </NextLink>
+    </>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+
+export function Nav({
+  products,
+  topics,
+}: {
+  products: ProductSummary[];
+  /** Live insight topics. Derived in the layout, so a topic link exists only
+   *  where there is something behind it. */
+  topics: string[];
+}) {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [mobileSection, setMobileSection] = useState<PanelId>(null);
   const pathname = usePathname();
+
+  /*
+   * Open state is stored WITH the route it was opened on, and read back only
+   * while that route is still current. Navigating therefore closes every menu
+   * for free.
+   *
+   * The obvious alternative — an effect on `pathname` that calls setState —
+   * is a cascading render: the new page paints with the panel still open, then
+   * immediately re-renders without it. Deriving during render means the panel
+   * is simply never open on a route it was not opened on.
+   */
+  const [menu, setMenu] = useState<{ panel: PanelId; mobile: boolean; at: string }>({
+    panel: null,
+    mobile: false,
+    at: pathname,
+  });
+  const sameRoute = menu.at === pathname;
+  const openPanel = sameRoute ? menu.panel : null;
+  const mobileOpen = sameRoute ? menu.mobile : false;
+
+  /*
+   * Each setter owns ONE field and preserves the other. That looks like
+   * over-carefulness and is a bug fix.
+   *
+   * Both of these used to overwrite the whole object — setOpenPanel wrote
+   * `mobile: false`. The header bar carries `onMouseLeave={hover.leave}` for
+   * the desktop mega panel, and hover.leave calls closePanel, which calls
+   * setOpenPanel(null). So on a touch device the sequence was: tap the
+   * hamburger, the overlay opens; move a finger toward a menu item, the
+   * pointer leaves the header bar, mouseleave fires, and the overlay
+   * UNMOUNTS before the tap lands. The menu was unusable on phone and tablet
+   * for exactly as long as it took to reach for it.
+   *
+   * The two menus are mutually exclusive by breakpoint anyway — the panel is
+   * lg:block, the overlay lg:hidden — so neither ever needed to close the
+   * other. Coupling them in one setState was the whole defect.
+   *
+   * The functional form matters too: reading `menu` from the closure would
+   * reintroduce a stale value whenever two updates land in one batch.
+   */
+  const setOpenPanel = useCallback(
+    (panel: PanelId) =>
+      setMenu((m) => ({
+        panel,
+        mobile: m.at === pathname ? m.mobile : false,
+        at: pathname,
+      })),
+    [pathname],
+  );
+  const setMobileOpen = useCallback(
+    (next: boolean) =>
+      setMenu((m) => ({
+        panel: m.at === pathname ? m.panel : null,
+        mobile: next,
+        at: pathname,
+      })),
+    [pathname],
+  );
   const reduce = useReducedMotion();
+  const panelBaseId = useId();
+  const barRef = useRef<HTMLDivElement>(null);
+
+  // Injected rather than static — see the note in config/nav.ts.
+  const groupsFor = (label: string): NavGroup[] =>
+    label === "Insights"
+      ? insightsGroups(topics)
+      : (PRIMARY_NAV.find((d) => d.label === label)?.groups ?? []);
+
+  const closePanel = useCallback(() => setOpenPanel(null), [setOpenPanel]);
+  const hover = useHoverIntent(setOpenPanel, closePanel);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -28,157 +261,191 @@ export function Nav({ products }: { products: ProductSummary[] }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll while the overlay is open, and close on Escape.
+  // Escape closes the open panel and returns focus to the bar; a click outside
+  // dismisses it. Both are required for a menu to be operable by keyboard.
   useEffect(() => {
-    if (!open) return;
+    if (!openPanel) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpenPanel(null);
+        barRef.current?.querySelector<HTMLElement>("[data-nav-trigger]")?.focus();
+      }
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (!barRef.current?.contains(e.target as Node)) setOpenPanel(null);
+    };
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointer);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointer);
+    };
+  }, [openPanel, setOpenPanel]);
+
+  // Lock body scroll behind the mobile overlay, and close on Escape.
+  useEffect(() => {
+    if (!mobileOpen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") setMobileOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [mobileOpen, setMobileOpen]);
 
-  const closeMenu = useCallback(() => setOpen(false), []);
-  const isElevated = scrolled || open;
-  const productsActive = pathname === "/products" || pathname.startsWith("/products/");
+  const isElevated = scrolled || mobileOpen || openPanel !== null;
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
 
   const linkBase =
-    "relative py-1 font-ui text-[0.9375rem] tracking-tight transition-colors duration-200";
+    "relative py-1 font-sans text-body-s font-medium tracking-tight transition-colors duration-fast";
 
   return (
     <>
       <ScrollProgress />
       <header
         className={cn(
-          "sticky top-0 z-40 w-full transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300",
+          "sticky top-0 z-nav w-full transition-[background-color,backdrop-filter,border-color,box-shadow] duration-base",
           isElevated
-            ? "border-b border-rule bg-canvas/70 shadow-sm backdrop-blur-xl supports-backdrop-filter:bg-canvas/60"
+            ? "border-b border-rule bg-canvas/80 shadow-sm backdrop-blur-xl supports-backdrop-filter:bg-canvas/70"
             : "border-b border-transparent bg-transparent",
         )}
       >
-        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 md:px-10 lg:h-20 lg:px-16">
-          <Magnetic strength={0.3}>
-            <NextLink
-              href="/"
-              aria-label="Qeet Group home"
-              className="group flex items-center gap-2.5 font-display text-[1.4rem] font-semibold leading-none tracking-[-0.03em] text-ink sm:text-[1.5rem] lg:text-[1.625rem]"
-            >
-              {/* Identity-core dot — a small echo of the graph signature. */}
-              <span
-                aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-brand transition-transform duration-300 group-hover:scale-125"
-              />
-              Qeet Group
-            </NextLink>
-          </Magnetic>
+        <div
+          ref={barRef}
+          className="mx-auto flex h-16 w-full max-w-wide items-center justify-between px-(--space-gutter) lg:h-20"
+          onMouseLeave={hover.leave}
+        >
+          {/* shrink-0 and nowrap together. As a flex item the wordmark was
+              shrinking to 114px at the 1024 breakpoint and breaking "Qeet
+              Group" onto two lines inside a 64px-tall bar. A logo that
+              reflows is not a logo, so it is taken out of the shrink
+              calculation entirely and the rail below is what gives way. */}
+          <Wordmark className="flex shrink-0 whitespace-nowrap" />
 
-          <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">
-            {/* Products mega-panel: opens on hover and on keyboard focus-within. */}
-            <div className="group relative">
-              <NextLink
-                href="/products"
-                className={cn(linkBase, "flex items-center gap-1.5", productsActive ? "text-ink" : "text-ink-muted hover:text-ink")}
-                aria-haspopup="true"
-              >
-                Products
-                <svg
-                  width="11"
-                  height="11"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  aria-hidden="true"
-                  className="mt-0.5 text-ink-subtle transition-transform duration-300 group-hover:rotate-180"
-                >
-                  <path d="m3 4.5 3 3 3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                {productsActive && <span className="absolute inset-x-0 -bottom-0.5 h-px bg-brand" />}
-              </NextLink>
+          {/*
+            The rail needed 1030px at the 1024px breakpoint where it turns
+            on, so every page had six pixels of horizontal scroll on a
+            1024-wide screen. gap-7 across ten children is 252px of pure
+            spacing; dropping to gap-5 until xl reclaims 72px and clears
+            it with room, and the wider spacing returns at 1280 where
+            there is actually space for it.
+          */}
+          <nav aria-label="Primary" className="hidden items-center gap-5 lg:flex xl:gap-7">
+            {PRIMARY_NAV.map((dest) => {
+              const active = isActive(dest.href);
+              const isProducts = dest.href === "/products";
+              const hasPanel = isProducts || groupsFor(dest.label).length > 0;
+              const panelId = `${panelBaseId}-${dest.label}`;
+              const expanded = openPanel === dest.label;
 
-              {/* pt bridge keeps hover alive across the gap to the panel */}
-              <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-4 opacity-0 transition-[opacity,transform] duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 motion-safe:translate-y-1 motion-safe:group-hover:translate-y-0 motion-safe:group-focus-within:translate-y-0">
-                <div className="glass-panel w-136 rounded-2xl p-3 backdrop-blur-xl">
-                  <div className="grid max-h-[70vh] grid-cols-2 gap-1 overflow-y-auto">
-                    {products.map((p) => (
-                      <NextLink
-                        key={p.href}
-                        href={p.href}
-                        className="group/item flex items-start gap-3 rounded-xl p-3 transition-colors duration-200 hover:bg-brand-faint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-                      >
-                        <span
-                          className={cn(
-                            "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-200 group-hover/item:bg-brand",
-                            p.live ? "bg-brand" : "bg-rule-strong",
-                          )}
-                        />
-                        <span className="min-w-0">
-                          <span className="block font-ui text-[0.9375rem] font-medium text-ink">{p.name}</span>
-                          <span className="mt-0.5 block truncate text-caption text-ink-subtle">{p.sector}</span>
-                        </span>
-                        <span
-                          className={cn(
-                            "ml-auto shrink-0 font-mono text-[0.6875rem] uppercase tracking-widest",
-                            p.live ? "text-brand" : "text-ink-subtle",
-                          )}
-                        >
-                          {p.statusLabel}
-                        </span>
-                      </NextLink>
-                    ))}
-                  </div>
+              if (!hasPanel) {
+                return (
                   <NextLink
-                    href="/products"
-                    className="mt-1 flex items-center justify-between rounded-xl border-t border-rule px-3 pb-1 pt-3 text-body-s text-ink transition-colors duration-200 hover:text-brand"
+                    key={dest.href}
+                    href={dest.href}
+                    onMouseEnter={hover.leave}
+                    className={cn(
+                      linkBase,
+                      active ? "text-ink" : "text-ink-muted hover:text-ink",
+                    )}
                   >
-                    Explore all platforms
-                    <span aria-hidden="true">→</span>
+                    {dest.label}
+                    {active && <span className="absolute inset-x-0 -bottom-1 h-px bg-accent" />}
                   </NextLink>
-                </div>
-              </div>
-            </div>
+                );
+              }
 
-            {navLinks.map((l) => {
-              const active = pathname === l.href || pathname.startsWith(l.href + "/");
               return (
-                <NextLink
-                  key={l.href}
-                  href={l.href}
-                  className={cn(linkBase, active ? "text-ink" : "text-ink-muted hover:text-ink")}
+                <div
+                  key={dest.href}
+                  className="relative"
+                  onMouseEnter={() => hover.enter(dest.label)}
                 >
-                  {l.label}
-                  {active &&
-                    (reduce ? (
-                      <span className="absolute inset-x-0 -bottom-0.5 h-px bg-brand" />
-                    ) : (
-                      <motion.span
-                        layoutId="nav-underline"
-                        className="absolute inset-x-0 -bottom-0.5 h-px bg-brand"
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  <button
+                    type="button"
+                    data-nav-trigger
+                    aria-expanded={expanded}
+                    aria-controls={panelId}
+                    onClick={() => setOpenPanel(expanded ? null : dest.label)}
+                    onFocus={() => setOpenPanel(dest.label)}
+                    className={cn(
+                      linkBase,
+                      "flex items-center gap-1.5 focus-ring rounded-sm",
+                      active || expanded ? "text-ink" : "text-ink-muted hover:text-ink",
+                    )}
+                  >
+                    {dest.label}
+                    <svg
+                      width="11"
+                      height="11"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      aria-hidden="true"
+                      className={cn(
+                        "mt-0.5 text-ink-subtle transition-transform duration-base",
+                        expanded && "rotate-180",
+                      )}
+                    >
+                      <path
+                        d="m3 4.5 3 3 3-3"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
-                    ))}
-                </NextLink>
+                    </svg>
+                    {active && <span className="absolute inset-x-0 -bottom-1 h-px bg-accent" />}
+                  </button>
+                </div>
               );
             })}
+
+            {/*
+              The utility pair waits for xl.
+
+              Once the wordmark stops shrinking, the full rail needs about
+              1060px and the breakpoint it turns on at is 1024. Something has
+              to give between 1024 and 1280, and these two are the right thing:
+              the five primary destinations, search and the theme toggle all
+              survive, and Developers and Contact are both still one click away
+              in the footer and in the Company panel. Cramming ten items into a
+              1024px bar at gap-3 was the alternative, and it looked it.
+            */}
+            <span aria-hidden="true" className="hidden h-4 w-px bg-rule xl:block" />
+
+            {UTILITY_NAV.map((l) => (
+              <NextLink
+                key={l.href}
+                href={l.href}
+                onMouseEnter={hover.leave}
+                className={cn(linkBase, "hidden text-ink-muted hover:text-ink xl:block")}
+              >
+                {l.label}
+              </NextLink>
+            ))}
+
             <NextLink
               href="/search"
-              aria-label="Search (⌘K)"
+              aria-label="Search"
               title="Search (⌘K)"
+              onMouseEnter={hover.leave}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                 e.preventDefault();
                 window.dispatchEvent(new Event(COMMAND_PALETTE_OPEN_EVENT));
               }}
-              className="ml-2 inline-flex h-9 items-center gap-2 rounded-full border border-rule px-3.5 text-ink-muted transition-colors duration-200 hover:border-rule-strong hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+              className="inline-flex h-9 items-center gap-2 rounded-full border border-rule px-3.5 text-ink-muted transition-colors duration-fast hover:border-rule-strong hover:text-ink focus-ring"
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" />
                 <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
-              <kbd className="font-mono text-[0.6875rem] tracking-[0.08em] text-ink-subtle">⌘K</kbd>
+              <kbd className="font-mono text-caption tracking-[0.08em] text-ink-subtle">⌘K</kbd>
             </NextLink>
             <ThemeToggle />
           </nav>
@@ -187,20 +454,15 @@ export function Nav({ products }: { products: ProductSummary[] }) {
             <ThemeToggle />
             <button
               type="button"
-              aria-label={open ? "Close menu" : "Open menu"}
-              aria-expanded={open}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
               aria-controls="mobile-nav"
-              className="-mr-2 inline-flex h-10 w-10 items-center justify-center text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas rounded-sm"
-              onClick={() => setOpen((v) => !v)}
+              className="-mr-2 inline-flex h-10 w-10 items-center justify-center rounded-sm text-ink focus-ring"
+              onClick={() => setMobileOpen(!mobileOpen)}
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                {open ? (
-                  <path
-                    d="M6 6l12 12M18 6L6 18"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
+                {mobileOpen ? (
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 ) : (
                   <>
                     <path d="M4 8.5h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -211,6 +473,35 @@ export function Nav({ products }: { products: ProductSummary[] }) {
             </button>
           </div>
         </div>
+
+        {/*
+          The panel spans the full bar rather than floating under its trigger.
+          A sixteen-product grid does not fit in a dropdown, and anchoring wide
+          panels to narrow triggers is what makes mega menus feel unmoored.
+        */}
+        <AnimatePresence>
+          {openPanel && (
+            <motion.div
+              key={openPanel}
+              id={`${panelBaseId}-${openPanel}`}
+              variants={reduce ? undefined : chromeSettle}
+              initial={reduce ? false : "hidden"}
+              animate="visible"
+              exit={reduce ? undefined : "exit"}
+              onMouseEnter={hover.cancel}
+              onMouseLeave={hover.leave}
+              className="absolute inset-x-0 top-full hidden border-b border-rule bg-canvas/95 backdrop-blur-xl lg:block"
+            >
+              <div className="mx-auto w-full max-w-wide px-(--space-gutter) py-10">
+                {openPanel === "Products" ? (
+                  <ProductPanel products={products} />
+                ) : (
+                  <PanelColumns groups={groupsFor(openPanel)} />
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/*
@@ -219,38 +510,103 @@ export function Nav({ products }: { products: ProductSummary[] }) {
         containing block for fixed descendants and collapse this overlay.
       */}
       <AnimatePresence>
-        {open && (
+        {mobileOpen && (
           <motion.div
             id="mobile-nav"
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={reduce ? undefined : { opacity: 0 }}
             transition={{ duration: 0.2, ease: EASE_OUT }}
-            className="fixed inset-x-0 top-16 bottom-0 z-30 overflow-y-auto bg-canvas/95 backdrop-blur-xl lg:hidden"
+            className="fixed inset-x-0 bottom-0 top-16 z-overlay overflow-y-auto bg-canvas/97 backdrop-blur-xl lg:hidden"
           >
-            <nav aria-label="Mobile" className="mx-auto flex w-full max-w-7xl flex-col px-6 pt-4 pb-12 md:px-10">
-              {[{ href: "/products", label: "Products" }, ...navLinks, { href: "/search", label: "Search" }].map((l, i) => {
-                const active = pathname === l.href || pathname.startsWith(l.href + "/");
-                return (
-                  <motion.div
-                    key={l.href}
-                    initial={reduce ? false : { opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.06 + i * 0.05, duration: 0.4, ease: EASE_OUT }}
-                  >
+            <nav
+              aria-label="Mobile"
+              className="mx-auto flex w-full max-w-wide flex-col px-(--space-gutter) pb-16 pt-4"
+            >
+              {PRIMARY_NAV.map((dest) => {
+                const expanded = mobileSection === dest.label;
+                const groups =
+                  dest.href === "/products"
+                    ? groupProducts(products).map((g) => ({
+                        heading: g.label,
+                        items: g.items.map((p) => ({ href: p.href, label: p.name })),
+                      }))
+                    : groupsFor(dest.label);
+
+                if (groups.length === 0) {
+                  return (
                     <NextLink
-                      href={l.href}
-                      onClick={closeMenu}
-                      className={cn(
-                        "block border-b border-rule py-5 font-display font-medium text-[1.875rem] leading-tight tracking-[-0.02em] transition-colors duration-200 md:text-[2.25rem]",
-                        active ? "text-ink" : "text-ink-muted hover:text-ink",
-                      )}
+                      key={dest.href}
+                      href={dest.href}
+                      className="block border-b border-rule py-5 font-display text-heading-xl text-ink-muted transition-colors duration-fast hover:text-ink"
                     >
-                      {l.label}
+                      {dest.label}
                     </NextLink>
-                  </motion.div>
+                  );
+                }
+
+                return (
+                  <div key={dest.href} className="border-b border-rule">
+                    <button
+                      type="button"
+                      aria-expanded={expanded}
+                      onClick={() => setMobileSection(expanded ? null : dest.label)}
+                      className="flex w-full items-center justify-between rounded-sm py-5 text-left font-display text-heading-xl text-ink focus-ring"
+                    >
+                      {dest.label}
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "text-ink-subtle transition-transform duration-base",
+                          expanded && "rotate-45",
+                        )}
+                      >
+                        +
+                      </span>
+                    </button>
+                    {expanded && (
+                      <div className="space-y-6 pb-6">
+                        {groups.map((g) => (
+                          <div key={g.heading}>
+                            <p className="font-mono text-label uppercase text-ink-subtle">
+                              {g.heading}
+                            </p>
+                            <ul className="mt-3 space-y-3">
+                              {g.items.map((item) => (
+                                <li key={item.href}>
+                                  {/* py-2 with the negative inset takes these
+                                      from a 28px line box to a 40px target
+                                      without changing the visual rhythm — 28px
+                                      clears the 24px WCAG 2.5.8 minimum but is
+                                      mean for a thumb. */}
+                                  <NextLink
+                                    href={item.href}
+                                    className="-my-1 block rounded-sm py-2 text-body text-ink-muted transition-colors duration-fast hover:text-ink focus-ring"
+                                  >
+                                    {item.label}
+                                  </NextLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
+
+              <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+                {[...UTILITY_NAV, { href: "/search", label: "Search" }].map((l) => (
+                  <NextLink
+                    key={l.href}
+                    href={l.href}
+                    className="rounded-sm font-sans text-body text-ink-muted transition-colors duration-fast hover:text-ink focus-ring"
+                  >
+                    {l.label}
+                  </NextLink>
+                ))}
+              </div>
             </nav>
           </motion.div>
         )}
