@@ -6,7 +6,7 @@ function Avatar({ initials, brand }: { initials: string; brand?: boolean }) {
   return (
     <span
       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[0.6875rem] font-medium ${
-        brand ? "bg-brand text-white" : "bg-ink/8 text-ink"
+        brand ? "bg-accent text-accent-contrast" : "bg-ink/8 text-ink"
       }`}
     >
       {initials}
@@ -32,7 +32,7 @@ export function QeetPeopleMock() {
       <div className="flex w-full flex-col rounded-2xl border border-rule bg-surface p-4 shadow-sm">
         <div className="flex items-center justify-between">
           <span className="text-[0.75rem] font-medium text-ink">Org · Engineering</span>
-          <span className="rounded-full border border-rule px-2 py-0.5 text-[0.625rem] text-ink-muted">
+          <span className="rounded-full border border-rule px-2 py-0.5 text-[0.6875rem] text-ink-muted">
             12 members
           </span>
         </div>
@@ -47,8 +47,8 @@ export function QeetPeopleMock() {
           </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-1.5 border-t border-rule pt-2.5 text-[0.625rem] text-ink-subtle">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+        <div className="mt-3 flex items-center gap-1.5 border-t border-rule pt-2.5 text-[0.6875rem] text-ink-subtle">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           Payroll · PF · ESI compliant
         </div>
       </div>

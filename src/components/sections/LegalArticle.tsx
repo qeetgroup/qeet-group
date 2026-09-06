@@ -8,14 +8,7 @@ import { mdxComponents } from "@/components/mdx/MDXComponents";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/structured-data";
 import type { LoadedLegal } from "@/lib/content";
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+import { formatDate } from "@/lib/format";
 
 export function LegalArticle({ doc }: { doc: LoadedLegal }) {
   const { data, content } = doc;
@@ -33,7 +26,7 @@ export function LegalArticle({ doc }: { doc: LoadedLegal }) {
             <Eyebrow className="mb-8 md:mb-10">Legal</Eyebrow>
           </FadeRise>
           <FadeRise delay={0.1} className="max-w-3xl">
-            <h1 className="text-balance font-serif font-normal tracking-[-0.015em] text-ink text-[2.5rem] leading-[1.06] md:text-[3.5rem] md:leading-[1.04] lg:text-[4.25rem] lg:leading-[1.02]">
+            <h1 className="text-balance font-display text-ink text-display-l">
               {data.title}
             </h1>
             <p className="mt-8 font-sans text-body-s text-ink-subtle md:mt-10">
@@ -45,7 +38,7 @@ export function LegalArticle({ doc }: { doc: LoadedLegal }) {
 
       <Section className="border-t border-rule" padding="tight">
         <FadeRise>
-          <article className="max-w-[42rem]">
+          <article className="max-w-measure">
             <MDXRemote source={content} components={mdxComponents} />
           </article>
         </FadeRise>

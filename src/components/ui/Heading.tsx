@@ -1,7 +1,8 @@
-import type { ElementType, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export type HeadingSize =
+  | "display-2xl"
   | "display-xl"
   | "display-l"
   | "display-m"
@@ -11,47 +12,54 @@ export type HeadingSize =
   | "heading-s";
 
 /**
- * `display` is the confident headline face (Cal Sans Display) — the default for
- * the Confident-Enterprise look. `sans` is the body face for softer headings.
- * `serif` is a retained alias → display, so call sites from the previous
- * serif-led design keep rendering correctly while they migrate.
+ * Both variants are Qeet UI — the site sets headings in one face. What differs
+ * is WEIGHT, which is where hierarchy comes from once the typeface stops
+ * changing:
+ *
+ *   `display`  600. The announcing voice, and the default.
+ *   `sans`     500. For headings that should structure a page without claiming
+ *              it — a card title, a sidebar label, the second heading in a
+ *              section that already has a display headline.
+ *
+ * Two headings at 600 competing in one viewport is the most common way a
+ * single-face hierarchy collapses; `sans` is the escape hatch for that.
  */
-type Variant = "display" | "sans" | "serif";
+export type HeadingVariant = "display" | "sans";
 
-/**
- * Responsive size map. Desktop sizes match the brief's type scale; smaller
- * viewports step down so display type doesn't overflow on phones.
+/*
+ * Sizes map straight onto the fluid scale in globals.css. Each token carries
+ * its own line-height and letter-spacing, so there is nothing to remember and
+ * nothing to re-tune per breakpoint — discrete breakpoint steps are exactly
+ * why headlines used to look inconsistent between viewports.
+ *
+ * This component is the only place display type gets sized.
  */
 const sizeMap: Record<HeadingSize, string> = {
-  "display-xl":
-    "text-[3.25rem] leading-[1.05] sm:text-[4rem] md:text-[5rem] md:leading-[1.05] lg:text-[6rem] lg:leading-[1.04]",
-  "display-l":
-    "text-[2.75rem] leading-[1.08] sm:text-[3.25rem] md:text-[4rem] md:leading-[1.1] lg:text-[4.5rem] lg:leading-[1.11]",
-  "display-m":
-    "text-[2.25rem] leading-[1.1] md:text-[2.75rem] md:leading-[1.12] lg:text-[3.5rem] lg:leading-[1.14]",
-  "heading-xl":
-    "text-[1.875rem] leading-[1.15] md:text-[2.25rem] lg:text-[2.5rem] lg:leading-[1.2]",
-  "heading-l":
-    "text-[1.5rem] leading-[1.2] md:text-[1.75rem] lg:text-[2rem] lg:leading-[1.25]",
-  "heading-m": "text-[1.25rem] leading-[1.3] md:text-[1.5rem] md:leading-[1.33]",
-  "heading-s": "text-[1.125rem] leading-[1.55]",
+  "display-2xl": "text-display-2xl",
+  "display-xl": "text-display-xl",
+  "display-l": "text-display-l",
+  "display-m": "text-display-m",
+  "heading-xl": "text-heading-xl",
+  "heading-l": "text-heading-l",
+  "heading-m": "text-heading-m",
+  "heading-s": "text-heading-s",
 };
 
-const variantMap: Record<Variant, string> = {
-  display: "font-display font-semibold tracking-tight",
-  sans: "font-sans font-medium tracking-[-0.02em]",
-  // Legacy: previous serif headlines now render in the display face.
-  serif: "font-display font-medium tracking-[-0.02em]",
+const variantMap: Record<HeadingVariant, string> = {
+  // `font-display` carries weight 600 from the base layer; `sans` is the same
+  // face stepped down to 500 rather than a different family.
+  display: "font-display",
+  sans: "font-ui font-medium",
 };
 
 type HeadingProps = {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
-  variant?: Variant;
+  variant?: HeadingVariant;
   size?: HeadingSize;
   className?: string;
   children: ReactNode;
   as?: ElementType;
-};
+} & Omit<ComponentPropsWithoutRef<"h2">, "className" | "children">;
 
 export function Heading({
   level = 2,
@@ -60,10 +68,11 @@ export function Heading({
   className,
   children,
   as,
+  ...rest
 }: HeadingProps) {
   const Tag = (as ?? (`h${level}` as ElementType)) as ElementType;
   return (
-    <Tag className={cn("text-balance", variantMap[variant], sizeMap[size], className)}>
+    <Tag className={cn(variantMap[variant], sizeMap[size], className)} {...rest}>
       {children}
     </Tag>
   );

@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   build:
-    name: Lint · typecheck · test · build
+    name: Lint · typecheck · test · contrast · build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,6 +38,11 @@ jobs:
 
       - name: Test
         run: bun run test
+
+      # Contrast is arithmetic, not a judgement call. Asserts every declared
+      # token pairing against its WCAG threshold in BOTH themes.
+      - name: Contrast gate
+        run: bun run check:contrast
 
       - name: Build
         run: bun run build

@@ -1,46 +1,16 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useTheme, type Theme } from "@/lib/use-theme";
 import { cn } from "@/lib/utils";
 
-type Theme = "light" | "dark";
-
-/**
- * Subscribes to <html> classList changes so the toggle re-renders when theme
- * changes (including changes triggered elsewhere). Uses useSyncExternalStore
- * — the React-blessed pattern for reading external (DOM) state — to avoid
- * the setState-in-effect pattern that lint flags as a cascading render.
- *
- * The initial class is set by the inline FOUC script in layout.tsx, so there
- * is no theme flash on navigation. On the server snapshot we return null so
- * the button renders an invisible placeholder until hydration completes.
- */
-function getThemeSnapshot(): Theme | null {
-  if (typeof document === "undefined") return null;
-  return document.documentElement.classList.contains("dark") ? "dark" : "light";
-}
-
-function subscribe(callback: () => void) {
-  if (typeof document === "undefined") return () => {};
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  return () => observer.disconnect();
-}
-
 export function ThemeToggle({ className }: { className?: string }) {
-  const theme = useSyncExternalStore<Theme | null>(
-    subscribe,
-    getThemeSnapshot,
-    () => null,
-  );
+  // Theme state lives in lib/use-theme — GhostFibers reads the same source.
+  const theme = useTheme();
 
   const toggle = () => {
     if (!theme) return;
     const next: Theme = theme === "dark" ? "light" : "dark";
-    document.documentElement.classList.toggle("dark", next === "dark");
+    document.documentElement.classList.toggle("light", next === "light");
     try {
       localStorage.setItem("theme", next);
     } catch {
@@ -50,8 +20,8 @@ export function ThemeToggle({ className }: { className?: string }) {
 
   const baseCls = cn(
     "inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition-colors duration-200",
-    "hover:bg-ink/[5%] hover:text-ink",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "hover:bg-ink/5 hover:text-ink",
+    "focus-ring",
     className,
   );
 

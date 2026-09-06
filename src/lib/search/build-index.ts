@@ -1,18 +1,23 @@
 import "server-only";
-import { listProducts, listMemos, listPosts } from "@/lib/content";
+import { listInsights, listProducts, listTechnology, statusLabel } from "@/lib/content";
 import { STATIC_PAGES, type SearchEntry } from "./index";
 
 /**
- * Server-only index builder. Reads MDX from disk (products, newsroom,
- * memos) and merges with the static-page seed. Kept apart from the
- * client-safe utilities in lib/search.ts because that file is imported
- * by client components and cannot transitively pull in node:fs.
+ * Server-only index builder. Reads MDX from disk and merges with the
+ * static-page seed. Kept apart from the client-safe utilities in ./index.ts
+ * because that file is imported by client components and cannot transitively
+ * pull in node:fs.
+ *
+ * Uses the VISIBLE loaders rather than the publishable ones — unlike the
+ * sitemap, search is a surface a human is actively looking at, so if
+ * demonstration content is being shown on the site it should be findable. The
+ * demo badge on the destination page is what keeps it honest.
  */
 export async function buildSearchIndex(): Promise<SearchEntry[]> {
-  const [products, posts, memos] = await Promise.all([
+  const [products, insights, technology] = await Promise.all([
     listProducts(),
-    listPosts(),
-    listMemos(),
+    listInsights(),
+    listTechnology(),
   ]);
 
   const entries: SearchEntry[] = [];
@@ -28,31 +33,34 @@ export async function buildSearchIndex(): Promise<SearchEntry[]> {
     entries.push({
       type: "product",
       title: p.data.name,
-      description: p.data.description,
+      // Lifecycle rides along in the description, so a result for a planned
+      // product cannot be mistaken for something available today — search
+      // results get read far more carelessly than pages do.
+      description: `${statusLabel(p.data.status)} · ${p.data.oneLiner}`,
       url: `/products/${p.slug}`,
       haystack:
-        `${p.data.name} ${p.data.tagline} ${p.data.sector} ${p.data.description} ${p.content}`.toLowerCase(),
+        `${p.data.name} ${p.data.tagline} ${p.data.oneLiner} ${p.data.sector} ${p.data.description} ${p.content}`.toLowerCase(),
     });
   }
 
-  for (const p of posts) {
+  for (const t of technology) {
     entries.push({
-      type: "post",
-      title: p.data.title.replace(/\.$/, ""),
-      description: p.data.dek,
-      url: `/newsroom/${p.slug}`,
+      type: "technology",
+      title: t.data.title,
+      description: t.data.dek,
+      url: `/technology/${t.slug}`,
+      haystack: `${t.data.title} ${t.data.eyebrow} ${t.data.dek} ${t.content}`.toLowerCase(),
+    });
+  }
+
+  for (const i of insights) {
+    entries.push({
+      type: "insight",
+      title: i.data.title.replace(/\.$/, ""),
+      description: i.data.dek,
+      url: `/insights/${i.slug}`,
       haystack:
-        `${p.data.title} ${p.data.category} ${p.data.dek} ${p.content}`.toLowerCase(),
-    });
-  }
-
-  for (const m of memos) {
-    entries.push({
-      type: "memo",
-      title: m.data.title.replace(/\.$/, ""),
-      description: m.data.dek,
-      url: `/memos/${m.slug}`,
-      haystack: `${m.data.title} ${m.data.dek} ${m.content}`.toLowerCase(),
+        `${i.data.title} ${i.data.topic} ${i.data.dek} ${i.content}`.toLowerCase(),
     });
   }
 

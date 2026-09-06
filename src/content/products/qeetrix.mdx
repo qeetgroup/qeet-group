@@ -1,48 +1,31 @@
 ---
 name: Qeetrix
-tagline: One design system. Every Qeet product.
-sector: Design Systems
-stage: Early access
-founded: "2026"
-externalUrl: https://www.npmjs.com/org/qeetrix
+tagline: The system everything is built from.
+oneLiner: The design foundation that makes an entire portfolio feel like one organisation.
+sector: Design Foundation
+group: foundation
+status: available
+externalUrl: https://ui.qeet.in
 order: 2
-description: The design system behind Qeet Group. A token-driven foundation, a React component library built on shadcn and Base UI with Tailwind v4, and brand assets — published to npm and shared across every Qeet product so they look and feel like one family.
+description: Qeetrix is the shared design and interface foundation behind every Qeet product — the reason they look, behave and feel like parts of the same whole.
 ---
 
-## Overview
+## What it does
 
-Qeetrix is the design-system company inside Qeet Group. It grew out of building Qeet ID: once a second product was on the horizon, it stopped making sense for each one to reinvent its own buttons, tokens, and theming. Qeetrix is the answer — a single, versioned source of truth for how Qeet products look, feel, and behave, packaged so any team can install it and build.
+Qeetrix holds the decisions that every Qeet product would otherwise make separately: what a button looks like, how far apart things sit, which colours mean what, how an interface behaves for someone using a keyboard or a screen reader.
 
-Everything flows from one place. Design tokens are authored once and generated into the formats every surface needs, components consume those tokens rather than hard-coded values, and the whole system is published to npm. Change a token and it propagates to every product; ship a component and every team gets it on their next install.
+Those decisions are made once, tested once, and inherited by every product. A change to how something works propagates outward rather than needing to be re-litigated in eight places.
 
-## Available today
+## Why it matters
 
-The packages running in production now, under the `@qeetrix` scope on npm:
+Consistency across a portfolio is usually described as a visual nicety. It is not. It is a compounding cost.
 
-- **`@qeetrix/tokens`** — the foundation. Design tokens authored as W3C Design Tokens JSON and built with Style Dictionary into CSS custom properties and JSON. A three-tier architecture (primitive → semantic → component), first-class light and dark themes, and WCAG-AA contrast verified at build time.
-- **`@qeetrix/ui`** — the React component library. Forty-four components built on shadcn/ui with the Base UI registry and Tailwind CSS v4 — from buttons, inputs, and dialogs to data tables, command palette, charts, and identity-specific primitives like an OTP input and a copyable-secret field. ESM, server-component-ready, and shipped with the Cal Sans type family in three optical sizes.
-- **`@qeetrix/brand`** — the Qeet mark as theme-adaptive React components, plus a set of product icons.
-- **`@qeetrix/tsconfig` and `@qeetrix/eslint-config`** — the shared TypeScript and lint configs every Qeet package builds on.
-- **A living workshop** — a Storybook documenting every component alongside the colour, type, spacing, and radius foundations, driven by the live tokens.
+When each product decides for itself, accessibility is done well in some places and forgotten in others, an interface pattern a customer learns in one product does not transfer to the next, and every team spends a portion of its time rebuilding things that already exist. A shared foundation removes that tax permanently, and it is the reason a portfolio this size can move at all.
 
-## On the roadmap
+## Where it fits
 
-The system is built so each of these slots in without breaking what consumers already ship:
-
-- The full Qeet brand colour palette — the system runs on a neutral baseline today, with brand, accent, and status ramps wired and ready to drop in
-- Final artwork for the custom product icon set
-- A cross-platform token export (JSON today, Flutter next) for mobile SDKs
-- Visual-regression testing and an expanding component library
-- New Qeet products building on it from day one, on the same foundation Qeet ID already ships on
-
-## Who it serves
-
-Every team inside Qeet Group, starting with Qeet ID — whose admin and web apps already build on `@qeetrix/ui` today. The promise is consistency without coordination overhead — a product team installs Qeetrix and inherits the tokens, components, accessibility, and theming, instead of rebuilding them. The same foundation that keeps one product coherent keeps the whole group recognisable as Qeet.
-
-## How it is built
-
-Token-driven by construction: no component hard-codes a colour, size, or radius — every value traces back to a token. Theme-ready by default, with light and dark as equals. Accessible at the token layer, where contrast is checked before a component is ever written. And distributed like any other dependency — versioned with Changesets, published to npm, installed with a single command.
+Qeetrix and Qeet ID are the two things everything else depends on. Between them they answer "who is this person" and "what should this look like" — the two questions no product can avoid and none should answer alone.
 
 ## Status
 
-Early access. The `@qeetrix` packages are published to npm and consumable today; the system is versioned independently per package and hardening toward a 1.0 with the brand palette and broader product adoption. Browse the packages at [npmjs.com/org/qeetrix](https://www.npmjs.com/org/qeetrix).
+Available. It is the most mature artefact in the portfolio, and it is used by every Qeet interface.

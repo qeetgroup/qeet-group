@@ -15,15 +15,19 @@ type SectionProps = {
   padding?: "default" | "tight" | "none";
 };
 
+/* Fluid rhythm from --space-section, so section spacing scales continuously
+ * with the viewport instead of stepping at two breakpoints. */
 const paddingMap = {
-  default: "py-24 md:py-32 lg:py-40",
-  tight: "py-16 md:py-20",
+  default: "py-section",
+  tight: "py-section-tight",
   none: "",
 } as const;
 
 const toneMap: Record<Tone, string> = {
   default: "bg-canvas text-ink",
-  inverse: "bg-inverse text-ink-inverse",
+  /* `on-dark` pins the accent tokens: an inverse band stays dark in the light
+   * theme too, so its accent must not follow the theme. */
+  inverse: "on-dark bg-inverse text-ink-inverse",
 };
 
 export function Section({

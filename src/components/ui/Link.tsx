@@ -1,5 +1,5 @@
-import NextLink from "next/link";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { Anchor } from "./Anchor";
 import { cn, isExternalHref } from "@/lib/utils";
 
 type Variant = "default" | "arrow" | "external";
@@ -68,13 +68,13 @@ export function Link({
 
   const baseClass = cn(
     "group/link inline-flex items-baseline gap-1.5 rounded-sm text-current",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "focus-ring",
     className,
   );
 
   const labelClass = cn(
     underline &&
-      "underline underline-offset-[5px] decoration-[1px] decoration-current/30 motion-safe:transition-[text-decoration-color] motion-safe:duration-300 group-hover/link:decoration-brand",
+      "underline underline-offset-[5px] decoration-1 decoration-current/30 motion-safe:transition-[text-decoration-color] motion-safe:duration-300 group-hover/link:decoration-accent",
   );
 
   const content = (
@@ -93,23 +93,9 @@ export function Link({
     </>
   );
 
-  if (isExternal) {
-    return (
-      <a
-        href={href}
-        className={baseClass}
-        target={href.startsWith("http") ? "_blank" : undefined}
-        rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-        {...rest}
-      >
-        {content}
-      </a>
-    );
-  }
-
   return (
-    <NextLink href={href} className={baseClass} {...rest}>
+    <Anchor href={href} className={baseClass} {...rest}>
       {content}
-    </NextLink>
+    </Anchor>
   );
 }

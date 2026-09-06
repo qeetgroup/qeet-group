@@ -13,9 +13,9 @@ type SectionHeaderProps = {
 };
 
 /**
- * Consistent section intro used across the homepage for rhythm: a numbered
- * eyebrow ("01 — Products"), an optional serif title, and an optional lede.
- * Pure layout — wrap in <FadeRise> at the call site for entrance motion.
+ * Consistent section intro used across the site for rhythm: a numbered eyebrow
+ * ("01 — Products"), an optional title, and an optional lede. Pure layout —
+ * wrap in <FadeRise> at the call site for entrance motion.
  */
 export function SectionHeader({
   index,
@@ -34,7 +34,7 @@ export function SectionHeader({
       )}
     >
       {index && (
-        <div className={cn("h-px w-8 bg-brand", align === "center" && "mx-auto")} />
+        <div className={cn("h-px w-8 bg-accent", align === "center" && "mx-auto")} />
       )}
       <Eyebrow className="flex items-center gap-2.5">
         {index && (
@@ -48,14 +48,14 @@ export function SectionHeader({
         {eyebrow}
       </Eyebrow>
       {title && (
-        <h2 className="text-balance font-display font-semibold tracking-tight text-ink text-[2rem] leading-[1.07] md:text-[2.6rem] lg:text-[3.1rem] lg:leading-[1.05]">
+        <h2 className="text-balance font-display text-ink text-display-m">
           {title}
         </h2>
       )}
       {description && (
         <p
           className={cn(
-            "max-w-[42rem] text-body-l text-ink-muted",
+            "max-w-measure text-body-l text-ink-muted",
             align === "center" && "mx-auto",
           )}
         >

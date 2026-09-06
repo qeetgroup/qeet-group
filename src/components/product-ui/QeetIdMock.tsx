@@ -14,14 +14,14 @@ export function QeetIdMock() {
   return (
     <div aria-hidden="true" className="flex h-full w-full items-center justify-center">
       <div className="w-full max-w-[20rem] rounded-2xl border border-rule bg-surface p-5 shadow-sm">
-        <p className="font-serif text-[1.125rem] leading-none text-ink">Sign in to Qeet</p>
+        <p className="font-display text-[1.125rem] leading-none text-ink">Sign in to Qeet</p>
         <p className="mt-1.5 text-[0.75rem] text-ink-subtle">Welcome back. Continue with…</p>
 
         <div className="mt-4 flex h-9 items-center rounded-lg border border-rule px-3 text-[0.8125rem] text-ink-subtle">
           you@company.com
           <span className="ml-auto h-3.5 w-px animate-pulse bg-ink-subtle motion-reduce:animate-none" />
         </div>
-        <div className="mt-2 flex h-9 items-center justify-center rounded-lg bg-brand text-[0.8125rem] font-medium text-white">
+        <div className="mt-2 flex h-9 items-center justify-center rounded-lg bg-accent text-[0.8125rem] font-medium text-accent-contrast">
           Continue
         </div>
 
@@ -42,7 +42,7 @@ export function QeetIdMock() {
 
         <div className="mt-2 grid grid-cols-4 gap-2">
           <ProviderTile>
-            <span className="text-[0.8125rem] font-semibold">G</span>
+            <span className="text-[0.8125rem] font-medium">G</span>
           </ProviderTile>
           <ProviderTile>
             <span className="grid grid-cols-2 gap-px">
@@ -58,12 +58,12 @@ export function QeetIdMock() {
             </svg>
           </ProviderTile>
           <ProviderTile>
-            <span className="text-[0.8125rem] font-semibold">SSO</span>
+            <span className="text-[0.8125rem] font-medium">SSO</span>
           </ProviderTile>
         </div>
 
         <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-rule px-2 py-1 text-[0.6875rem] text-ink-muted">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           Passkey · MFA verified
         </div>
       </div>

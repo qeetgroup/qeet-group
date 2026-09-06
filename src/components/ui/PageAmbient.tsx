@@ -1,11 +1,19 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Lightweight ambient backdrop for inner-page heroes — the Confident-Enterprise
- * structural vocabulary: a faded hairline grid, one restrained brand glow, and
- * film grain. No animated blobs, so it stays cheap on content pages. Purely
- * decorative (aria-hidden). Drop into a `relative overflow-hidden` hero section
- * as its first child.
+ * Ambient backdrop for inner-page heroes: a faded hairline grid and film grain.
+ * Purely decorative (aria-hidden). Drop into a `relative overflow-hidden` hero
+ * section as its first child.
+ *
+ * The grid is drawn with a two-axis linear-gradient — a line-drawing technique,
+ * not a colour blend — and the radial mask fades it into the canvas. Neither
+ * introduces a colour gradient.
+ *
+ * There used to be a third layer here: `bg-mesh`, three radial accent washes
+ * behind the grid. It is gone, along with the closing-band glow. On a palette
+ * whose whole argument is one signal at ~2% coverage, a soft accent haze across
+ * an entire hero is the largest accent surface on the page, and it reads as a
+ * product page rather than a corporate one.
  */
 export function PageAmbient({ className }: { className?: string }) {
   return (
@@ -17,7 +25,6 @@ export function PageAmbient({ className }: { className?: string }) {
       )}
     >
       <div className="bg-grid absolute inset-0 opacity-[0.5] mask-[radial-gradient(ellipse_75%_70%_at_50%_-10%,black,transparent_75%)] dark:opacity-[0.35]" />
-      <div className="bg-mesh absolute inset-0 opacity-90 mask-[radial-gradient(ellipse_85%_75%_at_50%_-10%,black,transparent_80%)]" />
       <div className="bg-grain absolute inset-0" />
     </div>
   );

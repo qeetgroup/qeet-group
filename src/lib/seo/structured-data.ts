@@ -8,6 +8,7 @@ import { SOCIAL_PLATFORMS } from "@/config/social";
 import {
   CONTACT,
   FOUNDING_YEAR,
+  SITE_DESCRIPTION,
   SITE_NAME,
   SITE_ORIGIN,
   SITE_SLOGAN,
@@ -25,12 +26,18 @@ export function organizationSchema() {
     legalName: SITE_NAME,
     url: SITE_ORIGIN,
     logo: `${SITE_ORIGIN}/qeet-logo-light.svg`,
-    description:
-      "A multi-company holding built on a single philosophy: that meaningful progress begins with the right question.",
+    /*
+     * Kept in step with SITE_DESCRIPTION deliberately. This is the single most
+     * consequential place the positioning appears — it is what a search engine
+     * and every AI crawler reads as the organisation's own account of itself,
+     * and it outlives any page copy that contradicts it.
+     */
+    description: SITE_DESCRIPTION,
     slogan: SITE_SLOGAN,
     foundingDate: FOUNDING_YEAR,
     knowsAbout: [
       "Identity and access management",
+      "Artificial intelligence infrastructure",
       "Design systems",
       "Log management and observability",
       "Human capital management",
@@ -84,11 +91,17 @@ export function articleSchema(args: {
   dek: string;
   date: string;
   author?: string;
-  /** Path under SITE_ORIGIN where the article lives, e.g. /newsroom, /memos. */
-  section?: "newsroom" | "memos";
+  /** Editorial topic, surfaced as articleSection. */
+  topic?: string;
 }): WithContext<Record<string, unknown>> {
-  const section = args.section ?? "newsroom";
-  const url = `${SITE_ORIGIN}/${section}/${args.slug}`;
+  /*
+   * One path, not a configurable one. The `section` parameter used to accept
+   * "newsroom" or "memos" — both of which now 308 to /insights — so this
+   * function was emitting a canonical URL into structured data that pointed at
+   * a redirect. Search engines resolve that eventually and treat it as a soft
+   * signal problem in the meantime; there is no reason to make them.
+   */
+  const url = `${SITE_ORIGIN}/insights/${args.slug}`;
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -131,12 +144,21 @@ export function productsListSchema(
   } as const;
 }
 
+/**
+ * `externalUrl` is optional because planned products do not have one.
+ *
+ * That has a consequence worth stating: a planned product is described here as
+ * SoftwareApplication with no `url`, which is honest — it exists as a
+ * described thing, not as something anyone can go and use. Emitting the
+ * eventual marketing URL before it resolves would put a claim into structured
+ * data, which is the one place a claim is hardest to walk back.
+ */
 export function productSchema(args: {
   slug: string;
   name: string;
   description: string;
   sector: string;
-  externalUrl: string;
+  externalUrl?: string;
 }): WithContext<Record<string, unknown>> {
   return {
     "@context": "https://schema.org",
@@ -146,7 +168,7 @@ export function productSchema(args: {
     applicationCategory: "BusinessApplication",
     applicationSubCategory: args.sector,
     operatingSystem: "Web",
-    url: args.externalUrl,
+    ...(args.externalUrl ? { url: args.externalUrl } : {}),
     mainEntityOfPage: `${SITE_ORIGIN}/products/${args.slug}`,
     publisher: {
       "@type": "Organization",

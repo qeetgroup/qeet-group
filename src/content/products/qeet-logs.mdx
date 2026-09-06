@@ -1,69 +1,31 @@
 ---
 name: Qeet Logs
-tagline: Log management that knows who your tenants are.
+tagline: Know what your systems are doing.
+oneLiner: Operational visibility that respects the privacy of the people in the data.
 sector: Observability
-stage: Coming soon
-founded: "2026"
+group: visibility
+status: available
 externalUrl: https://logs.qeet.in
-order: 4
-description: Structured log management for multi-tenant SaaS — with PII masking at ingestion, tenant-scoped queries by design, and native identity-event integration from Qeet ID.
+order: 3
+description: Qeet Logs collects what software records about itself and turns it into something a team can search, watch and act on — without collecting more about people than it needs to.
 ---
 
-## Overview
+## What it does
 
-Every serious engineering team eventually runs into the same three problems with their log platform: storage is too expensive to keep logs at volume, PII keeps ending up in logs and creating compliance exposure, and authentication and identity events are invisible — buried in raw strings, never first-class signals.
+Software produces an enormous quantity of description about its own behaviour. Qeet Logs gathers it, keeps it in one place, and makes it searchable at the moment somebody needs it — which is almost always during an incident, when nobody has time to go looking.
 
-qeet-logs was built to solve all three, without asking teams to choose between cost, compliance, and observability. It is a structured log management platform designed specifically for multi-tenant SaaS — built on ClickHouse for columnar compression at a fraction of the cost of Elasticsearch, with privacy and multi-tenancy treated as architecture decisions rather than features bolted on afterward.
+It answers the questions that follow a failure: what happened, when, to whom, and what changed just before.
 
-## What makes it different
+## Why it matters
 
-Three things that no existing log platform does well:
+Most organisations discover they cannot answer those questions at exactly the point where being unable to answer them is expensive.
 
-- **Identity-aware by default** — qeet-logs integrates natively with Qeet ID. Every login, token issuance, MFA challenge, and anomalous auth event is published as a structured, typed log record — not a raw string. Auth anomaly detection understands auth semantics: credential stuffing, impossible travel, unusual geography, burst failures. Your security team gets signal, not noise.
-- **Privacy-native architecture** — PII detection runs at ingestion, before anything is written to storage. Email addresses, IP addresses, session tokens, and national identifiers are masked, hashed, or dropped at the gate based on configurable policy. GDPR Article 17 erasure is supported with pseudonymous user linkage keys and deletion receipts — not a manual process.
-- **Tenant-scoped by construction** — `tenant_id` is a required field on every log record, not an optional label. Every query, dashboard, alert, and billing report is naturally tenant-scoped. No cross-tenant data leakage. Per-tenant volume dashboards and budget alerts come out of the box.
+There is a second problem that is discussed less. Operational data is full of personal information that nobody deliberately decided to store — it arrives incidentally, and it accumulates. Qeet Logs removes sensitive detail before it is written down rather than after, which means the organisation is not quietly building a liability while trying to build visibility.
 
-## On the roadmap
+## Where it fits
 
-**Phase 1 — MVP (Q3–Q4 2026)**
-
-The foundation: ingest, store, query, alert.
-
-- OTLP/HTTP endpoint (OpenTelemetry native) and HTTP JSON/NDJSON ingest
-- Go SDK with structured logging; Vector and Fluent Bit endpoints
-- ClickHouse columnar backend with time-based partitioning and full-text indexing
-- Web UI with search bar, filter chips, and live tail with sub-500 ms latency
-- LogQL++ query language — SQL-familiar, log-aware
-- Basic threshold and absence alerts over email and webhook
-- Multi-tenancy with row-level tenant isolation
-- Docker Compose and Helm charts for self-hosted deployment
-
-**Phase 2 — Privacy and integrations (Q1–Q2 2027)**
-
-- Full PII detection pipeline: masking, hashing, field-level and record-level drop
-- GDPR Article 17 erasure with deletion receipts and data-residency controls (EU/US)
-- Qeet ID auth event stream — structured identity events as first-class log records
-- Log correlation via distributed trace IDs
-- SDKs for TypeScript/Node.js and Python; adapters for logrus, zap, Winston, Pino
-- Loki-compatible ingestion for teams migrating from Grafana stacks
-- RBAC via Qeet ID: `logs:read`, `logs:query`, `logs:admin`, `logs:export`
-- Slack and PagerDuty alert integrations
-
-**Phase 3 — AI and enterprise (Q3–Q4 2027)**
-
-- AI anomaly detection with time-of-day seasonality awareness — unsupervised baselines, no threshold tuning required
-- Auth anomaly detection integrated with Qeet ID: credential stuffing patterns, impossible travel, geographic outliers
-- Natural-language query powered by Claude — describe what you're looking for, get LogQL++
-- Log clustering and root-cause assist
-- HIPAA BAA, PCI-DSS log segregation, 99.9% SLA
-- Self-hosted and private cloud deployment with dedicated ClickHouse clusters
-
-## Who it serves
-
-Platform and SRE engineers at multi-tenant SaaS companies who are either overpaying for logs at volume or flying blind on identity events. Security and compliance engineers at companies handling user data — identity platforms, fintech, healthcare, and B2B SaaS — where PII in logs is not a hypothetical risk but a recurring incident.
-
-The platform is built for teams who want observability that respects their tenants and their compliance obligations, without a custom integration project to get there.
+Qeet Logs is where the rest of the ecosystem reports what it is doing. It is also the product that makes the others accountable: when a question is asked about what a system did, this is where the answer comes from.
 
 ## Status
 
-Coming soon. qeet-logs is currently in the requirements and design phase, with Phase 1 development targeting Q3–Q4 2026 alongside five design partners. If you are a platform engineer or CTO at a multi-tenant SaaS company who wants to be involved in the design-partner programme, reach out at [partnerships@qeet.in](mailto:partnerships@qeet.in).
+Available.
