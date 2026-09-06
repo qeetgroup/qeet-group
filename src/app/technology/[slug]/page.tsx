@@ -120,7 +120,7 @@ export default async function TechnologyDetailPage({
                     href={p.href}
                     className="group/prod grid grid-cols-1 gap-2 border-b border-rule py-6 transition-colors duration-fast hover:border-rule-strong focus-ring md:grid-cols-12 md:items-baseline md:gap-8"
                   >
-                    <span className="font-display text-ink text-heading-xl transition-colors duration-fast group-hover/prod:text-accent-text md:col-span-3">
+                    <span className="font-display text-ink text-heading-xl transition-colors duration-fast group-hover/prod:text-accent-text-hover md:col-span-3">
                       {p.name}
                     </span>
                     <span className="text-body text-ink-muted md:col-span-7">

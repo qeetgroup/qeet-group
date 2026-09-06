@@ -22,8 +22,8 @@ export default async function AppleIcon() {
           alignItems: "center",
           justifyContent: "center",
           // Mirrors --color-canvas / --color-ink; Satori cannot read tokens.
-          background: "#101214",
-          color: "#F5F6F7",
+          background: "#0a0a0a",
+          color: "#fcfcfc",
           fontFamily: fonts.length > 0 ? "Qeet UI" : "sans-serif",
           fontSize: 118,
           fontWeight: 600,

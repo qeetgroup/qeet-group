@@ -19,7 +19,7 @@ export default async function Icon() {
   const raw = await readFile(join(process.cwd(), "public", "qeet-mark.svg"), "utf-8");
   const svg = raw
     .replace(/<style>[\s\S]*?<\/style>/i, "")
-    .replace(/class="bowl"/i, 'fill="#101214"'); // mirrors --color-canvas
+    .replace(/class="bowl"/i, 'fill="#0a0a0a"'); // mirrors --color-canvas
   const dataUri = `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 
   return new ImageResponse(

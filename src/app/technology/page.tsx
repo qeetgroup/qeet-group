@@ -63,7 +63,7 @@ export default async function TechnologyPage() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="md:col-span-4">
-                    <span className="block font-display text-ink text-heading-xl transition-colors duration-fast group-hover/cap:text-accent-text">
+                    <span className="block font-display text-ink text-heading-xl transition-colors duration-fast group-hover/cap:text-accent-text-hover">
                       {item.data.title}
                     </span>
                     <span className="mt-1 block font-mono text-label uppercase text-ink-subtle">

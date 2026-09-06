@@ -100,7 +100,7 @@ export default function DevelopersPage() {
                     : "group/dest block cursor-not-allowed border-t border-rule pt-6 opacity-55"}
                 >
                   <span className="flex items-baseline justify-between gap-4">
-                    <span className="font-display text-ink text-heading-xl transition-colors duration-fast group-hover/dest:text-accent-text">
+                    <span className="font-display text-ink text-heading-xl transition-colors duration-fast group-hover/dest:text-accent-text-hover">
                       {d.label}
                     </span>
                     <span

@@ -295,7 +295,7 @@ export function EcosystemMap({
             </p>
             <NextLink
               href={active.href}
-              className="mt-8 inline-flex items-center gap-2 rounded-sm text-body text-ink transition-colors duration-fast hover:text-accent-text focus-ring"
+              className="mt-8 inline-flex items-center gap-2 rounded-sm text-body text-ink transition-colors duration-fast hover:text-accent-text-hover focus-ring"
             >
               Explore {active.name}
               <span aria-hidden="true">→</span>

@@ -218,7 +218,7 @@ export default async function InsightPage({
                     <span className="font-mono text-label uppercase text-ink-subtle">
                       {label}
                     </span>
-                    <span className="mt-3 block text-balance font-display text-ink text-heading-l transition-colors duration-fast group-hover/nav:text-accent-text">
+                    <span className="mt-3 block text-balance font-display text-ink text-heading-l transition-colors duration-fast group-hover/nav:text-accent-text-hover">
                       {item.data.title}
                     </span>
                   </NextLink>
@@ -246,7 +246,7 @@ export default async function InsightPage({
                       {p.data.topic}
                       {p.data.demo && <DemoBadge />}
                     </span>
-                    <span className="text-balance font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/rel:text-accent-text md:col-span-9">
+                    <span className="text-balance font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/rel:text-accent-text-hover md:col-span-9">
                       {p.data.title}
                     </span>
                   </NextLink>

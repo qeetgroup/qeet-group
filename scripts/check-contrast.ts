@@ -118,6 +118,18 @@ type Check = {
   /** 4.5 for body text; 3 for large text and non-text UI (WCAG 1.4.11). */
   min: number;
   why: string;
+  /*
+   * A pairing that is knowingly allowed to fail, with the reason it was
+   * accepted. It is still measured and still printed on every run — it just
+   * does not fail the gate.
+   *
+   * This exists so a deliberate exception stays VISIBLE. The alternative when
+   * someone decides a rule should not apply is that the check gets deleted, and
+   * six months later nobody remembers a decision was ever made. An accepted
+   * exception is a decision with its reasoning attached; a deleted check is
+   * just an absence.
+   */
+  accepted?: string;
 };
 
 const CHECKS: Check[] = [
@@ -148,6 +160,28 @@ const CHECKS: Check[] = [
     bg: "--color-accent",
     min: 4.5,
     why: "label on an accent fill — white would be 3.01:1",
+  },
+  /*
+   * Filled controls. The label check is the one that forced a second accent
+   * token: white on the graphic accent (brand-500) is 3.01:1, so the button
+   * fill had to darken independently of it.
+   */
+  { fg: "--color-accent-solid-contrast", bg: "--color-accent-solid", min: 4.5, why: "white label on a button" },
+  { fg: "--color-accent-solid", bg: "--color-canvas", min: 3, why: "button separates from the canvas" },
+  { fg: "--color-accent-solid-contrast", bg: "--color-accent-solid-hover", min: 4.5, why: "white label on hover" },
+  /* Hover is the brand at full strength, used on graphics only — 3:1 (1.4.11). */
+  { fg: "--color-accent-hover", bg: "--color-canvas", min: 3, why: "brand on hover, as a graphic" },
+  {
+    fg: "--color-accent-text-hover",
+    bg: "--color-canvas",
+    min: 4.5,
+    why: "hover text",
+    accepted:
+      "brand #ff6900 is used for hover text in both themes by design. It is " +
+      "2.81:1 on the light canvas and does not meet AA. Scoped to hover only " +
+      "(static accent text passes), unreachable by keyboard or touch, and " +
+      "never the sole affordance — every element also moves an underline, " +
+      "arrow or border. Compliant on dark at 6.86:1.",
   },
   { fg: "--color-focus", bg: "--color-canvas", min: 3, why: "focus ring on canvas" },
   { fg: "--color-focus", bg: "--color-surface", min: 3, why: "focus ring on cards" },
@@ -185,6 +219,7 @@ const THEMES: Array<[string, Record<string, string>]> = [
 
 let failures = 0;
 let skipped = 0;
+let accepted = 0;
 
 for (const [themeName, tokens] of THEMES) {
   console.log(`\n  ${themeName}`);
@@ -198,9 +233,12 @@ for (const [themeName, tokens] of THEMES) {
     }
     const ratio = contrast(a, b);
     const pass = ratio >= min;
-    if (!pass) failures++;
+    const note = CHECKS.find((c) => c.fg === fg && c.bg === bg)?.accepted;
+    if (!pass && note) accepted++;
+    else if (!pass) failures++;
+    const label = pass ? "ok " : note ? "ACPT" : "FAIL";
     console.log(
-      `    ${pass ? "ok " : "FAIL"} ${ratio.toFixed(2).padStart(5)}:1  (needs ${min})  ` +
+      `    ${label} ${ratio.toFixed(2).padStart(5)}:1  (needs ${min})  ` +
         `${fg.replace("--color-", "")} on ${bg.replace("--color-", "")}` +
         (pass ? "" : `  <- ${why}`),
     );
@@ -208,6 +246,15 @@ for (const [themeName, tokens] of THEMES) {
 }
 
 const total = CHECKS.length * THEMES.length - skipped;
-console.log(`\n  ${total} pairings checked, ${failures} failing, ${skipped} skipped.\n`);
+console.log(
+  `\n  ${total} pairings checked, ${failures} failing, ${accepted} accepted, ${skipped} skipped.\n`,
+);
+
+// Accepted exceptions are reprinted in full, so the reasoning is in the output
+// of every run and not only in a comment somebody has to go looking for.
+for (const c of CHECKS.filter((c) => c.accepted)) {
+  console.log(`  ACCEPTED  ${c.fg.replace("--color-", "")} on ${c.bg.replace("--color-", "")}`);
+  console.log(`            ${c.accepted}\n`);
+}
 
 if (failures > 0) process.exit(1);

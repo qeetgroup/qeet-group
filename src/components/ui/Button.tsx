@@ -27,10 +27,12 @@ const button = cva(
       variant: {
         solid:
           "bg-ink text-canvas hover:bg-ink/90 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 active:bg-ink/80",
+        // White label on a brand-700 fill — see --color-accent-solid in
+        // globals.css for why this is not the same fill as `bg-accent`.
         accent:
-          "bg-accent text-accent-contrast hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0",
+          "bg-accent-solid text-accent-solid-contrast hover:bg-accent-solid-hover hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0",
         outline:
-          "border border-rule-interactive text-ink hover:border-accent/50 hover:bg-accent-soft active:bg-accent-soft/70",
+          "border border-rule-interactive text-ink hover:border-accent-hover hover:bg-accent-soft active:bg-accent-soft/70",
         ghost: "text-ink hover:bg-accent-soft active:bg-accent-soft/70",
       },
       size: {

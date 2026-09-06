@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Fira_Code, Newsreader } from "next/font/google";
+import { Fira_Code } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Nav } from "@/components/layout/Nav";
@@ -21,15 +21,21 @@ import {
  * Type system
  * ============================================================================
  *
- *   Newsreader  editorial display type and major headings
- *   Qeet UI     navigation, controls, labels and compact headings
+ *   Qeet UI     headings, display type, navigation, controls, labels
  *   Qeet Text   body copy
  *   Fira Code   data, metrics, timestamps
  *
- * The display face deliberately differs from the product UI. Qeet Group is a
- * corporate headquarters and an editorial publisher, not another interface in
- * the product suite; Newsreader gives its large statements a recognisable
- * institutional voice while Qeet UI keeps every functional surface familiar.
+ * Two Qeet faces, and no serif. A serif display face (Newsreader) was
+ * introduced here at one point on the argument that a corporate headquarters
+ * is also an editorial publisher. In practice it read as the voice of a
+ * magazine rather than of a technology organisation, and it was hard to tell
+ * apart from the Fraunces pairing this identity was built to replace. Headings
+ * are set in Qeet UI.
+ *
+ * Qeet Display — the geometric cut Qeetrix maps to its own `--font-display` —
+ * is also unused: at display sizes its geometry reads as styling rather than
+ * as voice. Qeet UI is the more neutral drawing and holds from a 12px label to
+ * a 96px headline, so it carries both roles.
  *
  * ---------------------------------------------------------------------------
  * Why the files are copied in rather than imported from the package
@@ -73,15 +79,6 @@ const body = localFont({
     { path: "./fonts/QeetText-Regular.woff2", weight: "400", style: "normal" },
     { path: "./fonts/QeetText-Medium.woff2", weight: "500", style: "normal" },
   ],
-});
-
-const display = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-display-face",
-  display: "swap",
-  preload: true,
-  fallback: ["Georgia", "Times New Roman", "serif"],
-  weight: ["400", "500", "600"],
 });
 
 /** Qeetrix's mono. Google-hosted rather than vendored — it is not a Qeet face. */
@@ -153,8 +150,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   // Matches --color-canvas in each theme. Dark leads because it is the default.
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#101214" },
-    { media: "(prefers-color-scheme: light)", color: "#FAFBFC" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#fcfcfc" },
   ],
   colorScheme: "dark light",
 };
@@ -185,7 +182,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${ui.variable} ${body.variable} ${mono.variable} h-full`}
+      className={`${ui.variable} ${body.variable} ${mono.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

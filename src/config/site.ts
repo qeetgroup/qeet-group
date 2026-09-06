@@ -25,7 +25,7 @@ export const SITE_TITLE = "Qeet Group — one organisation, one ecosystem";
  * qeet-context/ORGANIZATION.md and PRODUCT-PORTFOLIO.md.
  */
 export const SITE_DESCRIPTION =
-  "Qeet Group is a technology organisation building a connected ecosystem of products — identity, payments, people, communications, observability and intelligence — on shared identity and design foundations.";
+  "Qeet Group is a technology organisation building a connected ecosystem of products";
 
 /** Q·E·E·T. The organisation's published acronym, not a backronym. */
 export const SITE_SLOGAN = "Question. Explore. Envision. Transform.";

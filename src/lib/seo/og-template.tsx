@@ -14,11 +14,11 @@ export const OG_CONTENT_TYPE = "image/png";
  * theme — the card is always a dark surface, so it takes the dark theme's
  * values. If the token layer moves, these move with it.
  */
-const CANVAS = "#101214";
-const INK = "#F5F6F7";
-const INK_SUBTLE = "#93999E";
-const RULE = "#2C3136";
-const ACCENT = "#E8FF47"; // mirrors --color-accent in the dark theme
+const CANVAS = "#0a0a0a";
+const INK = "#fcfcfc";
+const INK_SUBTLE = "#7e7e7e";
+const RULE = "#262626";
+const ACCENT = "#ff6900"; // mirrors --color-accent in the dark theme
 
 /**
  * Shared 1200×630 OG card.

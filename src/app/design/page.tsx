@@ -200,7 +200,7 @@ export default function DesignPage() {
               <Contrast fg="--color-accent-text-display" bg="--color-canvas" use="large-text" />
               <Text size="caption" tone="subtle">
                 Large text only, so 3:1 applies. Lets the light canvas stay
-                close to #f26d0e, which measures 2.94:1 and clears neither bar.
+                close to #ff6900, which measures 2.81:1 and clears neither bar.
               </Text>
             </div>
             <div className="flex flex-wrap items-center gap-4">

@@ -160,7 +160,7 @@ function ProductPanel({ products }: { products: ProductSummary[] }) {
       </div>
       <NextLink
         href="/ecosystem"
-        className="mt-8 flex items-center justify-between border-t border-rule pt-5 text-body-s text-ink transition-colors duration-fast hover:text-accent-text focus-ring"
+        className="mt-8 flex items-center justify-between border-t border-rule pt-5 text-body-s text-ink transition-colors duration-fast hover:text-accent-text-hover focus-ring"
       >
         See how the products fit together
         <span aria-hidden="true">→</span>

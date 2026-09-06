@@ -11,8 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
     // Both mirror --color-canvas in the DARK theme, which is the site default.
     // These were split across themes before — a light splash screen followed by
     // a dark app is a visible flash on every launch.
-    background_color: "#101214",
-    theme_color: "#101214",
+    background_color: "#0a0a0a",
+    theme_color: "#0a0a0a",
     icons: [
       {
         src: "/qeet-mark.svg",

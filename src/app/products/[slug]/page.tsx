@@ -214,7 +214,7 @@ export default async function ProductPage({
                     href={p.href}
                     className="group/rel grid grid-cols-1 gap-2 rounded-sm border-b border-rule py-6 transition-colors duration-fast hover:border-rule-strong focus-ring md:grid-cols-12 md:items-baseline md:gap-8"
                   >
-                    <span className="font-display text-ink text-heading-l transition-colors duration-fast group-hover/rel:text-accent-text md:col-span-3">
+                    <span className="font-display text-ink text-heading-l transition-colors duration-fast group-hover/rel:text-accent-text-hover md:col-span-3">
                       {p.name}
                     </span>
                     <span className="text-body text-ink-muted md:col-span-7">{p.oneLiner}</span>

@@ -5,6 +5,7 @@ import { useFormStatus } from "react-dom";
 import { HoneypotField } from "./HoneypotField";
 import { submitContact, type ContactFormState } from "@/app/contact/actions";
 import { Events, track } from "@/lib/analytics";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 const initialState: ContactFormState = { status: "idle" };
@@ -163,19 +164,19 @@ export function ContactForm() {
   );
 }
 
+/**
+ * The form's primary action.
+ *
+ * Uses the Button primitive rather than a hand-rolled <button>. The previous
+ * version reimplemented the pill shape, height, padding and hover here, and had
+ * already drifted from Button's own values — which is the whole reason Button
+ * exists. It also meant this control missed the designed loading state.
+ */
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={cn(
-        "inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-7 font-sans text-body font-medium text-canvas",
-        "transition-opacity duration-200 hover:bg-ink/90 disabled:opacity-60 disabled:cursor-not-allowed",
-        "focus-ring",
-      )}
-    >
+    <Button type="submit" variant="accent" size="lg" loading={pending}>
       {pending ? "Sending…" : "Send message"}
-    </button>
+    </Button>
   );
 }

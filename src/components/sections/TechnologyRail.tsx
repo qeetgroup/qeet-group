@@ -45,7 +45,7 @@ export function TechnologyRail() {
                 <span className="font-mono text-label uppercase text-ink-subtle tabular-figures md:col-span-1">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="font-display text-ink text-heading-xl transition-colors duration-fast group-hover/cap:text-accent-text md:col-span-4">
+                <span className="font-display text-ink text-heading-xl transition-colors duration-fast group-hover/cap:text-accent-text-hover md:col-span-4">
                   {item.label}
                 </span>
                 <span className="max-w-prose text-body text-ink-muted md:col-span-6">

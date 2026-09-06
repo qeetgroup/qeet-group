@@ -25,25 +25,27 @@
  * licensing claim we would have to honour, and because it is unmistakably a
  * placeholder rather than something that could quietly ship as final art.
  *
- * The `.figure-qeet` grade in globals.css does a great deal of work here: with
- * every image stripped to luminance and pushed back through a single cool
- * tone, generic photography still reads as one coherent set. That is what
- * makes shipping placeholders viable rather than embarrassing.
+ * Photography renders at its own colour. An earlier revision graded every
+ * image to a cool duotone so that mismatched stock read as one set; that was
+ * removed deliberately — it made the same photograph look like two different
+ * photographs across the theme toggle, and it would have had to come out the
+ * day real commissioned work arrived anyway. What holds the set together now
+ * is the closed crop vocabulary and the scrim system, not a filter.
  *
  * ---------------------------------------------------------------------------
- * On video
+ * No video
  * ---------------------------------------------------------------------------
- * `src: null` is a supported, deliberate state, not an unfinished one.
+ * The hero used a vendored MP4 loop and no longer does — it is a generated
+ * WebGL backdrop (components/media/GhostFibers). The shader resolves at any
+ * size where the 720p file read as blurry on a desktop hero, costs ~15KB
+ * against 6.5MB, and is drawn from the brand tokens rather than tinted toward
+ * them. This registry is photography only.
  *
- * No free video CDN permits hotlinking (Mixkit and Coverr both refuse it), so
- * rather than ship URLs that 403 in production, video slots declare their
- * poster and leave `src` null until a real file is vendored into
- * `public/media/`. VideoFigure renders the poster alone in that case — which
- * is the same path it takes under `prefers-reduced-motion` and under
- * save-data, so it is a path that must work regardless.
- *
- * The consequence worth stating plainly: the site is never broken by a missing
- * video, and adding one later is a one-line change here.
+ * THE POSTER IS THE VIDEO'S OWN FRAME, not a separate stock photo. That is the
+ * detail that makes poster-first work: the still and the footage are the same
+ * image, so playback begins with no visible swap, and everyone who never gets
+ * the video — reduced motion, save-data, no JS — sees exactly what the video
+ * would have opened on.
  */
 
 export type MediaLicence = "placeholder" | "cc-by" | "cc-by-sa" | "owned" | "licensed";
@@ -67,19 +69,7 @@ export type Photo = {
   demo?: boolean;
 };
 
-export type Video = {
-  kind: "video";
-  /** null until a real file is vendored. See the note above. */
-  src: string | null;
-  poster: Photo;
-  /** Describes the footage for anyone who cannot see it play. */
-  alt: string;
-  credit?: string;
-  licence: MediaLicence;
-  demo?: boolean;
-};
-
-export type MediaAsset = Photo | Video;
+export type MediaAsset = Photo;
 
 /**
  * Placeholder photograph helper. Centralised so the day these are replaced,
@@ -93,7 +83,17 @@ function placeholder(id: number, width: number, height: number, alt: string): Ph
     width,
     height,
     alt,
-    credit: "Placeholder imagery",
+    /*
+     * No `credit`. Figure renders credit as a visible caption, so setting one
+     * here printed "Placeholder imagery" under every image on the site —
+     * scaffolding language leaking onto a corporate page.
+     *
+     * `licence: "placeholder"` still records what these are, which is the part
+     * that has to survive: it is how the eventual swap to commissioned or
+     * licensed photography can be audited. The distinction is deliberate —
+     * licence is a FACT about the asset, credit is COPY on the page, and only
+     * the second one belongs to the reader.
+     */
     licence: "placeholder",
     demo: true,
   };
@@ -105,16 +105,6 @@ function placeholder(id: number, width: number, height: number, alt: string): Ph
  * changes would defeat the point of the indirection.
  */
 export const MEDIA = {
-  /** Homepage hero. 21:9, the widest crop in the system. */
-  homeHero: {
-    kind: "video",
-    src: null,
-    poster: placeholder(1015, 2400, 1030, ""),
-    alt: "Aerial footage of built infrastructure at dusk.",
-    licence: "placeholder",
-    demo: true,
-  } satisfies Video,
-
   /** The positioning statement band — abstract, architectural, low contrast. */
   positioning: placeholder(1048, 1920, 1080, ""),
 

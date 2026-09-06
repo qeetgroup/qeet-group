@@ -45,7 +45,7 @@ export function Wordmark({ href = "/", tintOnHover = false, className }: Wordmar
   const classes = cn(
     "group inline-flex items-center gap-2.5 font-display font-semibold leading-none tracking-[-0.03em] text-ink",
     "text-[clamp(1.375rem,1.2rem+0.6vw,1.625rem)]",
-    tintOnHover && "transition-colors duration-fast hover:text-accent-text",
+    tintOnHover && "transition-colors duration-fast hover:text-accent-text-hover",
     className,
   );
 

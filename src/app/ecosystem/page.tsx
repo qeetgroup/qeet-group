@@ -83,7 +83,7 @@ export default async function EcosystemPage() {
                           href={p.href}
                           className="group/row grid grid-cols-1 gap-2 border-b border-rule py-5 transition-colors duration-fast hover:border-rule-strong focus-ring md:grid-cols-12 md:items-baseline md:gap-8"
                         >
-                          <span className="font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/row:text-accent-text md:col-span-3">
+                          <span className="font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/row:text-accent-text-hover md:col-span-3">
                             {p.name}
                           </span>
                           <span className="text-body-s text-ink-muted md:col-span-7">

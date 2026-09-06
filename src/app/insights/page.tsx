@@ -113,7 +113,7 @@ export default async function InsightsPage() {
                   <span>{lead.readingTime} min read</span>
                   {lead.data.demo && <DemoBadge />}
                 </p>
-                <h2 className="mt-5 text-balance font-display text-ink text-display-l transition-colors duration-fast group-hover/lead:text-accent-text">
+                <h2 className="mt-5 text-balance font-display text-ink text-display-l transition-colors duration-fast group-hover/lead:text-accent-text-hover">
                   {lead.data.title}
                 </h2>
                 <p className="mt-6 max-w-prose text-body-l text-ink-muted">{lead.data.dek}</p>

@@ -101,7 +101,7 @@ export default async function TopicPage({ params }: { params: Promise<RouteParam
                     {item.data.demo && <DemoBadge className="ml-2" />}
                   </p>
                   <div className="md:col-span-9">
-                    <h2 className="text-balance font-display text-ink text-heading-xl transition-colors duration-fast group-hover/row:text-accent-text">
+                    <h2 className="text-balance font-display text-ink text-heading-xl transition-colors duration-fast group-hover/row:text-accent-text-hover">
                       {item.data.title}
                     </h2>
                     <p className="mt-3 max-w-prose text-body text-ink-muted">{item.data.dek}</p>

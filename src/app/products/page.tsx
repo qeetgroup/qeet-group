@@ -161,7 +161,7 @@ export default async function ProductsPage() {
                       className="group/row grid grid-cols-1 gap-3 rounded-sm border-b border-rule py-8 transition-colors duration-fast hover:border-rule-strong focus-ring md:grid-cols-12 md:gap-8 md:py-10"
                     >
                       <span className="md:col-span-3">
-                        <span className="block font-display text-ink text-heading-xl transition-colors duration-fast group-hover/row:text-accent-text">
+                        <span className="block font-display text-ink text-heading-xl transition-colors duration-fast group-hover/row:text-accent-text-hover">
                           {p.name}
                         </span>
                         <span className="mt-1 block font-mono text-label uppercase text-ink-subtle">

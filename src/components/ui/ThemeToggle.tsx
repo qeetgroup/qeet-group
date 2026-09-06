@@ -1,45 +1,11 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useTheme, type Theme } from "@/lib/use-theme";
 import { cn } from "@/lib/utils";
 
-type Theme = "light" | "dark";
-
-/**
- * Subscribes to <html> classList changes so the toggle re-renders when theme
- * changes (including changes triggered elsewhere). Uses useSyncExternalStore
- * — the React-blessed pattern for reading external (DOM) state — to avoid
- * the setState-in-effect pattern that lint flags as a cascading render.
- *
- * Dark is the default, so it is the ABSENCE of a class — `.light` is what opts
- * out. That way a visitor without JavaScript still gets the intended brand
- * surface, and the inline script in layout.tsx only has to act for people who
- * chose light.
- *
- * On the server snapshot we return null so the button renders an invisible
- * placeholder until hydration, rather than guessing and then flipping.
- */
-function getThemeSnapshot(): Theme | null {
-  if (typeof document === "undefined") return null;
-  return document.documentElement.classList.contains("light") ? "light" : "dark";
-}
-
-function subscribe(callback: () => void) {
-  if (typeof document === "undefined") return () => {};
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  return () => observer.disconnect();
-}
-
 export function ThemeToggle({ className }: { className?: string }) {
-  const theme = useSyncExternalStore<Theme | null>(
-    subscribe,
-    getThemeSnapshot,
-    () => null,
-  );
+  // Theme state lives in lib/use-theme — GhostFibers reads the same source.
+  const theme = useTheme();
 
   const toggle = () => {
     if (!theme) return;

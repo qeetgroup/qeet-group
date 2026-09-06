@@ -58,7 +58,7 @@ export async function InsightPreview() {
                 <span>{lead.readingTime} min read</span>
                 {lead.data.demo && <DemoBadge />}
               </p>
-              <h3 className="mt-4 text-balance font-display text-ink text-display-m transition-colors duration-fast group-hover/lead:text-accent-text">
+              <h3 className="mt-4 text-balance font-display text-ink text-display-m transition-colors duration-fast group-hover/lead:text-accent-text-hover">
                 {lead.data.title}
               </h3>
               <p className="mt-4 max-w-prose text-body-l text-ink-muted">{lead.data.dek}</p>
@@ -81,7 +81,7 @@ export async function InsightPreview() {
                       <span>{item.data.topic}</span>
                       {item.data.demo && <DemoBadge />}
                     </p>
-                    <p className="mt-2 text-balance font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/item:text-accent-text">
+                    <p className="mt-2 text-balance font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/item:text-accent-text-hover">
                       {item.data.title}
                     </p>
                   </NextLink>

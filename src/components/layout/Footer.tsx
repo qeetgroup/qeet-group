@@ -149,7 +149,7 @@ export function Footer({
                 return (
                   <li key={p.href}>
                     <Anchor href={p.href} className="group/prop rounded-sm focus-ring">
-                      <span className="block font-mono text-body-s text-ink transition-colors duration-fast group-hover/prop:text-accent-text">
+                      <span className="block font-mono text-body-s text-ink transition-colors duration-fast group-hover/prop:text-accent-text-hover">
                         {p.label}
                       </span>
                       <span className="block text-caption text-ink-subtle">{p.description}</span>

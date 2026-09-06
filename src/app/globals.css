@@ -72,17 +72,27 @@
  * Type roles — the Qeet typefaces.
  * ---------------------------------------------------------------------------
  *
- *   display   Newsreader   editorial statements and major headings
- *   ui        Qeet UI      controls, navigation, labels, compact headings
+ *   display   Qeet UI      headings and display type
+ *   ui        Qeet UI      controls, navigation, labels
  *   sans      Qeet Text    body copy
  *   mono      Fira Code    data, metrics, timestamps
  *
- * Newsreader separates the organisation's editorial voice from its product
- * interfaces. The Qeet faces remain the functional foundation, while the
- * display role can carry a more distinctive, publication-led cadence.
+ * Two faces, from `@qeetrix/ui`, so this site is set in the same type as the
+ * products it describes.
+ *
+ * NO SERIF. A serif display face was introduced here at one point — the
+ * headings then read as the editorial voice of a publication rather than the
+ * voice of a technology organisation, and it was indistinguishable from the
+ * Fraunces pairing this identity replaced. `--font-display` and `--font-ui`
+ * resolve to the same family deliberately; they stay distinct ROLES so display
+ * type can later diverge in weight or tracking without touching call sites.
+ *
+ * With one face doing headings and chrome, hierarchy comes from weight, size
+ * and space alone. That is the harder system to build and the steadier one, and
+ * it is what nearly every large technology organisation actually ships.
  */
 @theme inline {
-  --font-display: var(--font-display-face);
+  --font-display: var(--font-ui-face);
   --font-sans: var(--font-body-face);
   --font-ui: var(--font-ui-face);
   --font-mono: var(--font-mono-face);
@@ -100,73 +110,64 @@
    * ======================================================================= */
 
   /*
-   * Neutral. Hue 248 at a chroma that never exceeds 0.009 — a cool cast so
-   * faint it cannot be named, which is exactly the intent. Pure achromatic grey
-   * reads flat and slightly cheap on a large dark surface; a trace of blue
-   * reads as graphite, and it is the right ground for a cool signal colour.
-   *
-   * Chroma tapers toward both ends, because a tint is visible in near-white and
-   * near-black long before it is in a mid grey.
+   * Neutral. The original qeet.in greys, hand-picked rather than computed —
+   * pure achromatic, no cool or warm cast. Kept as hex so they are the exact
+   * values the site shipped with.
    */
-  --color-neutral-0: oklch(1 0 0);
-  --color-neutral-50: oklch(0.985 0.002 248);
-  --color-neutral-100: oklch(0.968 0.003 248);
-  --color-neutral-200: oklch(0.928 0.004 248);
-  --color-neutral-300: oklch(0.87 0.005 248);
-  --color-neutral-400: oklch(0.72 0.007 248);
-  --color-neutral-500: oklch(0.62 0.008 248);
-  --color-neutral-600: oklch(0.52 0.009 248);
-  --color-neutral-700: oklch(0.42 0.009 248);
-  --color-neutral-800: oklch(0.312 0.008 248);
-  --color-neutral-850: oklch(0.248 0.007 248);
-  --color-neutral-900: oklch(0.208 0.006 248);
-  --color-neutral-950: oklch(0.152 0.005 248);
-  --color-neutral-1000: oklch(0 0 0);
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #fcfcfc;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #c8c8c8;
+  --color-neutral-400: #929292;
+  --color-neutral-500: #7e7e7e;
+  --color-neutral-600: #6e6e6e;
+  --color-neutral-700: #4a4a4a;
+  --color-neutral-800: #3d3d3d;
+  --color-neutral-850: #262626;
+  --color-neutral-900: #181818;
+  --color-neutral-950: #141414;
+  --color-neutral-1000: #0a0a0a;
 
   /*
-   * Signal. One colour, hue 116.6 — a yellow-green with no incumbent in
-   * enterprise technology.
+   * Brand — Qeet orange. 500 is #ff6900, the value @qeetrix/ui ships, so an
+   * orange here is the same orange the products render.
    *
-   * 400 is exactly #e8ff47, so nothing shifts at the anchor. Every other step
-   * was solved against the sRGB gamut boundary at its own lightness: the
-   * mid-range would clip at the chroma a naive even ramp would ask for, and a
-   * clipped OKLCH value renders as a slightly different hue, which is how a
-   * "computed" ramp quietly stops being one.
+   * The whole ramp is Qeetrix's, converted from its OKLCH definitions. Note the
+   * hue drifts as it darkens (56 -> 38): a straight lightness ramp does not
+   * preserve perceived warmth, so the deep steps rotate toward red rather than
+   * going brown.
    *
-   * Note the shape — this ramp is top-heavy. 50 through 400 span barely 0.03 in
-   * lightness, because at this hue the interesting range IS the bright end; the
-   * low steps exist to give the light theme readable text, not to give the dark
-   * theme more yellows it will never use.
+   * ---------------------------------------------------------------------------
+   * What each step can and cannot do — measured, not guessed.
+   * ---------------------------------------------------------------------------
+   *                on light   on dark   white label on it
+   *   400 #ff8904    2.32      8.33          2.38
+   *   500 #ff6900    2.81      6.86          2.89   <- the brand
+   *   600 #f54900    3.51      5.50          3.60
+   *   700 #ca3500    5.09      3.79          5.22
+   *   800 #9f2d00    7.18      2.69          7.37
+   *
+   * The consequence worth stating plainly: #ff6900 CANNOT be text on the light
+   * canvas. At 2.81:1 it fails AA for body text and also fails the relaxed 3:1
+   * bar for display type — there is no size at which it is compliant on white.
+   * On the dark canvas it is 6.86:1 and needs no help at all.
+   *
+   * So the brand appears at full strength everywhere except light-mode TEXT,
+   * where it steps to 600 for display and 700 for body. Those are the lightest
+   * steps that pass, chosen to stay as close to #ff6900 as the arithmetic
+   * allows rather than defaulting to something safely dark.
    */
-  --color-signal-50: oklch(0.985 0.04 116.6);
-  --color-signal-100: oklch(0.972 0.08 116.6);
-  --color-signal-200: oklch(0.962 0.13 116.6);
-  --color-signal-300: oklch(0.957 0.165 116.6);
-  --color-signal-400: oklch(0.952 0.197 116.6);
-  --color-signal-500: oklch(0.885 0.2 116.6);
-  --color-signal-600: oklch(0.75 0.15 110);
-  /*
-   * From 600 down, THE HUE DRIFTS toward gold — 116.6 at the top, 92 at the
-   * bottom. This is the fix for the light theme, and it is not a preference.
-   *
-   * Darkening a yellow-green while holding its hue produces OLIVE: #849300,
-   * #687400, #505902 — army greens that read as muddy on a white page, which is
-   * exactly how the light theme looked before. Letting the hue rotate toward
-   * gold as lightness falls gives #908200, #806E00, #5E4B00 instead — dark
-   * golds and bronzes, which is what a yellow is supposed to become when you
-   * take light out of it.
-   *
-   * The same trick is why the Qeetrix orange ramp drifts 75 -> 38. A straight
-   * lightness ramp does not preserve perceived warmth; the hue has to move.
-   *
-   * Chroma is capped at the sRGB gamut boundary for each step — the deep end of
-   * this hue runs out of gamut quickly, and a clipped OKLCH value silently
-   * renders as a different hue.
-   */
-  --color-signal-700: oklch(0.6 0.126 102);
-  --color-signal-800: oklch(0.54 0.112 98);
-  --color-signal-900: oklch(0.48 0.099 95);
-  --color-signal-950: oklch(0.42 0.087 92);
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #ffb086;
+  --color-brand-400: #ff8904;
+  --color-brand-500: #ff6900;
+  --color-brand-600: #f54900;
+  --color-brand-700: #ca3500;
+  --color-brand-800: #9f2d00;
+  --color-brand-900: #7e2a0c;
 
 }
 
@@ -180,20 +181,20 @@
    * carried by shadow. Named by role rather than by number, so a component
    * asks for what it is instead of how bright it should be.
    */
-  --color-canvas: oklch(0.181 0.005 248);
-  --color-surface: oklch(0.225 0.007 248);
-  --color-surface-raised: oklch(0.262 0.007 248);
-  --color-surface-overlay: oklch(0.29 0.007 248);
-  --color-surface-sunken: oklch(0.142 0.005 248);
+  --color-canvas: #0a0a0a;
+  --color-surface: #141414;
+  --color-surface-raised: #1c1c1c;
+  --color-surface-overlay: #242424;
+  --color-surface-sunken: #050505;
   /* Inverse-tone bands (the closing CTA) read as a lifted dark panel rather
    * than flipping to light, so the dark aesthetic survives the whole page. */
-  --color-inverse: oklch(0.248 0.007 248);
+  --color-inverse: #181818;
 
   /* Text. Measured on the dark canvas: 18.96 / 9.72 / 5.44 — all clear AA. */
-  --color-ink: oklch(0.973 0.002 248);
-  --color-ink-muted: oklch(0.775 0.006 248);
-  --color-ink-subtle: oklch(0.635 0.008 248);
-  --color-ink-inverse: oklch(0.973 0.002 248);
+  --color-ink: #fcfcfc;
+  --color-ink-muted: #b5b5b5;
+  --color-ink-subtle: #7e7e7e;
+  --color-ink-inverse: #fcfcfc;
 
   /*
    * Rules. `rule` is a decorative hairline and `rule-strong` a visible divider
@@ -202,9 +203,9 @@
    * carry meaning (inputs, toggles, selected states) and is the only one held
    * to WCAG 1.4.11: 3.59:1 on canvas, 3.38:1 on a raised surface.
    */
-  --color-rule: oklch(0.298 0.007 248);
-  --color-rule-strong: oklch(0.38 0.008 248);
-  --color-rule-interactive: oklch(0.535 0.009 248);
+  --color-rule: #262626;
+  --color-rule-strong: #3d3d3d;
+  --color-rule-interactive: #6b6b6b;
 
   /*
    * Accent — three distinct jobs. Conflating them is how accessible palettes
@@ -221,25 +222,103 @@
    * In dark mode all three text tokens are the true brand orange — it is only the
    * light canvas that forces them apart.
    */
-  --color-accent: var(--color-signal-400);
-  --color-accent-hover: var(--color-signal-300);
+  --color-accent: var(--color-brand-500);
+  /*
+   * Hover is the BRAND, not a lighter or darker relative of it — in both
+   * themes. It previously stepped to brand-400 in dark and brand-600 in light,
+   * which meant hovering something changed which orange you were looking at.
+   *
+   * This token is for NON-TEXT hover only: borders, underlines, washes, marks.
+   * Those need 3:1 as graphics, which #ff6900 clears on both canvases, so the
+   * true brand can appear at full strength on hover everywhere.
+   *
+   * Hover on TEXT goes through --color-accent-text instead, and has to: at
+   * body size on the light canvas #ff6900 is 2.81:1 and fails, so light-mode
+   * text hover steps to brand-700 — the lightest step that passes. On dark it
+   * is already the brand at 6.86:1 and does not move.
+   */
+  --color-accent-hover: var(--color-brand-500);
   /*
    * Dark mode uses the held-back accent for all three text roles — see
    * the note on the accent ramp above for why. The LIGHT canvas has the opposite
    * problem and splits by size instead, because there the same orange drops to
    * roughly 3:1 and has to darken to stay readable.
    */
-  --color-accent-text: var(--color-signal-400);
-  --color-accent-text-display: var(--color-signal-400);
+  --color-accent-text: var(--color-brand-500);
+  --color-accent-text-display: var(--color-brand-500);
+  /*
+   * ==========================================================================
+   * Hover text — the true brand, in both themes.
+   * ==========================================================================
+   *
+   * A deliberate, recorded exception. #ff6900 measures 2.81:1 on the LIGHT
+   * canvas, which fails WCAG AA for body text (4.5:1) and also fails the
+   * relaxed large-text bar (3:1). There is no size at which it is compliant on
+   * white.
+   *
+   * It is used anyway, on hover only, because the brand reading as one colour
+   * everywhere was judged to matter more than the hover state alone meeting AA.
+   * That is a legitimate call to make and it is recorded here rather than
+   * quietly absorbed — `bun run check:contrast` prints it as an ACCEPTED
+   * exception on every run, so it stays visible.
+   *
+   * The exposure is deliberately narrow, and that narrowness is the mitigation:
+   *
+   *   - It applies to HOVER ONLY. Static accent text still goes through
+   *     --color-accent-text, which passes in both themes. Nothing a visitor
+   *     reads at rest is affected.
+   *   - Hover requires a pointer. Keyboard and touch users never reach this
+   *     state; they get the focus ring, which does pass.
+   *   - Colour is never the only affordance on these elements. Every one is a
+   *     link with its own underline, arrow or border movement, so the hover is
+   *     legible without perceiving the colour change at all.
+   *
+   * On the dark canvas it is 6.86:1 and compliant — the exception is
+   * light-mode only.
+   */
+  --color-accent-text-hover: var(--color-brand-500);
   /* A label sitting ON an accent fill. Near-black, not white — white on
    * brand-500 measures about 3:1 and fails for normal text. */
-  --color-accent-contrast: oklch(0.152 0.005 248);
+  --color-accent-contrast: #0a0a0a;
+
+  /*
+   * ==========================================================================
+   * Filled controls — a separate fill from the graphic accent, on purpose.
+   * ==========================================================================
+   *
+   * A button's label must be WHITE, and white is only legible from brand-700
+   * down:
+   *
+   *     white on brand-500 #ff6900   2.89:1   FAIL
+   *     white on brand-600 #f54900   3.60:1   FAIL
+   *     white on brand-700 #ca3500   5.22:1   ok
+   *
+   * qeet-id-website reaches the same conclusion and sets `--primary` to
+   * brand-700 for exactly this reason.
+   *
+   * The important part is that this is a SECOND token rather than a change to
+   * --color-accent. The accent is also a status dot, a nav rule, a diagram
+   * connection and a focus ring — graphics with no label on them, which want
+   * the bright brand-500 and would go dull and muddy if darkened to 700 just to
+   * satisfy a button. One token cannot serve both jobs; pretending otherwise is
+   * how an accent ends up either unreadable or lifeless.
+   *
+   * Identical in both themes: brand-700 separates from the light canvas at
+   * 5.09:1 and from the dark canvas at 3.79:1, so the same fill works on both
+   * and the button is recognisably the same control.
+   */
+  --color-accent-solid: var(--color-brand-700);
+  /* Hover DARKENS in both themes rather than lightening in dark mode. Lifting
+   * toward brand-600 would take the white label to 3.56:1 — the hover state is
+   * not the place to lose the label. */
+  --color-accent-solid-hover: var(--color-brand-800);
+  --color-accent-solid-contrast: #ffffff;
   --color-accent-soft: color-mix(in oklab, var(--color-accent) 14%, transparent);
   --color-accent-faint: color-mix(in oklab, var(--color-accent) 7%, transparent);
 
   /* Focus lifts one step above the accent, so the ring stays visible on an
    * accent-filled control it might be sitting on. */
-  --color-focus: var(--color-signal-400);
+  --color-focus: var(--color-brand-400);
 
   /*
    * Functional. Form and status states only, and deliberately desaturated
@@ -248,9 +327,9 @@
    * 47.6, far enough that an amber notice is never mistaken for brand orange —
    * which is the one collision this particular brand hue makes easy.
    */
-  --color-success: oklch(0.76 0.14 158);
-  --color-warning: oklch(0.8 0.13 70);
-  --color-error: oklch(0.7 0.17 22);
+  --color-success: #5fb87a;
+  --color-warning: #e0a458;
+  --color-error: #f08585;
 
   /*
    * ==========================================================================
@@ -267,7 +346,7 @@
    * presence, so a planned product cannot accidentally look as real as a live
    * one, which is the failure mode the whole lifecycle system exists to prevent.
    */
-  --color-status-available: var(--color-signal-400);
+  --color-status-available: var(--color-brand-500);
   --color-status-development: var(--color-ink-muted);
   --color-status-planned: var(--color-ink-subtle);
 
@@ -426,8 +505,8 @@
 
   /* ==========================================================================
    * Media. A closed set of crops — every photograph on the site is one of
-   * these five ratios. That is most of what makes assorted stock read as one
-   * commissioned set; the .figure-qeet grade below does the rest.
+   * these five ratios. With the duotone grade retired, this consistent crop
+   * set is what holds assorted photography together as one visual system.
    * ======================================================================= */
   --aspect-hero: 21 / 9;
   --aspect-editorial: 16 / 9;
@@ -449,8 +528,8 @@
    * purely so the contrast gate can resolve and assert it — an rgba value with
    * alpha cannot be measured against anything on its own.
    */
-  --scrim-floor: oklch(0.13 0.005 248 / 0.72);
-  --scrim-floor-solid: oklch(0.419 0.002 251);
+  --scrim-floor: rgb(10 10 10 / 0.72);
+  --scrim-floor-solid: #545454;
 
   /* Stacking order. Hand-picked z-indexes are how overlays end up behind navs. */
   --z-base: 0;
@@ -470,23 +549,23 @@
  * ============================================================================
  */
 .light {
-  --color-canvas: oklch(0.988 0.002 248);
-  --color-surface: var(--color-neutral-0);
-  --color-surface-raised: var(--color-neutral-0);
-  --color-surface-overlay: var(--color-neutral-0);
-  --color-surface-sunken: oklch(0.962 0.003 248);
-  --color-inverse: oklch(0.181 0.005 248);
+  --color-canvas: #fcfcfc;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-overlay: #ffffff;
+  --color-surface-sunken: #f5f5f5;
+  --color-inverse: #0a0a0a;
 
-  --color-ink: oklch(0.185 0.006 248);
-  --color-ink-muted: oklch(0.44 0.009 248);
-  --color-ink-subtle: oklch(0.555 0.009 248);
+  --color-ink: #0a0a0a;
+  --color-ink-muted: #4a4a4a;
+  --color-ink-subtle: #6e6e6e;
   /* Stays light: it is the text colour for inverse-tone bands, which remain
    * dark in both themes. */
   --color-ink-inverse: oklch(0.985 0 0);
 
-  --color-rule: oklch(0.9 0.004 248);
-  --color-rule-strong: oklch(0.82 0.006 248);
-  --color-rule-interactive: oklch(0.63 0.009 248);
+  --color-rule: #e5e5e5;
+  --color-rule-strong: #c8c8c8;
+  --color-rule-interactive: #8f8f8f;
 
   /*
    * On the light canvas the accent splits by SIZE. Brand-500 measures about
@@ -499,10 +578,19 @@
    * readable on any canvas, which is why --color-accent-contrast is shared
    * across both themes.
    */
-  --color-accent-text: var(--color-signal-800);
-  --color-accent-text-display: var(--color-signal-700);
-  --color-accent-hover: var(--color-signal-500);
-  --color-focus: var(--color-signal-700);
+  --color-accent-text: var(--color-brand-700);
+  --color-accent-text-display: var(--color-brand-600);
+  /*
+   * brand-600, not 500. #ff6900 measures 2.81:1 on this canvas — it fails the
+   * 3:1 that WCAG 1.4.11 requires of a border or mark that carries meaning, so
+   * the true brand cannot be a hover border on white either. brand-600
+   * (#f54900) is 3.51:1: the lightest step that passes, and near enough to the
+   * brand that the hover still reads as orange rather than as rust.
+   *
+   * On the dark canvas this token stays at the true brand — see the dark block.
+   */
+  --color-accent-hover: var(--color-brand-600);
+  --color-focus: var(--color-brand-700);
   /*
    * The FILL does not move. A near-white yellow works on a white page the way a
    * highlighter does — as a block with dark ink on it — which is why
@@ -514,14 +602,14 @@
   /* Lifecycle follows the accent: the ladder is presence, so on a light canvas
    * "available" must be the darkest and most present of the three, not the
    * lightest. Inheriting the dark-theme values would invert the whole meaning. */
-  --color-status-available: var(--color-signal-800);
+  --color-status-available: var(--color-brand-700);
 
   --color-status-development: var(--color-ink-muted);
   --color-status-planned: var(--color-ink-subtle);
 
-  --color-success: oklch(0.48 0.13 158);
-  --color-warning: oklch(0.53 0.12 70);
-  --color-error: oklch(0.52 0.19 25);
+  --color-success: #2f6b3e;
+  --color-warning: #8b5a1c;
+  --color-error: #8b2f2f;
 
   /* Light elevation is carried by shadow, not by surface lightness. */
   --shadow-sm: 0 1px 2px 0 color-mix(in oklab, var(--color-ink) 6%, transparent);
@@ -813,8 +901,8 @@
  * stop flipping underneath it.
  */
 @utility on-dark {
-  --color-accent-text-display: var(--color-signal-400);
-  --color-accent-text: var(--color-signal-400);
+  --color-accent-text-display: var(--color-brand-500);
+  --color-accent-text: var(--color-brand-500);
 }
 
 /* Numbers in tables, metrics and timestamps must not jitter as they change. */
@@ -911,76 +999,42 @@
 
   /*
    * ==========================================================================
-   * The figure grade — the single most load-bearing rule in the media system.
+   * The figure frame.
    * ==========================================================================
    *
-   * qeet.in sources photography from stock libraries. Untreated, that reads as
-   * exactly what it is: a dozen photographers, a dozen colour grades, a dozen
-   * lighting setups, stapled together. One grade applied to all of it reads as
-   * a commissioned set instead.
+   * This used to carry a duotone grade — strip every photograph to luminance,
+   * then push one hue back through it with `mix-blend-mode: color` — so that
+   * assorted stock read as a single commissioned set.
    *
-   * The grade is a two-step duotone: strip the image to luminance, then push a
-   * single hue back through it with `mix-blend-mode: color`. The hue comes from
-   * --figure-tone, and its default is the COOL NEUTRAL, not the accent —
-   * photography is graded to match the canvas so it reads as part of the same
-   * material, and the accent stays reserved for the ~2% of the page that is
-   * meant to be looked at. An orange-tinted photograph would blow that budget
-   * in one element, and warm duotones are the single most dated stock-photo
-   * treatment there is.
+   * IT NO LONGER GRADES. Photography renders at its own colour, in both
+   * themes. The grade was solving a sourcing problem (mismatched stock) by
+   * making every image monochrome, which is a heavy price for a site that will
+   * eventually run commissioned photography, and it made the same image look
+   * like two different images across the theme toggle.
    *
-   * `--figure-tone: var(--color-accent)` is available as a deliberate opt-in
-   * for a single hero moment per page. Two on one page is a bug.
+   * What survives is the frame itself, and each line still earns its place:
+   *   - `overflow: hidden` clips the `mediaScale` zoom to the frame.
+   *   - `isolation: isolate` keeps the scrim's blending inside the figure.
+   *   - the sunken background holds the box while the image loads, so a slow
+   *     connection sees a deliberate surface rather than a white gap.
    *
-   * `isolation: isolate` is required, not cosmetic: without it the blend
-   * escapes the figure and composites against whatever section sits behind it.
+   * Contrast for text over media is unaffected: it was never the grade that
+   * guaranteed it, it is the scrim below, which is measured against
+   * `--scrim-floor-solid` in scripts/check-contrast.ts and is independent of
+   * whatever the photograph does.
    */
   .figure-qeet {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    /* Holds the layout and gives a graded placeholder while the image loads,
-     * so a slow connection sees a deliberate surface rather than a white gap. */
     background-color: var(--color-surface-sunken);
   }
 
-  .figure-qeet :is(img, video) {
-    filter: grayscale(1) contrast(1.06) brightness(0.97);
-  }
-
-  /* Light canvas: the same grade, minus the darkening. On a white page a
-   * brightness-reduced photograph reads as muddy rather than cinematic. */
-  .light .figure-qeet :is(img, video) {
-    filter: grayscale(1) contrast(1.04) brightness(1.03);
-  }
-
-  .figure-qeet::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background-color: var(--figure-tone, oklch(0.42 0.009 248));
-    mix-blend-mode: color;
-    opacity: var(--figure-tone-strength, 0.55);
-  }
-
   /* Content placed inside a figure (captions, kickers, badges) must clear the
-   * tint layer, or `mix-blend-mode: color` eats it. */
+   * scrim layer, which is painted at z-index 1. */
   .figure-qeet > :not(img, video, picture) {
     position: relative;
     z-index: 2;
-  }
-
-  /*
-   * Opt-out for imagery that must stay true to colour — leadership portraits
-   * where skin tone matters, and press assets, where altering the artwork is
-   * the whole thing a press kit exists to prevent.
-   */
-  .figure-plain :is(img, video) {
-    filter: none;
-  }
-  .figure-plain::after {
-    content: none;
   }
 
   /*
