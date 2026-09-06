@@ -155,7 +155,7 @@ export function CommandPalette() {
 
       {/* Panel */}
       <div className="relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-rule bg-canvas shadow-2xl">
-        <div className="flex items-center gap-3 border-b border-rule px-5">
+        <div className="flex items-center gap-3 border-b border-rule px-5 mt-4">
           <svg
             width="18"
             height="18"
@@ -186,7 +186,7 @@ export function CommandPalette() {
             aria-activedescendant={
               results[activeIdx] ? `cmd-row-${activeIdx}` : undefined
             }
-            className="w-full appearance-none border-0 bg-transparent py-4 font-sans text-body text-ink placeholder:text-ink-subtle"
+            className="w-full appearance-none border-0 bg-transparent py-4 font-sans text-body text-ink placeholder:text-ink-subtle focus-field"
           />
           <kbd className="hidden shrink-0 rounded-sm border border-rule bg-canvas px-1.5 py-0.5 font-sans text-caption text-ink-subtle sm:inline-flex">
             Esc

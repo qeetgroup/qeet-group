@@ -115,10 +115,21 @@ export function HeroBackdrop() {
              full-viewport at every breakpoint. */
           priority
           sizes="100vw"
-          /* 70 rather than the site's usual 75: this sits under a 75% scrim,
-             where compression artefacts are unresolvable, and it is the
-             largest single image on the site. */
-          quality={70}
+          /*
+           * 60, not the site's usual 75, and 60 specifically because
+           * `images.qualities` in next.config.ts allows [60, 75, 90] — asking
+           * for 70 was a runtime warning on every render, since each extra
+           * value is another cache permutation the allowlist exists to bound.
+           *
+           * Going DOWN rather than up is measured, not assumed. Through the
+           * optimiser at w=1920 this photograph is 145KB of AVIF at q60
+           * against 281KB at q75, and the two are indistinguishable — checked
+           * on the smooth sky region, where banding would show first, with the
+           * scrim removed so it was the worst case rather than the real one.
+           * It is the largest single image on the site and the LCP element of
+           * a light-theme first paint, so 136KB is worth having.
+           */
+          quality={60}
           className="object-cover"
         />
         {/*

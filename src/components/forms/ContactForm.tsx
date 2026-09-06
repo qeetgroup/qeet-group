@@ -13,7 +13,7 @@ const initialState: ContactFormState = { status: "idle" };
 const TOPICS = ["Partnerships", "Press", "Hiring", "General", "Other"];
 
 const inputCls =
-  "w-full appearance-none border-0 border-b border-rule-strong bg-transparent py-3 font-sans text-body text-ink placeholder:text-ink-subtle focus:border-ink transition-colors duration-200 aria-[invalid=true]:border-error";
+  "w-full appearance-none border-0 border-b border-rule-strong bg-transparent py-3 font-sans text-body text-ink placeholder:text-ink-subtle focus:border-ink transition-colors duration-200 aria-[invalid=true]:border-error focus-field";
 
 const labelCls = "block font-sans text-caption font-medium uppercase tracking-[0.14em] text-ink-subtle";
 

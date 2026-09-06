@@ -804,6 +804,52 @@
   }
 }
 
+/*
+ * ============================================================================
+ * focus-field — the focus indicator for underline inputs
+ * ============================================================================
+ *
+ * Every text control on this site is an EDITORIAL UNDERLINE: `border-0
+ * border-b`, transparent background, no box. `focus-ring` and the global
+ * :focus-visible fallback both draw a rounded 2px rectangle at a 2px offset,
+ * which is right for a button and wrong for these — on /search the field is
+ * 672x74, so keyboard focus drew a large rounded orange box around a control
+ * whose only visible edge is a hairline underneath it. Correct, and ugly.
+ *
+ * So the indicator follows the SHAPE OF THE CONTROL instead:
+ *
+ *   - a 2px underline in the focus colour, drawn as an inset shadow. Inset,
+ *     because thickening the real border-bottom would move every following
+ *     line by a pixel on focus.
+ *   - a faint wash of the same colour across the field, so the active input is
+ *     identifiable at a glance and not just at its bottom edge.
+ *
+ * The wash is on :focus rather than :focus-visible on purpose. A text input
+ * that has been clicked into is genuinely active and should look it; the
+ * heavier keyboard indicator stays scoped to :focus-visible so a mouse user
+ * does not get a hard orange rule they never asked for.
+ *
+ * `outline: 2px solid transparent` rather than `outline: none` is the part
+ * that is easy to get wrong. Forced-colors modes repaint transparent
+ * outlines, so this keeps a real indicator for Windows High Contrast users,
+ * where a box-shadow is discarded entirely and `none` would leave them with
+ * nothing at all.
+ *
+ * --color-focus is already measured against canvas and surface at 3:1 in
+ * scripts/check-contrast.ts, so the underline inherits a checked contrast.
+ */
+@utility focus-field {
+  &:focus {
+    background-color: color-mix(in oklab, var(--color-focus) 6%, transparent);
+  }
+  &:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 0;
+    box-shadow: inset 0 -2px 0 var(--color-focus);
+    border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  }
+}
+
 /* Durations, since Tailwind has no --duration-* theme namespace. */
 @utility duration-instant {
   transition-duration: var(--duration-instant);

@@ -48,7 +48,7 @@ export function NewsletterForm({ className }: { className?: string }) {
           required
           placeholder="you@example.com"
           aria-invalid={state.status === "error" || undefined}
-          className="min-w-0 flex-1 appearance-none border-0 bg-transparent py-2 font-sans text-body-s text-ink placeholder:text-ink-subtle"
+          className="min-w-0 flex-1 appearance-none border-0 bg-transparent py-2 font-sans text-body-s text-ink placeholder:text-ink-subtle focus-field"
         />
         <SubmitButton />
       </div>

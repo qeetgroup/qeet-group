@@ -46,7 +46,7 @@ export function SearchBox() {
         className={cn(
           "w-full appearance-none border-0 border-b border-rule-strong bg-transparent",
           "py-4 font-display text-heading-xl text-ink placeholder:text-ink-subtle",
-          "focus:border-ink transition-colors duration-200",
+          "focus:border-ink transition-colors duration-200 focus-field",
         )}
       />
 
