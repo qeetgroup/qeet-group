@@ -130,6 +130,20 @@ type Check = {
    * just an absence.
    */
   accepted?: string;
+  /*
+   * Restricts a pairing to one theme.
+   *
+   * Almost every pairing here is meaningful in both, because both themes
+   * define both tokens — that is the point of a semantic token layer. A few
+   * are not: the light hero has a photograph behind its type and the dark hero
+   * has a shader, so the light scrim floor exists in one theme only. Asserting
+   * ink-on-that-floor in dark mode would measure near-white against a mid-grey
+   * and fail a pairing that never occurs.
+   *
+   * Scoped checks still print, marked with the theme they belong to, so
+   * scoping stays visible rather than looking like a missing check.
+   */
+  only?: "light" | "dark";
 };
 
 const CHECKS: Check[] = [
@@ -185,6 +199,32 @@ const CHECKS: Check[] = [
   },
   { fg: "--color-focus", bg: "--color-canvas", min: 3, why: "focus ring on canvas" },
   { fg: "--color-focus", bg: "--color-surface", min: 3, why: "focus ring on cards" },
+  /*
+   * The ecosystem map's product glyphs, which sit on the node fill rather than
+   * on the page. 3:1 is the non-text bar (WCAG 1.4.11) — the icons are
+   * decorative and duplicated by the label beside them, so they are not
+   * strictly held to it, but an icon nobody can make out is a wasted glyph.
+   */
+  { fg: "--color-ink-muted", bg: "--color-surface-raised", min: 3, why: "product glyph on a node" },
+  {
+    /*
+     * The hovered node's glyph. Measured through --color-accent-solid-contrast
+     * because that token IS #ffffff in both themes and the gate needs a token
+     * to resolve, not a literal — the component itself writes `text-white`.
+     */
+    fg: "--color-accent-solid-contrast",
+    bg: "--color-accent",
+    min: 3,
+    why: "white product glyph on a hovered node",
+    accepted:
+      "White on the brand fill is 2.89:1, just under the 3:1 non-text bar. " +
+      "Accepted for this one glyph: it is aria-hidden and decorative, the " +
+      "product name is rendered beside it at full contrast, and the same " +
+      "interaction grows the node from r19 to r24 — so colour is never the " +
+      "sole indicator of which node is active. This is why the site has a " +
+      "SECOND accent token: --color-accent-solid (brand-700) darkens the fill " +
+      "wherever white is load-bearing text, and carries 5.22:1 there.",
+  },
   { fg: "--color-rule-interactive", bg: "--color-canvas", min: 3, why: "meaningful borders (1.4.11)" },
   { fg: "--color-rule-interactive", bg: "--color-surface", min: 3, why: "meaningful borders on cards" },
   { fg: "--color-error", bg: "--color-canvas", min: 4.5, why: "error text" },
@@ -210,6 +250,26 @@ const CHECKS: Check[] = [
    * scrim floor — not the image — that has to be measured.
    */
   { fg: "--color-ink-inverse", bg: "--scrim-floor-solid", min: 4.5, why: "text over scrimmed media" },
+  /*
+   * The light hero's backdrop is a photograph, so every piece of type in it is
+   * measured against the scrim's worst-case composite rather than against the
+   * canvas. ink-subtle is deliberately absent: it measures 2.71:1 here, which
+   * is why the hero overrides it to ink-muted for its eyebrow and stat labels.
+   */
+  {
+    fg: "--color-ink",
+    bg: "--scrim-hero-light-solid",
+    min: 4.5,
+    why: "hero headline over the light backdrop",
+    only: "light",
+  },
+  {
+    fg: "--color-ink-muted",
+    bg: "--scrim-hero-light-solid",
+    min: 4.5,
+    why: "hero lead copy and labels over the light backdrop",
+    only: "light",
+  },
 ];
 
 const THEMES: Array<[string, Record<string, string>]> = [
@@ -220,10 +280,16 @@ const THEMES: Array<[string, Record<string, string>]> = [
 let failures = 0;
 let skipped = 0;
 let accepted = 0;
+let scoped = 0;
 
 for (const [themeName, tokens] of THEMES) {
   console.log(`\n  ${themeName}`);
-  for (const { fg, bg, min, why } of CHECKS) {
+  for (const { fg, bg, min, why, only } of CHECKS) {
+    if (only && only !== themeName) {
+      scoped++;
+      console.log(`    --   ${fg.replace("--color-", "")} on ${bg.replace("--color-", "")} — ${only} only`);
+      continue;
+    }
     const a = resolve(tokens, fg);
     const b = resolve(tokens, bg);
     if (!a || !b) {
@@ -245,9 +311,10 @@ for (const [themeName, tokens] of THEMES) {
   }
 }
 
-const total = CHECKS.length * THEMES.length - skipped;
+const total = CHECKS.length * THEMES.length - skipped - scoped;
 console.log(
-  `\n  ${total} pairings checked, ${failures} failing, ${accepted} accepted, ${skipped} skipped.\n`,
+  `\n  ${total} pairings checked, ${failures} failing, ${accepted} accepted, ` +
+    `${skipped} skipped, ${scoped} out of theme scope.\n`,
 );
 
 // Accepted exceptions are reprinted in full, so the reasoning is in the output

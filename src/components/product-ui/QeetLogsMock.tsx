@@ -16,7 +16,7 @@ export function QeetLogsMock() {
       <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-rule bg-surface shadow-sm">
         <div className="flex items-center gap-2 border-b border-rule px-4 py-2.5">
           <span className="text-[0.75rem] font-medium text-ink">Live tail</span>
-          <span className="rounded-md border border-rule px-1.5 py-0.5 text-[0.625rem] text-ink-muted">
+          <span className="rounded-md border border-rule px-1.5 py-0.5 text-[0.6875rem] text-ink-muted">
             tenant: acme
           </span>
           <svg className="ml-auto text-ink-subtle" width="56" height="16" viewBox="0 0 56 16" fill="none" aria-hidden="true">

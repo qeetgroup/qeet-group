@@ -83,13 +83,26 @@ export default async function EcosystemPage() {
                           href={p.href}
                           className="group/row grid grid-cols-1 gap-2 border-b border-rule py-5 transition-colors duration-fast hover:border-rule-strong focus-ring md:grid-cols-12 md:items-baseline md:gap-8"
                         >
-                          <span className="font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/row:text-accent-text-hover md:col-span-3">
+                          {/*
+                            3 / 6 / 3, not 3 / 7 / 2.
+
+                            At the md breakpoint exactly, twelve columns across
+                            this container are ~54px each, so a 2-column sector
+                            cell is ~107px — and "Communications" sets to ~110px
+                            in tracked mono uppercase. A grid item will not
+                            shrink below its min-content, so those three pixels
+                            became three pixels of horizontal scroll on the
+                            whole document. Widening the cell is the fix;
+                            `min-w-0` is the guard that stops any future longer
+                            value doing the same thing.
+                          */}
+                          <span className="min-w-0 font-sans text-heading-m font-medium text-ink transition-colors duration-fast group-hover/row:text-accent-text-hover md:col-span-3">
                             {p.name}
                           </span>
-                          <span className="text-body-s text-ink-muted md:col-span-7">
+                          <span className="min-w-0 text-body-s text-ink-muted md:col-span-6">
                             {p.oneLiner}
                           </span>
-                          <span className="font-mono text-label uppercase text-ink-subtle md:col-span-2 md:text-right">
+                          <span className="min-w-0 font-mono text-label uppercase text-ink-subtle md:col-span-3 md:text-right">
                             {p.sector}
                           </span>
                         </NextLink>

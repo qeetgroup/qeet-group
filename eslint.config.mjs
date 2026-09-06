@@ -9,6 +9,10 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    /* Pairs with the NEXT_DIST_DIR escape hatch in next.config.ts: an audit
+       build lands here, and eslint walking 200-odd generated chunks reports
+       thousands of problems in code nobody wrote. */
+    ".next-audit/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

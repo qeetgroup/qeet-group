@@ -64,7 +64,7 @@ export function QeetNotifyMock() {
                 {t.msg}
               </span>
             </span>
-            <span className="shrink-0 self-start text-[0.625rem] text-ink-subtle">now</span>
+            <span className="shrink-0 self-start text-[0.6875rem] text-ink-subtle">now</span>
           </div>
         ))}
       </div>

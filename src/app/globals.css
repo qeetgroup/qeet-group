@@ -531,6 +531,26 @@
   --scrim-floor: rgb(10 10 10 / 0.72);
   --scrim-floor-solid: #545454;
 
+  /*
+   * The LIGHT hero's scrim. Same principle, opposite direction.
+   *
+   * On dark the backdrop is a shader and the type over it is near-white, so
+   * the scrim darkens. On light the backdrop is a photograph of a building and
+   * the type is near-black, so the scrim LIGHTENS — and the worst case flips
+   * with it: not a blown-out white frame but a black one.
+   *
+   * canvas at 75% over pure black composites to #bdbdbd, which holds
+   * ink-muted at 4.72:1 — AA for body copy against the darkest pixel the
+   * photograph could contain, whatever photograph it ends up being. 72%
+   * looked marginally better and measured 4.32:1, which is the kind of miss
+   * that is invisible to the eye and obvious to the gate.
+   *
+   * --scrim-hero-light-solid IS that composite, tokenised for the same reason
+   * as its dark counterpart: an rgba value cannot be measured on its own.
+   */
+  --scrim-hero-light: rgb(252 252 252 / 0.75);
+  --scrim-hero-light-solid: #bdbdbd;
+
   /* Stacking order. Hand-picked z-indexes are how overlays end up behind navs. */
   --z-base: 0;
   --z-raised: 10;

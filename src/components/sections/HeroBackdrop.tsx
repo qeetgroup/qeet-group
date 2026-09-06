@@ -1,58 +1,137 @@
 "use client";
 
+import Image from "next/image";
 import GhostFibers from "@/components/media/GhostFibers";
-import { useTheme } from "@/lib/use-theme";
+import { MEDIA } from "@/config/media";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
- * The hero's generated backdrop.
+ * ============================================================================
+ * The hero's backdrop — two of them, one per theme
+ * ============================================================================
  *
- * A thin client wrapper whose only job is to feed GhostFibers the palette for
- * the ACTIVE THEME. The shader takes flat hex values — it cannot resolve a CSS
- * custom property — so the tokens have to be handed to it, and handed to it
- * again when the theme changes.
+ * DARK gets the generated shader. LIGHT gets a photograph of a building.
  *
- * `useTheme` returns null on the server and until hydration. That renders the
- * dark palette, which is correct: dark is the site default, and a light-theme
- * visitor briefly sees the dark backdrop rather than a flash of white.
+ * That is not indecision. The shader is drawn FROM the canvas colour, so on
+ * dark it emerges out of the page and the fibres read as light in darkness —
+ * which is the only direction the effect works in. Inverted for light mode it
+ * became grey smudges on off-white: technically the same component, visually a
+ * smear. A photograph gives the light theme its own idea rather than a worse
+ * version of the dark one.
  *
- * Colours mirror the token layer:
- *   line     rule-strong   the fibre strokes, quiet structural hairlines
- *   glow     the accent    brand orange, and the only saturated thing here
- *   backdrop the canvas    so the shader's edges meet the page seamlessly
+ * ---------------------------------------------------------------------------
+ * Why CSS switches them and not JavaScript
+ * ---------------------------------------------------------------------------
+ * Both are rendered and the `light:` variant decides which is displayed. The
+ * obvious alternative — read the theme with useTheme and return one or the
+ * other — has a flaw that only shows up in the browser: a client component
+ * still server-renders, useTheme cannot know the theme on the server, so a
+ * light-mode visitor would get the shader in the SSR payload and watch it swap
+ * to a photograph on hydration. The `.light` class is on <html> before first
+ * paint, so letting CSS choose means the right backdrop is the first one
+ * painted.
  *
- * The upstream defaults were a dark navy and indigo. Those are handsome and
- * belong to somebody else; driving the shader from Qeet's own tokens is what
- * makes this the site's backdrop rather than a component someone installed.
+ * Rendering both costs nothing at runtime. GhostFibers gates its render loop
+ * on an IntersectionObserver, and a `display: none` element never intersects —
+ * so in light mode the shader is not merely invisible, its rAF loop is stopped.
+ * It has a ResizeObserver too, which is what makes it come back correctly
+ * sized when someone toggles the theme.
+ *
+ * Because the shader now only ever appears on dark, its palette is the dark
+ * palette, flat. It used to take a `lightMode` prop and a second set of
+ * colours; those were the smear.
  */
 export function HeroBackdrop() {
-  const theme = useTheme();
-  const light = theme === "light";
+  /*
+   * Phone tuning for the shader, and a legibility fix rather than a taste one.
+   *
+   * Fibre scale is in VIEWPORT units, so the same `scale` that draws fine
+   * filaments across a 1440px hero draws three wide bands across a 360px one —
+   * straight through the lead paragraph. Finer and quieter on small screens.
+   *
+   * The query asks "is this a phone" rather than "is this a desktop" on
+   * purpose: useMediaQuery answers false on the server, so the desktop
+   * treatment is the one that renders before hydration, exactly as min-width
+   * behaves in CSS.
+   */
+  const phone = useMediaQuery("(max-width: 767px)");
+  const photo = MEDIA.heroLight;
 
   return (
-    <GhostFibers
-      lineColor={light ? "#c8c8c8" : "#3d3d3d"}
-      glowColor="#ff6900"
-      backdrop={light ? "#fcfcfc" : "#0a0a0a"}
-      lightMode={light}
-      /*
-       * Slower and calmer than the reference defaults. This sits under a
-       * headline that people are meant to read; a backdrop that draws the eye
-       * is competing with the one thing the hero exists to say.
-       */
-      speed={0.14}
-      rotationSpeed={0.16}
-      scale={2.4}
-      layers={4}
-      glowIntensity={light ? 0.5 : 1.1}
-      brightness={light ? 1.2 : 1.7}
-      vignette={0.85}
-      grain={0.045}
-      /* Blue push off: it turns a warm glow muddy on this palette. */
-      blueBoost={1}
-      /* 1x. At DPR 3 this shader fills nine times the pixels for a backdrop
-       * sitting under a scrim — the cost is invisible and the battery is not. */
-      dpr={1}
-      fps={48}
-    />
+    <>
+      {/* -- dark: the shader ------------------------------------------- */}
+      <div className="absolute inset-0 light:hidden">
+        <GhostFibers
+          /*
+           * Colours mirror the token layer:
+           *   line     rule-strong   quiet structural hairlines
+           *   glow     the accent    brand orange, the only saturated thing
+           *   backdrop the canvas    so the shader meets the page seamlessly
+           *
+           * The upstream defaults were a dark navy and indigo. Handsome, and
+           * somebody else's; driving it from Qeet's tokens is what makes this
+           * the site's backdrop rather than a component someone installed.
+           */
+          lineColor="#3d3d3d"
+          glowColor="#ff6900"
+          backdrop="#0a0a0a"
+          /*
+           * Slower and calmer than the reference defaults. This sits under a
+           * headline people are meant to read; a backdrop that draws the eye
+           * competes with the one thing the hero exists to say.
+           */
+          speed={0.14}
+          rotationSpeed={0.16}
+          scale={phone ? 4.2 : 2.4}
+          layers={4}
+          glowIntensity={phone ? 0.6 : 1.1}
+          brightness={phone ? 1.15 : 1.7}
+          vignette={0.85}
+          grain={0.045}
+          /* Blue push off: it turns a warm glow muddy on this palette. */
+          blueBoost={1}
+          /* 1x. At DPR 3 this fills nine times the pixels for a backdrop
+           * behind a scrim — the cost is invisible and the battery is not. */
+          dpr={1}
+          fps={48}
+        />
+        {/*
+          Phone-only, and measured. At 360px the bands land under the lead
+          paragraph — ink-muted, the lowest-contrast text in the hero — at
+          roughly 3.2:1 against a 4.5:1 floor. 45% canvas takes it to about
+          5.7:1. From md up there is no scrim, because none is needed and it
+          would only mute the fibres it exists to show.
+        */}
+        <div aria-hidden="true" className="absolute inset-0 bg-canvas/45 md:hidden" />
+      </div>
+
+      {/* -- light: the building ---------------------------------------- */}
+      <div className="absolute inset-0 hidden light:block">
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          fill
+          /* The LCP element on a light-theme first paint, so it is eager and
+             full-viewport at every breakpoint. */
+          priority
+          sizes="100vw"
+          /* 70 rather than the site's usual 75: this sits under a 75% scrim,
+             where compression artefacts are unresolvable, and it is the
+             largest single image on the site. */
+          quality={70}
+          className="object-cover"
+        />
+        {/*
+          The scrim, at every width rather than only on phones. Its job here is
+          not to fix one breakpoint but to guarantee the pairing at all of
+          them — the same argument the media system makes for photographs
+          generally: the floor has to hold whatever the image underneath
+          decides to do, including being swapped for a different image. The
+          composite is measured as --scrim-hero-light-solid in
+          scripts/check-contrast.ts.
+        */}
+        <div aria-hidden="true" className="absolute inset-0 bg-(--scrim-hero-light)" />
+      </div>
+    </>
   );
 }

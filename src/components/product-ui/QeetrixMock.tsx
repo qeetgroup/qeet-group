@@ -18,7 +18,7 @@ export function QeetrixMock() {
           <span className="text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-ink-subtle">
             Tokens
           </span>
-          <span className="rounded-md border border-rule px-1.5 py-0.5 text-[0.625rem] text-ink-muted">
+          <span className="rounded-md border border-rule px-1.5 py-0.5 text-[0.6875rem] text-ink-muted">
             @qeetrix/ui
           </span>
         </div>

@@ -160,7 +160,7 @@ export default async function ProductsPage() {
                       href={p.href}
                       className="group/row grid grid-cols-1 gap-3 rounded-sm border-b border-rule py-8 transition-colors duration-fast hover:border-rule-strong focus-ring md:grid-cols-12 md:gap-8 md:py-10"
                     >
-                      <span className="md:col-span-3">
+                      <span className="min-w-0 md:col-span-3">
                         <span className="block font-display text-ink text-heading-xl transition-colors duration-fast group-hover/row:text-accent-text-hover">
                           {p.name}
                         </span>
@@ -168,7 +168,7 @@ export default async function ProductsPage() {
                           {p.sector}
                         </span>
                       </span>
-                      <span className="max-w-prose text-body-l text-ink-muted md:col-span-8">
+                      <span className="min-w-0 max-w-prose text-body-l text-ink-muted md:col-span-8">
                         {p.oneLiner}
                       </span>
                       <span

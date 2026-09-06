@@ -2,6 +2,18 @@ import type { NextConfig } from "next";
 import { MEDIA_HOSTS } from "./src/config/media";
 
 const nextConfig: NextConfig = {
+  /*
+   * Defaults to .next, exactly as before. The override exists so a production
+   * build can be run WITHOUT evicting a `next dev` server that is using the
+   * same directory — `next build` and `next dev` share .next, so building
+   * while dev is running pulls dev's client chunks out from under the browser
+   * and every client-side navigation fails with "Failed to fetch".
+   *
+   *   NEXT_DIST_DIR=.next-audit bun run build
+   *
+   * No effect on a normal build or on the deployed output.
+   */
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   reactCompiler: true,
   experimental: {
     // Wrap client-side navigations in document.startViewTransition() where

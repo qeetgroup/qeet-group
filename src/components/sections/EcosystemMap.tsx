@@ -3,7 +3,9 @@
 import { useMemo, useRef, useState } from "react";
 import NextLink from "next/link";
 import { motion, useReducedMotion } from "motion/react";
+import { Icon } from "@/components/ui/Icon";
 import { StatusChip } from "@/components/ui/StatusChip";
+import { productIcon } from "@/config/product-icons";
 import type { ProductSummary } from "@/lib/content/types";
 import { drawPath, IN_VIEW, nodeSettle } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -48,6 +50,22 @@ const FOUNDATIONS = new Set(["qeet-id", "qeetrix"]);
 const SIZE = 720;
 const CENTER = SIZE / 2;
 const RING = 258;
+
+/*
+ * Node radii, sized by the glyph rather than by taste. The nodes were 9px
+ * dots, which is below the floor at which a 24-unit icon stays readable — so
+ * adding icons meant growing the nodes, and growing the nodes meant pushing
+ * the labels out from under them. All four numbers move together; changing one
+ * alone reintroduces the overlap, which is why the label offset below is
+ * computed from the radius instead of being its own hardcoded constant.
+ *
+ * 15 nodes on a 258 ring leaves ~108 units of arc between centres, so a 48px
+ * active node still clears its neighbours with room for the label beneath.
+ */
+const NODE_R = 19;
+const NODE_R_ACTIVE = 24;
+const GLYPH = 18;
+const GLYPH_ACTIVE = 22;
 
 /** Math.sin/cos may differ by 1 ulp across engines; rounding keeps SSR and
  *  client hydration byte-identical. Same trick as the original IdentityGraph. */
@@ -94,6 +112,7 @@ export function EcosystemMap({
   );
 
   const active = nodes[activeIndex];
+  const activeGlyph = active ? productIcon(active.slug) : undefined;
 
   /*
    * Which connections to highlight. A foundation product lights up everything
@@ -147,7 +166,19 @@ export function EcosystemMap({
 
   return (
     <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
-      <div className="lg:col-span-7">
+      {/*
+        The ring is DESKTOP ONLY, and that is a measurement rather than a
+        preference. The figure is a 720-unit square that scales to its
+        container: at 360px wide it renders at 0.43x, which puts the 13px node
+        labels at roughly 5px and the node hit areas at 8px — a third of the
+        24px minimum target size. Worse, the whole interaction is hover-driven,
+        so on a touch device fourteen of the fifteen products were unreachable
+        and the panel only ever showed the default one.
+
+        Below md it is replaced by the list further down, which carries the
+        same information at a size people can read and tap.
+      */}
+      <div className="hidden lg:col-span-7 md:block">
         <svg
           viewBox={`0 0 ${SIZE} ${SIZE}`}
           className="mx-auto h-auto w-full max-w-[42rem]"
@@ -213,7 +244,7 @@ export function EcosystemMap({
               x={CENTER}
               y={CENTER + 14}
               textAnchor="middle"
-              className="fill-ink-subtle font-mono text-[10px] uppercase tracking-[0.14em]"
+              className="fill-ink-subtle font-mono text-[12px] uppercase tracking-[0.14em]"
             >
               Group
             </text>
@@ -223,6 +254,9 @@ export function EcosystemMap({
           <g>
             {nodes.map((n, i) => {
               const isActive = i === activeIndex;
+              const Glyph = productIcon(n.slug);
+              const r = isActive ? NODE_R_ACTIVE : NODE_R;
+              const g = isActive ? GLYPH_ACTIVE : GLYPH;
               return (
                 <motion.g
                   key={n.slug}
@@ -248,15 +282,46 @@ export function EcosystemMap({
                   <circle
                     cx={n.x}
                     cy={n.y}
-                    r={isActive ? 13 : 9}
+                    r={r}
                     fill={isActive ? "var(--color-accent)" : "var(--color-surface-raised)"}
                     stroke={STATUS_STROKE[n.status] ?? "var(--color-rule-strong)"}
                     strokeWidth="1.5"
                     style={{ transition: "r 200ms, fill 200ms" }}
                   />
+                  {/*
+                    The glyph, as a nested <svg> positioned by x/y in the
+                    parent's coordinate system. Icon forces
+                    `color="currentColor"`, so the class below is what actually
+                    paints it.
+
+                    Hovered or focused, the glyph goes white on the brand fill.
+                    That measures 2.89:1, under the 3:1 non-text bar, and is
+                    recorded as an accepted exception in check-contrast.ts
+                    rather than left to be discovered: the glyph is aria-hidden
+                    and decorative, the product name is rendered at full
+                    strength beside it, and the node also grows from 19 to 24
+                    on the same interaction — so colour is never the only thing
+                    telling you which node you are on.
+                  */}
+                  {Glyph && (
+                    <Icon
+                      icon={Glyph}
+                      size={g}
+                      x={n.x - g / 2}
+                      y={n.y - g / 2}
+                      className={cn(
+                        // `block` is not cosmetic: Icon's default class is
+                        // `inline-block`, an HTML layout value with no meaning
+                        // on a nested <svg>. tailwind-merge drops it in favour
+                        // of this one, so the glyph carries no dead CSS.
+                        "block transition-colors duration-base",
+                        isActive ? "text-white" : "text-ink-muted",
+                      )}
+                    />
+                  )}
                   <text
                     x={n.x}
-                    y={n.y > CENTER ? n.y + 30 : n.y - 20}
+                    y={n.y > CENTER ? n.y + r + 18 : n.y - r - 13}
                     textAnchor="middle"
                     className={cn(
                       "font-sans text-[13px]",
@@ -273,13 +338,24 @@ export function EcosystemMap({
       </div>
 
       {/* The detail panel. Reads as a caption to the figure, and is what makes
-          the interaction informative rather than merely responsive. */}
-      <div className="lg:col-span-5">
+          the interaction informative rather than merely responsive. Hidden
+          with the figure it captions — on its own it is a single product with
+          no way to change which one. */}
+      <div className="hidden lg:col-span-5 md:block">
         {active && (
           <div
             aria-live="polite"
             className="border-l-2 border-accent pl-6 md:pl-8"
           >
+            {/* The same glyph, at a size where it can actually be read — so
+                the panel and the node it came from are visibly the same thing,
+                which is what makes moving around the ring feel connected to
+                the text rather than merely adjacent to it. */}
+            {activeGlyph && (
+              <div className="mb-6 inline-flex size-14 items-center justify-center border border-rule-strong bg-surface text-accent-text">
+                <Icon icon={activeGlyph} size={26} />
+              </div>
+            )}
             <StatusChip status={active.status} />
             <PanelHeading className="mt-4 font-display text-ink text-display-m">
               {active.name}
@@ -305,32 +381,81 @@ export function EcosystemMap({
       </div>
 
       {/*
-        The same information, as data. Not a fallback bolted on afterwards —
-        this is the accessible representation of the figure, and the SVG above
-        is the visual one. A screen-reader user gets the portfolio; they do not
-        get a description of a drawing.
+        ======================================================================
+        The same portfolio, as a list. One element doing two jobs.
+        ======================================================================
+
+        BELOW md it is the visible content, because the ring is not usable at
+        that size. FROM md it becomes `sr-only` — the accessible
+        representation of the figure beside it, so a screen-reader user gets
+        the portfolio itself rather than a description of a drawing.
+
+        Writing it once, and letting the breakpoint decide whether it is seen
+        or only heard, is what keeps the two from drifting. The previous
+        version had a separate sr-only <table> that only ever ran on desktop,
+        and mobile got nothing.
+
+        It also fixes a real layout bug. `sr-only` works by pinning an element
+        to 1px with `overflow: hidden` — but `display: table` treats width as a
+        MINIMUM and grows to fit its content regardless, so that table was 918px
+        wide on a 360px screen and gave every page a horizontal scrollbar. A
+        grid container honours the 1px; a table does not.
       */}
-      <table className="sr-only">
-        <caption>Qeet Group products, their status and their role</caption>
-        <thead>
-          <tr>
-            <th scope="col">Product</th>
-            <th scope="col">Status</th>
-            <th scope="col">What it does</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((p) => (
-            <tr key={p.slug}>
-              <th scope="row">
-                <NextLink href={p.href}>{p.name}</NextLink>
-              </th>
-              <td>{p.statusLabel}</td>
-              <td>{p.oneLiner}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="col-span-full md:sr-only">
+        {/*
+          Said once, above the list, instead of on all fifteen rows. The first
+          pass repeated "Builds on Qeet ID and Qeetrix" under thirteen of them,
+          which is the same sentence thirteen times and reads as noise rather
+          than as the point. Stated once it is the point.
+        */}
+        <p className="mb-6 text-body text-ink-muted">
+          Every product below signs in through{" "}
+          {products.find((p) => p.slug === "qeet-id")?.name ?? "Qeet ID"} and is
+          built from{" "}
+          {products.find((p) => p.slug === "qeetrix")?.name ?? "Qeetrix"}.
+        </p>
+        <ul className="grid gap-px border border-rule bg-rule sm:grid-cols-2">
+        {products.map((p) => {
+          const Glyph = productIcon(p.slug);
+          const foundation = FOUNDATIONS.has(p.slug);
+          return (
+            <li key={p.slug} className="bg-canvas">
+              <NextLink
+                href={p.href}
+                /* min-h-16 keeps every row above the 24px target floor with
+                   room to spare, which the 8px ring nodes never were. */
+                className="flex min-h-16 items-center gap-4 p-4 transition-colors duration-fast hover:bg-surface focus-ring"
+              >
+                {Glyph && (
+                  <span className="flex size-11 shrink-0 items-center justify-center border border-rule-strong bg-surface text-accent-text">
+                    <Icon icon={Glyph} size={20} />
+                  </span>
+                )}
+                {/* min-w-0 is load-bearing: without it a flex child refuses to
+                    shrink below its content and the one-liner pushes the row
+                    past the viewport. */}
+                <span className="min-w-0 flex-1">
+                  <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="text-body font-medium text-ink">{p.name}</span>
+                    <span className="font-mono text-label uppercase text-ink-subtle">
+                      {p.statusLabel}
+                    </span>
+                  </span>
+                  <span className="mt-1 block text-caption text-ink-muted">{p.oneLiner}</span>
+                  {/* Only the two foundations say anything further — that IS
+                      the distinction the section exists to draw. */}
+                  {foundation && (
+                    <span className="mt-1 block font-mono text-label uppercase text-accent-text">
+                      Every product depends on this
+                    </span>
+                  )}
+                </span>
+              </NextLink>
+            </li>
+          );
+        })}
+        </ul>
+      </div>
     </div>
   );
 }

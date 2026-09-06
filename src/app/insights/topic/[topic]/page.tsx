@@ -94,13 +94,13 @@ export default async function TopicPage({ params }: { params: Promise<RouteParam
                   href={`/insights/${item.slug}`}
                   className="group/row grid grid-cols-1 gap-3 border-b border-rule py-8 rounded-sm transition-colors duration-fast hover:border-rule-strong focus-ring md:grid-cols-12 md:gap-8"
                 >
-                  <p className="font-mono text-label uppercase text-ink-subtle md:col-span-3">
+                  <p className="min-w-0 font-mono text-label uppercase text-ink-subtle md:col-span-3">
                     <time dateTime={item.data.date}>{formatDate(item.data.date)}</time>
                     <span aria-hidden="true"> · </span>
                     {item.readingTime} min
                     {item.data.demo && <DemoBadge className="ml-2" />}
                   </p>
-                  <div className="md:col-span-9">
+                  <div className="min-w-0 md:col-span-9">
                     <h2 className="text-balance font-display text-ink text-heading-xl transition-colors duration-fast group-hover/row:text-accent-text-hover">
                       {item.data.title}
                     </h2>

@@ -47,10 +47,11 @@ export async function Hero() {
         transparent gap; with it, it degrades to a flat brand surface and the
         headline stays readable either way.
 
-        There is no scrim. The shader is generated FROM the canvas colour, so
-        its darkest regions are the page background itself and it never
-        threatens the headline the way a photograph can — a scrim here would
-        only mute the fibres it exists to show.
+        Both backdrops carry their own measured scrim, and each one owns it
+        rather than the hero applying a single scrim over the top — the dark
+        shader needs darkening only on phones, the light photograph needs
+        lightening everywhere, and stacking one blanket over both washed the
+        photograph out on a phone. See HeroBackdrop.
       */}
       <div className="absolute inset-0 -z-10 bg-canvas">
         <HeroBackdrop />
@@ -80,8 +81,17 @@ export async function Hero() {
           leave it visually low in the space a reader actually sees.
         */}
         <div className="flex min-h-[86svh] flex-col items-center justify-center pb-24 pt-36 text-center md:min-h-[92svh] md:pb-28 md:pt-44">
+          {/*
+            The eyebrow and the stat labels below override Eyebrow's and the
+            page's default ink-subtle for ink-muted, and it is the backdrop
+            that forces it: ink-subtle clears 4.5:1 on a bare canvas by a hair
+            (4.68:1) and drops to 2.71:1 over the light hero's scrimmed
+            photograph. ink-muted holds 4.72:1 against the same worst case.
+            One step darker, only in the one place that has a picture behind
+            the type.
+          */}
           <FadeRise>
-            <Eyebrow className="mb-8 md:mb-10">
+            <Eyebrow className="mb-8 text-ink-muted md:mb-10">
               Qeet Group
             </Eyebrow>
           </FadeRise>
@@ -137,7 +147,7 @@ export async function Hero() {
                   <dd className="font-display text-ink text-heading-xl tabular-figures">
                     {s.n}
                   </dd>
-                  <dt className="mt-1 font-mono text-label uppercase text-ink-subtle">
+                  <dt className="mt-1 font-mono text-label uppercase text-ink-muted">
                     {s.label}
                   </dt>
                 </div>

@@ -203,12 +203,42 @@ export function Nav({
   const openPanel = sameRoute ? menu.panel : null;
   const mobileOpen = sameRoute ? menu.mobile : false;
 
+  /*
+   * Each setter owns ONE field and preserves the other. That looks like
+   * over-carefulness and is a bug fix.
+   *
+   * Both of these used to overwrite the whole object — setOpenPanel wrote
+   * `mobile: false`. The header bar carries `onMouseLeave={hover.leave}` for
+   * the desktop mega panel, and hover.leave calls closePanel, which calls
+   * setOpenPanel(null). So on a touch device the sequence was: tap the
+   * hamburger, the overlay opens; move a finger toward a menu item, the
+   * pointer leaves the header bar, mouseleave fires, and the overlay
+   * UNMOUNTS before the tap lands. The menu was unusable on phone and tablet
+   * for exactly as long as it took to reach for it.
+   *
+   * The two menus are mutually exclusive by breakpoint anyway — the panel is
+   * lg:block, the overlay lg:hidden — so neither ever needed to close the
+   * other. Coupling them in one setState was the whole defect.
+   *
+   * The functional form matters too: reading `menu` from the closure would
+   * reintroduce a stale value whenever two updates land in one batch.
+   */
   const setOpenPanel = useCallback(
-    (panel: PanelId) => setMenu({ panel, mobile: false, at: pathname }),
+    (panel: PanelId) =>
+      setMenu((m) => ({
+        panel,
+        mobile: m.at === pathname ? m.mobile : false,
+        at: pathname,
+      })),
     [pathname],
   );
   const setMobileOpen = useCallback(
-    (next: boolean) => setMenu({ panel: null, mobile: next, at: pathname }),
+    (next: boolean) =>
+      setMenu((m) => ({
+        panel: m.at === pathname ? m.panel : null,
+        mobile: next,
+        at: pathname,
+      })),
     [pathname],
   );
   const reduce = useReducedMotion();
@@ -290,9 +320,22 @@ export function Nav({
           className="mx-auto flex h-16 w-full max-w-wide items-center justify-between px-(--space-gutter) lg:h-20"
           onMouseLeave={hover.leave}
         >
-          <Wordmark className="flex" />
+          {/* shrink-0 and nowrap together. As a flex item the wordmark was
+              shrinking to 114px at the 1024 breakpoint and breaking "Qeet
+              Group" onto two lines inside a 64px-tall bar. A logo that
+              reflows is not a logo, so it is taken out of the shrink
+              calculation entirely and the rail below is what gives way. */}
+          <Wordmark className="flex shrink-0 whitespace-nowrap" />
 
-          <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">
+          {/*
+            The rail needed 1030px at the 1024px breakpoint where it turns
+            on, so every page had six pixels of horizontal scroll on a
+            1024-wide screen. gap-7 across ten children is 252px of pure
+            spacing; dropping to gap-5 until xl reclaims 72px and clears
+            it with room, and the wider spacing returns at 1280 where
+            there is actually space for it.
+          */}
+          <nav aria-label="Primary" className="hidden items-center gap-5 lg:flex xl:gap-7">
             {PRIMARY_NAV.map((dest) => {
               const active = isActive(dest.href);
               const isProducts = dest.href === "/products";
@@ -362,14 +405,25 @@ export function Nav({
               );
             })}
 
-            <span aria-hidden="true" className="h-4 w-px bg-rule" />
+            {/*
+              The utility pair waits for xl.
+
+              Once the wordmark stops shrinking, the full rail needs about
+              1060px and the breakpoint it turns on at is 1024. Something has
+              to give between 1024 and 1280, and these two are the right thing:
+              the five primary destinations, search and the theme toggle all
+              survive, and Developers and Contact are both still one click away
+              in the footer and in the Company panel. Cramming ten items into a
+              1024px bar at gap-3 was the alternative, and it looked it.
+            */}
+            <span aria-hidden="true" className="hidden h-4 w-px bg-rule xl:block" />
 
             {UTILITY_NAV.map((l) => (
               <NextLink
                 key={l.href}
                 href={l.href}
                 onMouseEnter={hover.leave}
-                className={cn(linkBase, "text-ink-muted hover:text-ink")}
+                className={cn(linkBase, "hidden text-ink-muted hover:text-ink xl:block")}
               >
                 {l.label}
               </NextLink>
@@ -520,9 +574,14 @@ export function Nav({
                             <ul className="mt-3 space-y-3">
                               {g.items.map((item) => (
                                 <li key={item.href}>
+                                  {/* py-2 with the negative inset takes these
+                                      from a 28px line box to a 40px target
+                                      without changing the visual rhythm — 28px
+                                      clears the 24px WCAG 2.5.8 minimum but is
+                                      mean for a thumb. */}
                                   <NextLink
                                     href={item.href}
-                                    className="block rounded-sm text-body text-ink-muted transition-colors duration-fast hover:text-ink focus-ring"
+                                    className="-my-1 block rounded-sm py-2 text-body text-ink-muted transition-colors duration-fast hover:text-ink focus-ring"
                                   >
                                     {item.label}
                                   </NextLink>
