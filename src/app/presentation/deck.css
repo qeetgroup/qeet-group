@@ -1,0 +1,205 @@
+/*
+ * ============================================================================
+ * The presentation stage
+ * ============================================================================
+ *
+ * This file owns exactly two things: how a slide is SIZED, and how the deck
+ * prints. Colour, typeface and motion all come from globals.css and
+ * lib/motion.ts — there is not one hex code or easing curve below.
+ *
+ * ---------------------------------------------------------------------------
+ * Why container query units instead of the site's clamp() scale
+ * ---------------------------------------------------------------------------
+ * The site's type scale is fluid: a headline at 1280px is proportionally
+ * LARGER relative to its measure than the same headline at 2560px, because
+ * clamp() deliberately compresses the range so reading distance stays sane.
+ * That is correct for a page someone reads at arm's length.
+ *
+ * A slide is the opposite problem. It is a fixed composition projected at an
+ * unknown size, and it must look identical on a laptop, a 4K monitor and a
+ * conference projector — the same line breaks, the same balance, the same
+ * relationship between the headline and the hairline under it. So the stage
+ * declares `container-type: size` and every dimension inside the deck is
+ * expressed in `cqw` (1cqw = 1% of the stage's width). Scale the stage and
+ * the entire composition scales with it, exactly.
+ *
+ * The alternative — measuring the viewport in JS and applying a transform —
+ * needs a layout pass before the first slide can be sized, which means either
+ * a flash at the least forgivable moment or a blocking measurement. Container
+ * units are resolved by the browser during normal layout, so there is no
+ * measurement to do and nothing to flash.
+ *
+ * The ratios and tracking below mirror the site scale in globals.css, so the
+ * deck is recognisably the same typographic system: tracking tightens as size
+ * grows (-0.035em at display, 0 at body) and jumps positive for uppercase
+ * labels (+0.14em).
+ */
+
+.deck-stage {
+  container-type: size;
+  container-name: stage;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  /* Letterboxed rather than cropped: a slide that overflows its display has
+     lost the bottom of its own argument. */
+  max-width: calc(100vh * 16 / 9);
+  max-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* When notes are open the stage shares the viewport, so its ceiling drops. */
+.deck-shell[data-notes="open"] .deck-stage {
+  max-height: 62vh;
+  max-width: calc(62vh * 16 / 9);
+}
+
+/*
+ * The deck type scale. Seven steps, all in cqw, all carrying their own
+ * line-height and tracking so a call site never has to remember either.
+ * `--deck-gutter` is the single spacing unit the slides compose from.
+ */
+.deck-stage {
+  --deck-gutter: 4.6cqw;
+
+  --deck-display-xl: 7.6cqw;
+  --deck-display: 5.6cqw;
+  --deck-display-s: 4.2cqw;
+  --deck-heading: 2.9cqw;
+  --deck-heading-s: 2.15cqw;
+  --deck-body: 1.62cqw;
+  --deck-body-s: 1.36cqw;
+  --deck-label: 1.06cqw;
+}
+
+.deck-display-xl {
+  font-size: var(--deck-display-xl);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+}
+
+.deck-display {
+  font-size: var(--deck-display);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+}
+
+.deck-display-s {
+  font-size: var(--deck-display-s);
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+}
+
+.deck-heading {
+  font-size: var(--deck-heading);
+  line-height: 1.14;
+  letter-spacing: -0.022em;
+}
+
+.deck-heading-s {
+  font-size: var(--deck-heading-s);
+  line-height: 1.24;
+  letter-spacing: -0.016em;
+}
+
+.deck-body {
+  font-size: var(--deck-body);
+  line-height: 1.58;
+  letter-spacing: -0.004em;
+}
+
+.deck-body-s {
+  font-size: var(--deck-body-s);
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+.deck-label {
+  font-size: var(--deck-label);
+  line-height: 1.35;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* The slide's own padding, so every slide shares one margin. */
+.deck-slide {
+  position: absolute;
+  inset: 0;
+  padding: calc(var(--deck-gutter) * 1.15) calc(var(--deck-gutter) * 1.45);
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * ============================================================================
+ * Print — the fallback that has to work
+ * ============================================================================
+ *
+ * A live presentation must survive a machine with no browser we trust, so the
+ * PDF is not a nice-to-have. On print the deck switches from "one slide at a
+ * time, animated" to "every slide, static, one per page": .deck-screen is
+ * dropped and .deck-print takes over, which is why the slide list is rendered
+ * twice in the markup.
+ *
+ * 1600x900 rather than A4-landscape: it is exactly 16:9, so a slide fills the
+ * page with no letterboxing and no scaling artefacts in the type.
+ */
+@page {
+  size: 1600px 900px landscape;
+  margin: 0;
+}
+
+.deck-print {
+  display: none;
+}
+
+@media print {
+  /* The site chrome and the interactive deck are both irrelevant on paper. */
+  .deck-screen,
+  .deck-notes-panel,
+  .deck-hud {
+    display: none !important;
+  }
+
+  .deck-print {
+    display: block;
+  }
+
+  .deck-print-page {
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .deck-print-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .deck-print .deck-stage {
+    /* On paper there is no viewport to fit inside. */
+    max-width: none;
+    max-height: none;
+    width: 1600px;
+    height: 900px;
+    aspect-ratio: auto;
+  }
+
+  /* Notes print beneath their own slide, on the page after it. */
+  .deck-print-notes {
+    break-before: page;
+    page-break-before: always;
+    break-after: page;
+    page-break-after: always;
+    padding: 96px 120px;
+    width: 1600px;
+    height: 900px;
+    box-sizing: border-box;
+  }
+
+  /* Belt and braces: the print tree renders in its still state anyway, but a
+     transition mid-print would still be a rendering race. */
+  .deck-print * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

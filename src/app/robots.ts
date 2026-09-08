@@ -13,6 +13,10 @@ export default function robots(): MetadataRoute.Robots {
           "/search-index.json",
           // Internal token reference. Also carries a noindex.
           "/design",
+          // The corporate deck. Also carries a noindex. A presentation is
+          // pitched at a room on a date; indexed, it outlives both and gets
+          // quoted back long after its status claims have moved on.
+          "/presentation",
         ],
       },
     ],
