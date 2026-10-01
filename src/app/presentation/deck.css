@@ -3,9 +3,11 @@
  * The presentation stage
  * ============================================================================
  *
- * This file owns exactly two things: how a slide is SIZED, and how the deck
- * prints. Colour, typeface and motion all come from globals.css and
- * lib/motion.ts — there is not one hex code or easing curve below.
+ * This file owns four things: how the stage is SIZED, the safe area every
+ * slide composes inside, the deck's pinned dark palette, and how the deck
+ * prints. Typefaces and motion come from globals.css and lib/motion.ts, and
+ * every colour below is a reference to an existing token — there is not one
+ * new hex code in this file.
  *
  * ---------------------------------------------------------------------------
  * Why container query units instead of the site's clamp() scale
@@ -23,53 +25,158 @@
  * expressed in `cqw` (1cqw = 1% of the stage's width). Scale the stage and
  * the entire composition scales with it, exactly.
  *
- * The alternative — measuring the viewport in JS and applying a transform —
- * needs a layout pass before the first slide can be sized, which means either
- * a flash at the least forgivable moment or a blocking measurement. Container
- * units are resolved by the browser during normal layout, so there is no
- * measurement to do and nothing to flash.
- *
- * The ratios and tracking below mirror the site scale in globals.css, so the
- * deck is recognisably the same typographic system: tracking tightens as size
- * grows (-0.035em at display, 0 at body) and jumps positive for uppercase
- * labels (+0.14em).
+ * The corollary is a rule: NOTHING inside a slide may depend on the viewport.
+ * The site's `grid-editorial` and `col-*` utilities change their column count
+ * at viewport breakpoints, which is right for a page and wrong here — on a
+ * small window they reflowed slides that were composed for twelve columns,
+ * and the stage's `overflow: hidden` clipped the result without a trace. The
+ * deck has its own twelve-column grid below, and it never reflows.
  */
+
+/* ==========================================================================
+ * The shell: stage, notes, controls — three rows that cannot overlap
+ * ==========================================================================
+ *
+ * The controls used to float over the stage as a fixed overlay, which meant
+ * that on any window shaped close to 16:9 the bottom of a slide sat under the
+ * slide counter. They are now a row of their own. The stage is sized to the
+ * space left over, so nothing a slide renders can ever be underneath them.
+ */
+.deck-shell {
+  --deck-hud: 3rem;
+  --deck-notes: 0px;
+  --deck-pad-x: 1.5rem;
+  --deck-pad-y: 0.75rem;
+
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--deck-notes) var(--deck-hud);
+  grid-template-columns: minmax(0, 1fr);
+
+  /*
+   * Always dark. The site honours a visitor's light-theme choice by putting
+   * `.light` on <html>, which flips these tokens for the whole document — and
+   * a corporate deck must not turn white because someone once preferred a
+   * light blog. Re-declaring them here wins for every descendant.
+   *
+   * Values are the dark theme's own, except three deliberate lifts for
+   * projectors, where a mid-grey on near-black washes out long before it does
+   * on a laptop panel:
+   *   ink-muted   #b5b5b5 → neutral-300   ~11.8:1 on canvas
+   *   ink-subtle  #7e7e7e → neutral-400   ~6.4:1, metadata only
+   *   rule        #262626 → neutral-800   a hairline that survives a projector
+   */
+  color-scheme: dark;
+  --color-canvas: var(--color-neutral-1000);
+  --color-surface: var(--color-neutral-950);
+  --color-surface-raised: var(--color-neutral-900);
+  --color-surface-overlay: var(--color-neutral-850);
+  --color-surface-sunken: var(--color-neutral-1000);
+  --color-inverse: var(--color-neutral-900);
+  --color-ink: var(--color-neutral-50);
+  --color-ink-muted: var(--color-neutral-300);
+  --color-ink-subtle: var(--color-neutral-400);
+  --color-ink-inverse: var(--color-neutral-50);
+  --color-rule: var(--color-neutral-800);
+  --color-rule-strong: var(--color-neutral-600);
+  --color-rule-interactive: var(--color-neutral-500);
+  --color-accent-text: var(--color-brand-500);
+  --color-accent-text-display: var(--color-brand-500);
+  --color-accent-hover: var(--color-brand-500);
+  --color-focus: var(--color-brand-400);
+
+  /*
+   * These are DERIVED tokens. They resolved their var() references at :root,
+   * so redefining the ink and surface tokens above does not reach them — they
+   * have to be restated here, with the same expressions as globals.css, so
+   * they resolve again against the pinned values.
+   */
+  --color-status-available: var(--color-brand-500);
+  --color-status-development: var(--color-ink-muted);
+  --color-status-planned: var(--color-ink-subtle);
+  --color-glass: color-mix(in oklab, var(--color-surface) 62%, transparent);
+  --color-glass-strong: color-mix(in oklab, var(--color-surface) 86%, transparent);
+  --color-glass-border: color-mix(in oklab, var(--color-ink) 12%, transparent);
+  --shadow-md:
+    0 4px 18px -4px rgb(0 0 0 / 0.6),
+    inset 0 1px 0 0 color-mix(in oklab, var(--color-ink) 6%, transparent);
+}
+
+.deck-shell[data-notes="open"] {
+  --deck-notes: 30dvh;
+}
+
+.deck-screen {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--deck-pad-y) var(--deck-pad-x);
+}
+
+/*
+ * The largest 16:9 rectangle that fits the space above the notes and the
+ * controls. Width plus aspect-ratio is all `container-type: size` needs; the
+ * one thing it must never get is `width: auto`, which size containment
+ * collapses to zero.
+ */
+.deck-screen > .deck-stage {
+  width: min(
+    100vw - 2 * var(--deck-pad-x),
+    (100dvh - var(--deck-hud) - var(--deck-notes) - 2 * var(--deck-pad-y)) * 16 / 9
+  );
+}
+
+.deck-notes-panel {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* ==========================================================================
+ * The stage, and the safe area inside it
+ * ======================================================================== */
 
 .deck-stage {
   container-type: size;
   container-name: stage;
   aspect-ratio: 16 / 9;
-  width: 100%;
-  /* Letterboxed rather than cropped: a slide that overflows its display has
-     lost the bottom of its own argument. */
-  max-width: calc(100vh * 16 / 9);
-  max-height: 100vh;
   position: relative;
+  /* Still clipped — a stage is a frame — but nothing is allowed to rely on
+     it. The layout audit fails any element that crosses the safe area, so
+     this never hides content; it only stops a mid-animation overshoot from
+     painting outside the frame. */
   overflow: hidden;
-}
 
-/* When notes are open the stage shares the viewport, so its ceiling drops. */
-.deck-shell[data-notes="open"] .deck-stage {
-  max-height: 62vh;
-  max-width: calc(62vh * 16 / 9);
-}
-
-/*
- * The deck type scale. Seven steps, all in cqw, all carrying their own
- * line-height and tracking so a call site never has to remember either.
- * `--deck-gutter` is the single spacing unit the slides compose from.
- */
-.deck-stage {
+  /*
+   * The safe area. Every slide is padded by exactly this, the grid overlay
+   * (G) draws exactly this, and the audit measures against exactly this —
+   * one definition, three consumers.
+   */
+  --deck-safe-y: 5cqw;
+  --deck-safe-x: 6.2cqw;
+  --deck-col-gap: 2.4cqw;
   --deck-gutter: 4.6cqw;
 
+  /*
+   * The deck type scale, all in cqw, each step carrying its own line-height
+   * and tracking. The floor is set by the smallest real stage: at a 1280×720
+   * window the stage is ~1150px wide, and `--deck-label` at 1.3cqw is still
+   * ~15px there.
+   */
+  --deck-hero: 13cqw;
   --deck-display-xl: 7.6cqw;
   --deck-display: 5.6cqw;
   --deck-display-s: 4.2cqw;
   --deck-heading: 2.9cqw;
-  --deck-heading-s: 2.15cqw;
-  --deck-body: 1.62cqw;
-  --deck-body-s: 1.36cqw;
-  --deck-label: 1.06cqw;
+  --deck-heading-s: 2.2cqw;
+  --deck-body: 1.75cqw;
+  --deck-body-s: 1.5cqw;
+  --deck-label: 1.3cqw;
+}
+
+.deck-hero {
+  font-size: var(--deck-hero);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
 }
 
 .deck-display-xl {
@@ -92,25 +199,25 @@
 
 .deck-heading {
   font-size: var(--deck-heading);
-  line-height: 1.14;
+  line-height: 1.18;
   letter-spacing: -0.022em;
 }
 
 .deck-heading-s {
   font-size: var(--deck-heading-s);
-  line-height: 1.24;
+  line-height: 1.26;
   letter-spacing: -0.016em;
 }
 
 .deck-body {
   font-size: var(--deck-body);
-  line-height: 1.58;
+  line-height: 1.5;
   letter-spacing: -0.004em;
 }
 
 .deck-body-s {
   font-size: var(--deck-body-s);
-  line-height: 1.55;
+  line-height: 1.5;
   letter-spacing: 0;
 }
 
@@ -121,13 +228,39 @@
   text-transform: uppercase;
 }
 
-/* The slide's own padding, so every slide shares one margin. */
+/*
+ * A slide: header, body, footer, top to bottom, inside the safe area. A flex
+ * column rather than `justify-between`, so the three can never be pushed on
+ * top of each other — the body takes what is left and centres its figure in
+ * it.
+ */
 .deck-slide {
   position: absolute;
   inset: 0;
-  padding: calc(var(--deck-gutter) * 1.15) calc(var(--deck-gutter) * 1.45);
+  padding: var(--deck-safe-y) var(--deck-safe-x);
   display: flex;
   flex-direction: column;
+  gap: 2.6cqw;
+}
+
+.deck-slide-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The deck's own grid: twelve columns at every stage size, gaps in cqw. */
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--deck-col-gap);
+}
+
+/* The site's ambient hairline grid, re-scaled to the stage. */
+.deck-stage .bg-grid {
+  background-size: 4.6cqw 4.6cqw;
 }
 
 /*
@@ -142,10 +275,13 @@
  * twice in the markup.
  *
  * 1600x900 rather than A4-landscape: it is exactly 16:9, so a slide fills the
- * page with no letterboxing and no scaling artefacts in the type.
+ * page with no letterboxing and no scaling artefacts in the type. (An
+ * orientation keyword is only valid beside a NAMED size; beside explicit
+ * lengths it invalidates the whole declaration and the browser falls back to
+ * Letter, which is what used to happen.)
  */
 @page {
-  size: 1600px 900px landscape;
+  size: 1600px 900px;
   margin: 0;
 }
 
@@ -154,7 +290,24 @@
 }
 
 @media print {
-  /* The site chrome and the interactive deck are both irrelevant on paper. */
+  /* The deck locks document scrolling with an inline style while it is
+     mounted; a printer needs the document to flow onto thirty pages. */
+  html {
+    overflow: visible !important;
+  }
+
+  /* Site chrome — nav, footer, palette, skip link — is not on paper. */
+  body > :not(main) {
+    display: none !important;
+  }
+
+  .deck-shell {
+    position: static;
+    display: block;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
   .deck-screen,
   .deck-notes-panel,
   .deck-hud {
@@ -165,35 +318,31 @@
     display: block;
   }
 
-  .deck-print-page {
-    break-after: page;
-    page-break-after: always;
-  }
-
-  .deck-print-page:last-child {
-    break-after: auto;
-    page-break-after: auto;
-  }
-
   .deck-print .deck-stage {
     /* On paper there is no viewport to fit inside. */
-    max-width: none;
-    max-height: none;
     width: 1600px;
     height: 900px;
     aspect-ratio: auto;
   }
 
-  /* Notes print beneath their own slide, on the page after it. */
+  /* Slide, then its notes, then the next slide — and nothing after the last. */
+  .deck-print-page,
   .deck-print-notes {
-    break-before: page;
-    page-break-before: always;
     break-after: page;
     page-break-after: always;
+  }
+
+  .deck-print > :last-child > .deck-print-notes {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .deck-print-notes {
     padding: 96px 120px;
     width: 1600px;
     height: 900px;
     box-sizing: border-box;
+    overflow: hidden;
   }
 
   /* Belt and braces: the print tree renders in its still state anyway, but a

@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import type { ProductSummary } from "@/lib/content/types";
+import { AnimatePresence, motion } from "motion/react";
 import { chromeSettle } from "@/lib/motion";
-import { cn } from "@/lib/utils";
-import { SLIDES } from "./slides";
-import { StillProvider } from "./slides/primitives";
+import { deckSlides } from "./slides";
+import type { DeckVariant } from "./slides/notes";
+import { StillProvider, usePrefersStill } from "./slides/primitives";
+import type { Slide } from "./slides/types";
 import { useDeck } from "./useDeck";
 
 /**
@@ -17,7 +17,8 @@ import { useDeck } from "./useDeck";
  * Renders the slide list twice, on purpose.
  *
  *   .deck-screen  one slide at a time, animated, keyboard-driven.
- *   .deck-print   all fifteen, static, one per page.
+ *   .deck-print   every slide, static, one per page, each followed by its
+ *                 notes and cautions.
  *
  * The second is not a nicety. A live presentation has to survive a room where
  * the laptop is not ours, the browser is unknown and the network is a
@@ -32,7 +33,8 @@ import { useDeck } from "./useDeck";
  */
 
 type DeckProps = {
-  products: ProductSummary[];
+  /** Which running order to present. See `slides/index.ts` for the variants. */
+  variant?: DeckVariant;
 };
 
 const KEYS: Array<[string, string]> = [
@@ -45,10 +47,11 @@ const KEYS: Array<[string, string]> = [
   ["?", "This list"],
 ];
 
-export function Deck({ products }: DeckProps) {
-  const deck = useDeck({ count: SLIDES.length });
-  const reduce = useReducedMotion();
-  const slide = SLIDES[deck.index];
+export function Deck({ variant = "master" }: DeckProps) {
+  const slides = deckSlides(variant);
+  const deck = useDeck({ count: slides.length });
+  const reduce = usePrefersStill();
+  const slide = slides[deck.index];
 
   /*
    * The deck is a fixed surface over the site chrome, so the document behind
@@ -123,17 +126,17 @@ export function Deck({ products }: DeckProps) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [deck]);
 
-  const slideProps = { index: deck.index + 1, products };
+  const slideProps = { index: deck.index + 1 };
 
+  /*
+   * Three grid rows — stage, notes, controls — sized in deck.css. The rows
+   * are placed explicitly, because the notes row is empty while notes are
+   * closed and the controls must not slide up into it.
+   */
   return (
-    <div
-      className={cn(
-        "deck-shell fixed inset-0 z-modal flex flex-col items-center justify-center gap-6 bg-canvas",
-      )}
-      data-notes={deck.notesOpen ? "open" : "closed"}
-    >
+    <div className="deck-shell fixed inset-0 z-modal bg-canvas" data-notes={deck.notesOpen ? "open" : "closed"}>
       {/* ---------------------------------------------------------------- screen */}
-      <div className="deck-screen flex w-full flex-col items-center">
+      <div className="deck-screen row-start-1">
         <div className="deck-stage">
           {deck.gridOpen ? <GridOverlay /> : null}
 
@@ -156,22 +159,15 @@ export function Deck({ products }: DeckProps) {
             </AnimatePresence>
           )}
         </div>
-
-        {deck.notesOpen ? (
-          <div className="deck-notes-panel mt-6 max-h-[30vh] w-full max-w-4xl overflow-y-auto px-6">
-            <p className="font-mono text-label uppercase text-ink-subtle">
-              Speaker notes — {slide.label}
-            </p>
-            <div className="mt-3 space-y-3">
-              {slide.notes.split("\n\n").map((paragraph, i) => (
-                <p key={i} className="font-sans text-body-s text-ink-muted">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          </div>
-        ) : null}
       </div>
+
+      {deck.notesOpen ? (
+        <div className="deck-notes-panel row-start-2 border-t border-rule px-6 pt-5">
+          <div className="mx-auto w-full max-w-4xl pb-4">
+            <SpeakerNotes slide={slide} heading={`Speaker notes — ${slide.label}`} size="text-body-s" />
+          </div>
+        </div>
+      ) : null}
 
       <Hud
         index={deck.index}
@@ -198,24 +194,19 @@ export function Deck({ products }: DeckProps) {
       {/* ----------------------------------------------------------------- print */}
       <div className="deck-print">
         <StillProvider still>
-          {SLIDES.map((printSlide, i) => (
+          {slides.map((printSlide, i) => (
             <div key={printSlide.id}>
               <div className="deck-print-page">
                 <div className="deck-stage bg-canvas">
-                  <printSlide.Component index={i + 1} products={products} />
+                  <printSlide.Component index={i + 1} />
                 </div>
               </div>
               <div className="deck-print-notes bg-canvas">
-                <p className="font-mono text-label uppercase text-ink-subtle">
-                  {String(i + 1).padStart(2, "0")} — {printSlide.label} · speaker notes
-                </p>
-                <div className="mt-6 space-y-4">
-                  {printSlide.notes.split("\n\n").map((paragraph, p) => (
-                    <p key={p} className="font-sans text-body text-ink-muted">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+                <SpeakerNotes
+                  slide={printSlide}
+                  heading={`${String(i + 1).padStart(2, "0")} — ${printSlide.label} · speaker notes`}
+                  size="text-body"
+                />
               </div>
             </div>
           ))}
@@ -225,7 +216,43 @@ export function Deck({ products }: DeckProps) {
   );
 }
 
-/** Slide position, progress and the two controls, as fixed-size site chrome. */
+/**
+ * The spoken material, then the caution. The caution is set apart — a rule,
+ * and the accent on its label — because it is the one paragraph the presenter
+ * must not skim: it names the claim that may not be made on this slide.
+ */
+function SpeakerNotes({
+  slide,
+  heading,
+  size,
+}: {
+  slide: Slide;
+  heading: string;
+  size: "text-body" | "text-body-s";
+}) {
+  return (
+    <>
+      <p className="font-mono text-label uppercase text-ink-subtle">{heading}</p>
+      <div className="mt-4 space-y-3">
+        {slide.notes.split("\n\n").map((paragraph, i) => (
+          <p key={i} className={`font-sans ${size} text-ink-muted`}>
+            {paragraph}
+          </p>
+        ))}
+      </div>
+      <div className="mt-5 border-t border-rule pt-4">
+        <p className="font-mono text-label uppercase text-accent-text">Careful</p>
+        <p className={`mt-2 font-sans ${size} text-ink`}>{slide.caution}</p>
+      </div>
+    </>
+  );
+}
+
+/**
+ * Slide position, progress and the two controls, as fixed-size site chrome —
+ * in a row of their own beneath the stage, so they can never sit on top of a
+ * slide.
+ */
 function Hud({
   index,
   count,
@@ -246,19 +273,19 @@ function Hud({
   onHelp: () => void;
 }) {
   return (
-    <div className="deck-hud pointer-events-none fixed inset-x-0 bottom-0 flex items-end justify-between gap-6 p-5">
+    <div className="deck-hud row-start-3 flex items-center justify-between gap-6 px-5">
       <p className="font-mono text-caption text-ink-subtle">
         Press <span className="text-ink-muted">N</span> for notes ·{" "}
         <button
           type="button"
           onClick={onHelp}
-          className="pointer-events-auto rounded-sm text-ink-muted underline decoration-current/30 underline-offset-4 focus-ring"
+          className="rounded-sm text-ink-muted underline decoration-current/30 underline-offset-4 focus-ring"
         >
           keys
         </button>
       </p>
 
-      <div className="pointer-events-auto flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <span className="sr-only">{label}</span>
         <span className="tabular-figures font-mono text-caption text-ink-subtle">
           <span className="text-ink">{String(index + 1).padStart(2, "0")}</span>
@@ -329,16 +356,20 @@ function KeyMap({ onClose }: { onClose: () => void }) {
 }
 
 /**
- * A review aid, not part of the deck: the twelve-column editorial grid the
- * slides are composed on, so a misaligned element can be seen rather than
- * argued about. Bound to G and never on by default.
+ * A review aid, not part of the deck: the safe area every slide composes
+ * inside, and the twelve-column grid within it — the same two boxes the
+ * layout audit measures against — so a misaligned element can be seen rather
+ * than argued about. Bound to G and never on by default.
  */
 function GridOverlay() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
-      <div className="grid-editorial h-full px-[6.67cqw]">
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-10 px-(--deck-safe-x) py-(--deck-safe-y)"
+    >
+      <div className="deck-grid h-full outline outline-accent/40">
         {Array.from({ length: 12 }, (_, i) => (
-          <div key={i} className="h-full bg-accent/10" style={{ gridColumn: "span 1" }} />
+          <div key={i} className="h-full bg-accent/10" />
         ))}
       </div>
     </div>

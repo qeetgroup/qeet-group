@@ -1,193 +1,253 @@
 /**
  * ============================================================================
- * Speaker notes
+ * The running order, the labels and the spoken material
  * ============================================================================
  *
- * Written to be SPOKEN, not read off. Each is 45–90 seconds at a normal
- * speaking pace and each does three things: it says the thing the slide
- * deliberately does not put on screen, it stays in plain language, and it ends
- * by handing over to the next slide.
+ * Notes are written to be SPOKEN, not read off. Each is roughly a minute at a
+ * normal speaking pace and each does three things: it says what the slide
+ * deliberately does not put on screen, it stays in plain language, and it
+ * ends by handing over to the next slide.
  *
  * None of them recites the slide. If a note could be replaced by reading the
  * slide aloud, the note is doing nothing and the slide is probably overloaded.
  *
- * This module holds DATA ONLY — no component imports — for two reasons. It is
- * what lets `slides.test.ts` load the notes and assert claim safety in a plain
- * Node environment with no React renderer, and it keeps the deck's ordering in
- * one list that is not entangled with fifteen import statements.
+ * ---------------------------------------------------------------------------
+ * Notes and cautions are separate on purpose
+ * ---------------------------------------------------------------------------
+ * `SLIDE_NOTES` is what the presenter says. `SLIDE_CAUTIONS` is what the
+ * presenter must NOT say — the GA date that is contested, the product total
+ * that does not reconcile, the integration that is an expectation rather than
+ * a fact. A caution has to name the claim it forbids, so it cannot sit in the
+ * same field as the notes: the claim-safety tests scan the notes for exactly
+ * those words. Both print, and both show in the notes panel.
  *
- * Notes are also where the deck's internal evidence lives. Several slides
- * deliberately state a principle where they could have stated the mechanism
- * behind it; the mechanism belongs here, said out loud by a person who can be
- * asked a follow-up question, rather than projected onto a wall where it
- * cannot.
+ * This module holds DATA ONLY — no component imports — so `slides.test.tsx`
+ * can load the order and the notes without a renderer, and so the order is
+ * one list rather than fifteen import statements.
  */
 
 export const SLIDE_IDS = [
   "title",
+  "who",
   "why",
   "method",
-  "qeet-id",
-  "question",
-  "explore",
-  "envision",
-  "transform",
-  "loop",
-  "portfolio",
-  "lifecycle",
-  "compounding",
-  "difference",
+  "in-practice",
+  "vision-mission",
+  "ecosystem",
+  "foundations",
+  "domain",
+  "productivity",
+  "connects",
+  "standards",
+  "how-we-build",
   "long-term",
   "closing",
 ] as const;
 
 export type SlideId = (typeof SLIDE_IDS)[number];
 
+/**
+ * Named running orders. Only the master overview is built today; the audience
+ * variants are described in `index.ts` and are composed by writing a new
+ * sequence here — replacing slides, never editing the master's.
+ */
+export const DECKS = {
+  master: SLIDE_IDS,
+} as const satisfies Record<string, readonly SlideId[]>;
+
+export type DeckVariant = keyof typeof DECKS;
+
 /** Short titles. Used by the slide marker, the notes panel and the tests. */
 export const SLIDE_LABELS: Record<SlideId, string> = {
   title: "Qeet Group",
+  who: "Who we are",
   why: "Why Qeet exists",
   method: "The name is the method",
-  "qeet-id": "Qeet ID — the method applied",
-  question: "Question",
-  explore: "Explore",
-  envision: "Envision",
-  transform: "Transform",
-  loop: "QEET as a loop",
-  portfolio: "What Qeet is building",
-  lifecycle: "Truth in lifecycle",
-  compounding: "Building what compounds",
-  difference: "What makes Qeet different",
-  "long-term": "The long-term Qeet Group",
+  "in-practice": "Q.E.E.T in practice",
+  "vision-mission": "Vision & mission",
+  ecosystem: "The Qeet ecosystem",
+  foundations: "Shared foundations",
+  domain: "Domain products",
+  productivity: "Planned productivity suite",
+  connects: "How the ecosystem connects",
+  standards: "What Qeet standardises",
+  "how-we-build": "How Qeet builds",
+  "long-term": "The long-term Qeet",
   closing: "Closing",
 };
 
 export const SLIDE_NOTES: Record<SlideId, string> = {
-  title: `Thank you for the time. I want to start with the name, because at Qeet the name is not decoration — it is the method. Qeet is an acronym before it is a company: Question, Explore, Envision, Transform. Four words, in that order.
+  title: `Thank you for the time. I want to start with the name, because at Qeet the name is not decoration — it is the method. Q.E.E.T stands for Question, Explore, Envision and Transform, in that order, and the order matters.
 
-Over the next twenty minutes I will do three things. I will show you what those four words mean in practice, because plenty of organisations have values on a wall and I do not want you to hear this as that. I will show you the first product they produced, early, so the method is attached to something real rather than to a diagram. And I will be precise about what exists today and what does not, because I would rather you left with an accurate picture than a flattering one.
+The line underneath is the shortest honest description of the group: one philosophy, many ventures. Over the next few minutes I will cover what the group is, how the philosophy works in practice, what we are building, and how the pieces fit together.
 
-Let me start with why the group exists at all.`,
+I will also be precise about what exists today and what does not. Some of what you will see is in use now, some of it is being built, and some of it is still on paper — and each will be labelled as exactly that.
 
-  why: `There is a question most organisations start with: what should we build? It is a reasonable question and it is the wrong first one, because it assumes the problem is already settled and the only thing left is execution.
+Let me start with the most basic question of all: who we are.`,
 
-Qeet starts one step earlier. What problem actually matters? The difference sounds small in a sentence and it is enormous over five years — the first question optimises how well you build, and the second one determines whether the thing was worth building at all.
+  who: `Qeet Group describes itself as a multi-company holding built on a single philosophy: that meaningful progress begins with the right question. In plainer terms, it is a group of ventures rather than a single product company.
 
-The line at the bottom is from our founding memo, and I think it is the truest sentence in it. Companies that fail mostly do not fail on execution; the execution is often excellent. They fail because the original question was too small, and no amount of good building rescues a question that did not matter.
+Three ideas hold it together. Each venture owns its domain — its architecture, its technology choices, its pace. Payments and payroll are different problems from news or identity, and they are allowed to be solved differently. What the ventures share is a small set of foundations: identity, a design system, notifications and observability, built once so that no venture has to rebuild them. And underneath both sits the method — the same way of deciding what deserves to be built at all.
 
-So the first discipline is choosing better questions. Which brings me to what the four letters actually are.`,
+If you remember one line from this slide, make it this one: independent domains, shared foundations, one philosophy.
 
-  method: `Question, Explore, Envision, Transform. The claims beside each letter are the organisation's own published wording, not something written for this room.
+So why does a group like this exist? That is the next slide.`,
 
-What I would ask you to notice is the order. These are not four values you could shuffle into a different sequence — each one is only honest if the one before it actually happened. Envisioning without exploring is guessing. Transforming without envisioning is just activity. Questioning and then stopping is commentary.
+  why: `There is a question most organisations begin with: what should we build? It is a reasonable question, and it is the one at the top of the slide, set back on purpose.
 
-The sequence is the argument. And the step most commonly skipped is the first one, because it is the only step with no visible output. Nobody gets credit for a quarter spent making sure the question was right, which is precisely why so few organisations spend one.
+Qeet begins one step earlier: what problem actually matters? The difference sounds small in a sentence. In practice it decides whether everything that follows was worth doing, because the first question optimises how well you build, and the second decides whether the thing deserved to be built at all.
 
-I would rather show you this working than keep describing it, so let me go straight to the product it produced.`,
+The line at the bottom is the conviction behind it. We believe execution cannot rescue the wrong problem — however good the building is, an answer to a question that did not matter is still an answer nobody needed.
 
-  "qeet-id": `This is Qeet ID, and I am showing it fourth rather than last on purpose. I do not want to spend twenty minutes on philosophy before you see anything real.
+That conviction is not a slogan we added afterwards. It is quite literally the first letter of the name, which is where I want to go next.`,
 
-Read the four columns as one story. The question was not "what login system should we build". It was what identity has to become when people, organisations, applications, machines and increasingly autonomous software are all interconnected. The exploration was genuinely wide — authentication, authorisation, machine and agent identity, the standards arriving now and the cryptography arriving behind them. What we envisioned was not another login box, but a trust foundation an organisation could own outright. And then we built it, and every other Qeet product signs in through it.
+  method: `Q.E.E.T is the organisation's official acronym, and the point of this slide is that it describes a sequence, not four values on a wall.
 
-One word on the status. It says Available, and that is all I am going to claim for it. Available means the capabilities described run, and you can use them. I will come back in a few slides to why I am being that careful, because it is not modesty — it is a rule.`,
+Question asks why this problem exists, and whether it is the one that matters. Explore asks which possibilities are worth investigating — research, experiments, the patient work of reducing uncertainty. Envision asks what future should exist once we understand the problem; the organisation's phrase is designing for what compounds, something specific that looks past the next quarter. And Transform asks how we make that future real. The phrase there is the one I like most: vision is decoration until it ships.
 
-  question: `Now let me unpack the four letters properly, starting with Question.
+Now look at the line underneath. Transform is not the end. Shipping produces real-world evidence, and evidence produces better questions than we could have asked at the start — so the method runs again.
 
-The four postures on the left are the easy part to say out loud. The hard one is the last: being willing to question ourselves. It is straightforward to challenge an industry assumption, and genuinely difficult to reopen a decision you made and then defended in public.
+Each step is only honest if the one before it actually happened. Rather than keep describing it, let me show it working on a real product.`,
 
-The principle on the right is how we try to resolve that. When evidence contradicts a claim, we correct the claim. Concretely — and this is the part I have deliberately kept off the slide — this organisation keeps a written register of the places its own documentation disagrees with what is actually built. When those two disagree, the documentation gets corrected rather than quietly defended.
+  "in-practice": `This is the method applied to Qeet ID, the identity platform.
 
-It is an uncomfortable habit, and it is the single most useful one we have, because it means the picture we hold of ourselves stays accurate. An accurate picture is what makes the next question a good one.
+The question was never which login system to build. It was what digital identity has to become as people, organisations, applications, machines and autonomous systems all become interconnected. The exploration was deliberately wide: identity and trust, authentication and authorisation, machine identity, the modern standards, and the cryptographic models behind them.
 
-Exploration is next.`,
+What came out of that was not another isolated login box. It was a shared foundation that every other Qeet product can depend on — and then it was built. Qeet ID is passkeys-first, and it is the identity substrate for the group: Qeet products authenticate against it through OIDC instead of each one building its own sign-in.
 
-  explore: `Exploration is the word here most likely to be mistaken for something soft, so let me be precise about what it is for. It is not the collecting of interesting ideas. It is the reduction of uncertainty.
+The status beside the name is Active, which in the organisation's vocabulary means shipped and in use. That is the claim, and it is the whole claim.
 
-The diagram is honest about the shape of that. One question, many directions worth testing, and most of them stop. The ones that stop are still drawn, because a direction ruled out is knowledge — it permanently narrows what we ever have to consider again. What we are trying to reach is the point on the right: not an idea we happen to like, but a possibility we have actually ruled in or out.
+Next, the two statements that sit above every product: the vision and the mission.`,
 
-The cost of working this way is patience. Some of what we explore will not pay for itself for years, and we have accepted that explicitly rather than pretending otherwise. What we do not accept is exploring without ever converging.
+  "vision-mission": `These are the organisation's published words, unedited, and I would rather read them to you than paraphrase them.
 
-Which is what the third letter is about.`,
+The vision is about the outcome: a future of limitless possibilities, where industries and individuals thrive through questioning, exploring, and transforming ideas into reality. You will notice it is the method again — question, explore, transform — described as what the world gains when it is practised widely.
 
-  envision: `Envision is really about the difference between two planning horizons.
+The mission is about our part in that: to empower people and organisations to adapt, innovate, and transform, by embracing curiosity, exploration, and future-focused thinking.
 
-The question on the left — what can we build this year — is a perfectly sensible operating question. The failure mode is when it is the only question, because then you accumulate products that do not help each other.
+One says where we are pointed. The other says what work we commit to on the way. Neither is a promise about a particular product; together they are the test every venture is held to.
 
-The question on the right is the one we try to hold. What becomes possible once the right foundation exists? The chain underneath is the shape that produces: foundation, capability, product, platform, ecosystem — where each stage is only affordable because the one before it is already there.
+With that in place, let me show you what the group is actually building.`,
 
-The clearest evidence that we actually work this way is the order in which we built things. Identity and the design foundation came first, before there was a portfolio anywhere near large enough to justify either of them. That is an expensive decision to make early, and it is the reason the fourth and fifth products cost less to build than the first one did.
+  ecosystem: `This is the whole portfolio on one slide, and the most important thing on it is the status labels.
 
-Which brings us to Transform.`,
+The organisation uses three states here. Active means shipped and in use. Development means substantive code exists, but it is not yet complete or launched. Planned means specified or intended, with no implementation yet. The three are drawn with deliberately different weight, so you can tell them apart from the back of the room — and even in black and white.
 
-  transform: `This is the slide I would most like you to remember.
+At the top are the shared foundations: Qeet ID, Qeetrix, Qeet Notify and Qeet Logs, all active. In the middle are the domain products: Qeet Pay, Qeet People, Qeet AI and Qeet News, all in development. At the bottom is a productivity suite — mail, calendar, contacts, tasks, drive, chat and meet — which is planned.
 
-Look at the rule in the middle of that scale. Everything to the left of it — the idea, the research, the prototype, the development — is work. Only what is to the right of it is a result. That is not a criticism of the work; it is most of what any organisation does, including us. It is a statement about what may be claimed.
+I am deliberately not putting a headline number on this. Each product carries its own status, and you can hold me to any of them.
 
-A roadmap entry is not a shipped capability. A prototype is not a product. A concept is not a launched business. Those distinctions sound obvious in a room like this, and they erode constantly under commercial pressure, which is exactly why we have made the rule enforced rather than encouraged.
+Let me take the foundations first, because everything else depends on them.`,
 
-Here is the uncomfortable version of it. If I cannot show you something working, I should not be describing it to you as though it does. You are entitled to hold me to that for the rest of this conversation.`,
+  foundations: `Some capabilities every product needs, and all of them are expensive to get right: who a user is, how an interface behaves, how a message gets delivered, and what happened when something went wrong. Qeet builds each of those once.
 
-  loop: `One correction before we get to the portfolio. Everything I have described so far sounds linear, and it is not.
+Qeet ID is identity — sign-in through OIDC. Qeetrix is the interface foundation, the design system the front-ends are built from. Qeet Notify is communication: email, SMS, WhatsApp, push, in-app and webhooks. Qeet Logs is observability: privacy-first logs, metrics, traces and audit.
 
-Transform does not end the sequence. It produces the one thing the sequence cannot generate on its own, which is evidence from the real world — and what using something teaches you is never quite what testing it teaches you. That evidence produces better questions than we were capable of asking at the start, and the loop closes.
+Notice that the arrows only point one way. Products depend on the foundations; the foundations never depend on the products. That is what keeps them foundations.
 
-Practically, this is why we treat a launch as a beginning rather than a finish line, and why the products that have been in real use the longest have changed the most since.
+Here is the practical test. If a new venture finds itself designing its own login, its own component library or its own notification pipeline, something has gone wrong — and the fix is to close the gap with the foundation, not to build a parallel version of it.
 
-It also means the durable asset here is the method rather than any particular answer it has produced. The answers will date. Some of them already have.
+Now, the products that sit on top.`,
 
-Now let me show you what it has produced so far.`,
+  domain: `These are the domain products — the ventures — and every one of them is in development. Real code exists, and none of it is presented as finished or launched.
 
-  portfolio: `This is the portfolio, grouped by the role each part plays rather than by how far along it is.
+Each one takes on a domain's hardest problem. Qeet Pay is India-first payments, billing and GST-compliant invoicing: UPI, cards, NACH and payouts, on a double-entry ledger. Qeet People is India-first HCM: core HR, leave, attendance and statutory payroll. Qeet AI is the layer for identity, memory, knowledge and agents across the suite — not a chatbot, and not a wrapper around a model. Qeet News is AI-first news under human editorial oversight, with cited, multi-perspective stories.
 
-Two shared foundations: identity, and the design foundation that every product interface is built from. Then the operating products, each aimed at a specific domain and composed from those foundations instead of rebuilding them. Then a set that is specified in real detail and not yet built — and I would rather show you those honestly than leave them out, because the specification work is real and the absence of code is a fact, not an embarrassment.
+The hard problems are different enough that the stacks are different too. Pay is Java and People is Kotlin, because tax and payroll arithmetic, and India's filing SDKs, live on the JVM. That is a deliberate choice, and I will come back to why it is allowed.
 
-Every item carries the status we publish for it. What I am not going to do is summarise those into one flattering headline number. If you want to know where any single one of these stands, ask me directly and I will tell you precisely, including where our own records disagree with each other.
+Beyond these sits a suite that is still on paper.`,
 
-The reason I am being this careful about status is the next slide, and it is the part of how we work that I am most confident about.`,
+  productivity: `Mail, calendar, contacts, tasks, drive, chat and meet: this is the planned productivity suite.
 
-  lifecycle: `We keep two vocabularies, and the discipline is in refusing to merge them.
+I want to be exact about where it stands. Each of these has a written specification — requirements, architecture, and the reasoning behind both. None of them has implementation code. They are documented product directions, and I am showing them so that you have the full picture, not because there is anything to try yet.
 
-Product status is public, and deliberately only three words wide: planned, in development, available. It answers exactly one question — can you use this?
+Why show them at all? Because they make the shape of the strategy visible. A productivity suite is precisely the kind of product that gains the most from shared identity, a shared interface and shared notifications — the foundations from two slides ago. Every one of them would start from what already exists rather than from nothing.
 
-Maturity is the scale across the top, and it answers a different question: how far has this actually progressed? Seven states, because the difference between a prototype and a preview is a real difference, and organisations that collapse it end up believing their own roadmaps.
+How those pieces connect is the next slide.`,
 
-The critical part is that these two do not map onto each other. Available does not mean mature. A product can be available, with its core in production, while one capability inside it is still at preview — and being able to tell you that precisely is worth considerably more to you than a single reassuring label.
+  connects: `This is the same idea seen from inside a single product — any Qeet product, whether it exists today or has not been started.
 
-So when anyone, including me, tells you a product is available, the useful follow-up is: which parts, and at what maturity? We should be able to answer that every time.`,
+Authentication comes from Qeet ID, over OIDC. The interface is built from Qeetrix, which is published as packages. Notifications go through Qeet Notify's API. Audit and observability go to Qeet Logs. And where a product needs to bill, the expectation is that it uses Qeet Pay — drawn dashed, because Pay is itself still in development.
 
-  compounding: `This is the strategic idea behind being a group at all, rather than a series of separate companies.
+Two rules sit underneath the picture. First, one direction only: products depend on these capabilities and never the reverse, so there are no hidden cycles. Second, everything crosses a published contract — an API, a package or an event. No product reads another product's database. A product boundary is a data boundary.
 
-Research produces knowledge. Knowledge becomes shared capabilities. Capabilities become infrastructure. Infrastructure makes the next product cheaper. Products become platforms, which open opportunities that send us back to research with better questions than we started with.
+That is what lets the next product benefit from what has already been built, instead of starting from nothing.
 
-The design principle we hold ourselves to is the line on the slide: the next thing should benefit from everything built before it. I am stating that as a principle, not as a financial forecast — I am not putting a number on it, because I do not have one I could defend.
+Which raises the obvious question: what exactly does Qeet standardise?`,
 
-But it is a usable test. If a new product has to re-answer who a user is, or how an interface should behave, then the group has failed at the only thing it uniquely offers. The structure is the argument here. The products are what the structure makes possible.`,
+  standards: `Qeet standardises interfaces and guarantees — not identical implementations. If you want one sentence for how the group is organised, it is that one.
 
-  difference: `I want to be careful with this slide, because it would be easy to read it as "other companies do this badly". That is not the claim.
+On the left is what every product shares: the identity and session model, the security baseline and tenancy rules, the shape of the APIs, how domains and hostnames are laid out, the design system for front-ends, the environment tiers, and what we expect from observability and audit.
 
-Every item in the left column is a real pressure that every organisation feels, us included. They are shortcuts precisely because they work in the short term. Shipping first and finding the question afterwards is faster. Optimising the next release is measurable. Letting roadmap language blur into the present tense makes for a better meeting. Accepting the category as given is how you get compared favourably within it.
+On the right is what each product decides for itself: its language and runtime, its architectural style, its datastore, its messaging, cache and search, its deployment topology, its internal structure and how it tests.
 
-The right column is what we have committed to instead. The honest framing is that this is a discipline rather than a talent, and it costs us speed — regularly.
+That is why the stacks differ. Qeet ID is Go, Qeet Pay is Java, Qeet People is Kotlin, and Qeet Logs uses Rust on its hottest path with Go for the rest. The stack follows the domain's hardest problem, not a house default. Divergence in implementation is expected; divergence in interface or security is a finding.
 
-What it buys is that the picture we give you of ourselves is accurate. Over a long relationship, I think that compounds as much as any technology does.`,
+So how does that turn into day-to-day work?`,
+
+  "how-we-build": `This is the philosophy turned into operating practice: five habits.
+
+Question with evidence means claims change when the evidence changes. Concretely, the organisation keeps a written register of every place where its own documentation disagrees with what is actually built — and when the two disagree, the documentation is corrected rather than defended.
+
+Secure by design means authentication, authorisation and tenant isolation are where a design starts, not something added at the end. Explicit contracts means products meet through published APIs, packages and events, never through hidden coupling. Ship reality means a roadmap item is never presented as a shipped capability, which is exactly why every product in this deck carries its status. And learning from real use closes the loop: build, deploy, observe, learn, improve — and let what we learn become the next question.
+
+None of these is unusual on its own. Holding all five at once, especially when they cost speed, is the discipline.
+
+Which brings me to the long term.`,
 
   "long-term": `Let me be plain about the long term.
 
-The portfolio will change. The technologies will change. Some of what we are confident about today will look naive in five years. What should survive all of that is the method — the questioning, the exploring, the envisioning, and the insistence that only shipped things count.
+The portfolio will change. The technologies will change. The questions will change — some of what we are confident about today will look naive in a few years. What should remain is the method: questioning, exploring, envisioning, and insisting that only shipped things count.
 
-The areas listed underneath are domains we think are worth exploring, and I have labelled them that way deliberately. They are not committed product lines, and I am not going to present them to you as a roadmap.
+The direction is already visible in the portfolio itself: foundations first, then domain products built on them, then a productivity suite that is specified and waiting. Where it goes after that is something the method should decide, not something I should promise from a slide.
 
-For the record, so you are not discovering it later: we are early, we are self-funded by design, and the team is small. We will not pretend the group is bigger than it is.
+What anchors it is the vision underneath — a future where industries and individuals thrive through questioning, exploring and transforming ideas into reality. The ambition is long-term. The claims stay grounded in what exists today.
 
-The ambition genuinely is long-term. And every claim I have made today is meant to be checkable against what exists right now.`,
+Let me close where we started.`,
 
   closing: `Question. Explore. Envision. Transform.
 
-I hope by now that reads as a description of how we work rather than as a slogan.
+At the start these were four words in a name. I hope they now read as a description of how the group works — how it decides what deserves to exist, how it builds, how it learns, and how it moves forward.
 
-If you take one thing from this conversation, I would like it to be this: we would rather be known less for what we have built so far — it is early, and the list is short — and more for how we decide what deserves to be built at all. That is the part we think compounds.
+If you take three things away, let them be these. What Qeet is: a group of ventures built on one philosophy and a set of shared foundations. What Qeet is building: a connected ecosystem of foundations, domain products and a planned productivity suite, each labelled for exactly what it is. And how Qeet thinks: the four words on this slide.
 
-And if you want to test whether we actually work this way, the fastest route is to ask about the gap between what we claim and what runs. We keep track of that gap deliberately, and I am happy to walk you through any part of it.
+If you want to test whether we really work this way, ask about the gap between what we claim and what runs. We keep track of that gap deliberately.
 
-Thank you. I would like to take questions.`,
+Thank you. I would like to take your questions.`,
+};
+
+/**
+ * What must not be said on each slide, and why. Presenter-only. These name
+ * the forbidden claims on purpose, so they are excluded from the claim scan.
+ */
+export const SLIDE_CAUTIONS: Record<SlideId, string> = {
+  title:
+    "Keep the opening bare. No products, dates or numbers yet — an opening claim is the one most likely to be quoted back.",
+  who:
+    "Say \"group of ventures\" or \"multi-company holding\" — never \"one technology organisation\" or \"a single product company\". Do not offer a founding date, team size, funding or legal structure: none is verified in the organisation's records.",
+  why:
+    "This is Qeet's belief, not an industry statistic. Do not say most companies fail for this reason, and do not quote any failure-rate figure — there is no source for one.",
+  method:
+    "Use the canonical words exactly: Question, Explore, Envision, Transform — not \"Exploration\" or \"Transformation\" as the principle names.",
+  "in-practice":
+    "No GA date and no \"generally available\": the organisation's records disagree on Qeet ID's GA status (drift QC-007), so it is unknown. Do not translate Active into \"available\". SSO, MFA, SAML, SCIM and the authorisation models are the product's scope — confirm any single capability against the product's own status before committing to it.",
+  "vision-mission":
+    "Quote the wording exactly. Do not compress the vision into \"changing the world\", and do not present either statement as a commitment about a specific product.",
+  ecosystem:
+    "Do not quote a product total. The organisation's summary and its detailed list disagree (sixteen versus the fifteen named here) and that is being reconciled, not resolved on stage. Never describe a development or planned product as shipped, and never say \"available\" in place of Active.",
+  foundations:
+    "This is the organisation's model and expectation, not a claim that every product already uses every foundation. Qeet ID is the one dependency every product has. Qeetrix covers almost every front-end, with recorded exceptions. Notify and Logs are widely used but not universally, and Logs adoption is still being rolled out.",
+  domain:
+    "Nothing here is launched, and nothing in Qeet AI is deployed. No dates, design-partner names or pricing. \"GST-compliant invoicing\" describes the product's scope, not a regulatory approval or certification.",
+  productivity:
+    "Planned means no implementation. No dates, no \"beta\" or \"early access\", and do not move any of these into development without a change in the organisation's records.",
+  connects:
+    "This is the model, not a claim that every integration exists today. Billing through Qeet Pay is an organisation-level expectation and Pay is in development. Do not say all products already use all of these.",
+  standards:
+    "These are the standards. Some interfaces still carry recorded divergence — API error and pagination shapes, for example — and it is tracked. Do not claim every product implements every standard identically.",
+  "how-we-build":
+    "Keep this at the level of principle. Do not cite security certifications — none is held — and do not describe security controls as complete; some organisation-level settings are still being tightened.",
+  "long-term":
+    "Do not present future categories, markets or timelines as commitments. If asked about funding, size or financials, say that no verified figures are part of this deck rather than estimating.",
+  closing: "End on the method, not on a promise. No call to action beyond qeet.in.",
 };

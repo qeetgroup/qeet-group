@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useSyncExternalStore, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   DURATION,
@@ -12,6 +12,7 @@ import {
   revealStagger,
 } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import type { OrgStatus } from "../portfolio";
 
 /**
  * ============================================================================
@@ -36,8 +37,9 @@ import { cn } from "@/lib/utils";
  * drift from the site's motion vocabulary — it can only sequence it
  * differently.
  *
- * `StillProvider` is how the print tree opts out. Under `still`, each
- * primitive renders its final state as plain markup: no motion components, no
+ * `StillProvider` is how the print tree — and the claim tests, which render
+ * every slide to static markup — opt out. Under `still`, each primitive
+ * renders its final state as plain markup: no motion components, no
  * transitions to race with the print rasteriser, and no reduced-motion
  * special-casing needed further down.
  */
@@ -48,37 +50,146 @@ export function StillProvider({ still, children }: { still: boolean; children: R
   return <StillContext.Provider value={still}>{children}</StillContext.Provider>;
 }
 
+const subscribeNever = () => () => {};
+
+/**
+ * False on the server and during hydration, true afterwards.
+ *
+ * The reduced-motion preference only exists in the browser, so the server
+ * always renders the animated tree. If the client switched to the still tree
+ * on its FIRST render, the two would disagree and React would throw away the
+ * server markup (minified error #418). Reading the preference only once
+ * hydration has finished keeps the first client render identical to the
+ * server's; the switch to the still tree is an ordinary re-render after it.
+ */
+export function useHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false,
+  );
+}
+
+/** True when the visitor prefers reduced motion — once it is safe to know. */
+export function usePrefersStill(): boolean {
+  const reduce = useReducedMotion();
+  const hydrated = useHydrated();
+  return hydrated && Boolean(reduce);
+}
+
 /** True when motion must resolve instantly — printing, or reduced motion. */
 function useStill(): boolean {
   const printing = useContext(StillContext);
-  const reduce = useReducedMotion();
-  return printing || Boolean(reduce);
+  const reduce = usePrefersStill();
+  return printing || reduce;
 }
 
 /* ==========================================================================
- * Structure
+ * Frame
  * ======================================================================== */
+
+/**
+ * A slide: header, body and footer stacked inside the safe area (deck.css).
+ * Every slide renders inside exactly one of these, so every slide shares one
+ * margin — and the layout audit measures every slide against the same box.
+ */
+export function Slide({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={cn("deck-slide", className)}>{children}</div>;
+}
+
+/** The flexible middle of a slide. Takes the height the header and footer leave. */
+export function SlideBody({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={cn("deck-slide-body", className)}>{children}</div>;
+}
 
 /**
  * The slide marker, top-left of every slide except the two bookends. Borrowed
  * wholesale from the site's SectionHeader rhythm — accent tick, two-digit
  * index, em-dash, label — because a presentation and the site it belongs to
  * should mark their sections the same way.
- *
- * This tick is usually the slide's entire accent budget.
  */
 export function SlideMark({ index, label }: { index: number; label: string }) {
   return (
     <div className="flex items-center gap-[1.4cqw]">
-      <span aria-hidden="true" className="h-px w-[2.6cqw] bg-accent" />
+      <span aria-hidden="true" className="h-[max(1px,0.12cqw)] w-[2.6cqw] bg-accent" />
       <p className="deck-label font-mono text-ink-subtle">
-        <span className="tabular-figures text-ink">
-          {String(index).padStart(2, "0")}
+        <span className="tabular-figures text-ink">{String(index).padStart(2, "0")}</span>
+        <span aria-hidden="true" className="mx-[0.7cqw] text-rule-strong">
+          —
         </span>
-        <span className="mx-[0.7cqw] text-rule-strong">—</span>
         {label}
       </p>
     </div>
+  );
+}
+
+/**
+ * Marker, headline and an optional one-sentence lede, in the same place on
+ * every content slide.
+ *
+ * The headline spans the full measure. The deck used to set multi-line
+ * display headlines in a four-column aside, where a single long word was
+ * enough to push a line past its column — and the reveal mask clipped it
+ * rather than letting anyone see. A full-width headline of at most two
+ * authored lines removes the conditions for that, and `Lines` now refuses to
+ * hide an overflow if one happens anyway.
+ */
+export function SlideHeader({
+  index,
+  label,
+  title,
+  accentIndex,
+  lede,
+  aside,
+}: {
+  index: number;
+  label: string;
+  /** Authored lines. Two at most: a third is a paragraph, not a headline. */
+  title: string[];
+  accentIndex?: number;
+  lede?: ReactNode;
+  /** Sits on the headline's baseline at the right — a status badge, usually. */
+  aside?: ReactNode;
+}) {
+  return (
+    <header className="shrink-0">
+      <SlideMark index={index} label={label} />
+      <div className="mt-[1.7cqw] flex items-end gap-[2.6cqw]">
+        <Lines
+          as="h2"
+          lines={title}
+          accentIndex={accentIndex}
+          className="deck-display-s font-display text-ink"
+        />
+        {aside ? (
+          <Rise delay={0.3} className="shrink-0 pb-[0.6cqw]">
+            {aside}
+          </Rise>
+        ) : null}
+      </div>
+      {lede ? (
+        <Rise delay={0.22}>
+          <p className="deck-body mt-[1.3cqw] max-w-[66cqw] font-sans text-ink-muted">{lede}</p>
+        </Rise>
+      ) : null}
+    </header>
+  );
+}
+
+/** The one closing line a slide may carry, beneath its figure. */
+export function SlideFooter({
+  children,
+  delay = 0.9,
+  className,
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <Rise delay={delay} className={cn("shrink-0", className)}>
+      <p className="deck-body font-sans text-ink-muted">{children}</p>
+    </Rise>
   );
 }
 
@@ -112,6 +223,17 @@ export function Rule({ className, delay = 0 }: { className?: string; delay?: num
  * authors them — where a display headline breaks is a typographic decision,
  * and a browser only knows where it broke after layout. On a slide that
  * matters more, not less: the break is part of the composition.
+ *
+ * Two properties make an authored line honest:
+ *
+ *   `whitespace-nowrap`  an authored line stays one line. If it is too long
+ *                        for the measure it overflows visibly, instead of
+ *                        wrapping into a break nobody chose.
+ *   `overflow-y-clip`    the mask clips VERTICALLY only, which is all the
+ *                        rise needs. It used to be `overflow: hidden`, which
+ *                        also clipped horizontally — so a line too long for
+ *                        its column was silently cut off mid-word. Now an
+ *                        overflow is visible, and the layout audit fails it.
  */
 export function Lines({
   lines,
@@ -132,18 +254,13 @@ export function Lines({
   const line = (text: string, i: number) => (
     <span
       key={i}
-      className={cn("block", i === accentIndex && "text-accent-text-display")}
+      data-deck-line=""
+      className={cn("block whitespace-nowrap", i === accentIndex && "text-accent-text-display")}
     >
       {text}
     </span>
   );
 
-  /*
-   * Under `still` the mask wrappers are dropped rather than animated to their
-   * end state: `overflow: hidden` on a line box clips descenders on some
-   * faces, and degrading the typography for reduced-motion readers would be a
-   * strange way to accommodate them.
-   */
   if (still) {
     return <Tag className={className}>{lines.map(line)}</Tag>;
   }
@@ -157,10 +274,14 @@ export function Lines({
     >
       <Tag className={className}>
         {lines.map((text, i) => (
-          <span key={i} className="block overflow-hidden pb-[0.12em] -mb-[0.12em]">
+          <span key={i} className="block overflow-y-clip pb-[0.12em] mb-[-0.12em]">
             <motion.span
               variants={revealLine.line}
-              className={cn("block", i === accentIndex && "text-accent-text-display")}
+              data-deck-line=""
+              className={cn(
+                "block whitespace-nowrap",
+                i === accentIndex && "text-accent-text-display",
+              )}
             >
               {text}
             </motion.span>
@@ -246,38 +367,71 @@ export function Item({
   );
 }
 
+/* ==========================================================================
+ * Status
+ * ======================================================================== */
+
 /**
- * A quotation set as the slide's evidence rather than its decoration: a
- * hairline down the left, the words at heading scale, attribution in mono
- * beneath. No quote marks — at this size they read as ornament.
+ * The organisation's status vocabulary, rendered — and the reason the deck
+ * does not reuse the site's StatusChip.
  *
- * The rule is `rule-strong`, not accent. Most slides spend their accent on one
- * emphasised word or one status dot, and a quotation that also claimed it
- * would put two competing signal surfaces on the same slide — which the
- * design system's ~2% accent budget exists to prevent.
+ * StatusChip speaks the site's vocabulary ("Available") at the site's rem
+ * size. The deck speaks the organisation's (`active`, context.yaml
+ * `vocabularies.status`) at a size that scales with the stage.
+ *
+ * Colour is never the only carrier. Every badge prints its word, and the
+ * glyph's SHAPE encodes the state, so it survives greyscale, a colour-blind
+ * reader and a projector with a broken colour profile:
+ *
+ *   ●  active       filled, in the accent
+ *   ◐  development  half-filled
+ *   ○  planned      an empty ring
  */
-export function PullQuote({
-  children,
-  source,
-  className,
-  delay = 0,
-}: {
-  children: ReactNode;
-  source?: string;
-  className?: string;
-  delay?: number;
-}) {
+const GLYPH: Record<OrgStatus, string> = {
+  active: "border-accent bg-accent",
+  development:
+    "border-ink-muted bg-[linear-gradient(90deg,var(--color-ink-muted)_50%,transparent_50%)]",
+  planned: "border-ink-subtle",
+};
+
+const STATUS_TEXT: Record<OrgStatus, string> = {
+  active: "text-accent-text",
+  development: "text-ink-muted",
+  planned: "text-ink-subtle",
+};
+
+const STATUS_WORD: Record<OrgStatus, string> = {
+  active: "Active",
+  development: "Development",
+  planned: "Planned",
+};
+
+/** Just the glyph — for per-product marks in a list that has a badge above it. */
+export function StatusGlyph({ status, className }: { status: OrgStatus; className?: string }) {
   return (
-    <Rise className={className} delay={delay}>
-      <figure className="border-l border-rule-strong pl-[2cqw]">
-        <blockquote className="deck-heading-s font-display text-ink">{children}</blockquote>
-        {source ? (
-          <figcaption className="deck-label mt-[1.4cqw] font-mono text-ink-subtle">
-            {source}
-          </figcaption>
-        ) : null}
-      </figure>
-    </Rise>
+    <span
+      aria-hidden="true"
+      className={cn(
+        "inline-block size-[0.8cqw] shrink-0 rounded-full border-[0.14cqw]",
+        GLYPH[status],
+        className,
+      )}
+    />
+  );
+}
+
+export function StatusBadge({ status, className }: { status: OrgStatus; className?: string }) {
+  return (
+    <span
+      className={cn(
+        "deck-label inline-flex items-center gap-[0.7cqw] font-mono",
+        STATUS_TEXT[status],
+        className,
+      )}
+    >
+      <StatusGlyph status={status} />
+      {STATUS_WORD[status]}
+    </span>
   );
 }
 
@@ -288,17 +442,19 @@ export function PullQuote({
 /**
  * An SVG whose strokes draw themselves and whose nodes settle after their
  * connectors land, so the figure explains itself in the order the argument
- * runs. Decorative by definition — the slide states the same thing in text —
- * so the whole carrier is hidden from assistive technology.
+ * runs. Decorative by definition — every slide states the same thing in text
+ * — so the whole carrier is hidden from assistive technology.
  */
 export function Figure({
   viewBox,
   className,
   children,
+  preserveAspectRatio,
 }: {
   viewBox: string;
   className?: string;
   children: ReactNode;
+  preserveAspectRatio?: string;
 }) {
   const still = useStill();
 
@@ -309,6 +465,7 @@ export function Figure({
       className={className}
       fill="none"
       role="presentation"
+      preserveAspectRatio={preserveAspectRatio}
     >
       {still ? (
         <g>{children}</g>
@@ -321,7 +478,12 @@ export function Figure({
   );
 }
 
-/** A connector inside <Figure> that draws itself in. */
+/**
+ * A connector inside <Figure> that draws itself in.
+ *
+ * A dashed stroke fades rather than draws: `pathLength` is implemented with
+ * the dash array, so drawing a dashed line would erase its dashes.
+ */
 export function Stroke({
   d,
   className,
@@ -340,11 +502,23 @@ export function Stroke({
     d,
     strokeWidth,
     strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
     className: cn("stroke-rule-strong", className),
-    ...(dashed ? { strokeDasharray: "2 6" } : {}),
+    ...(dashed ? { strokeDasharray: "3 5" } : {}),
   };
 
   if (still) return <path {...shared} />;
+
+  if (dashed) {
+    return (
+      <motion.path
+        {...shared}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: DURATION.slow, delay }}
+      />
+    );
+  }
 
   return (
     <motion.path
@@ -359,81 +533,17 @@ export function Stroke({
 }
 
 /** A node inside <Figure>, arriving after its connectors. */
-export function Node({
-  children,
-  delay = 0,
-}: {
-  children: ReactNode;
-  delay?: number;
-}) {
+export function Node({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   const still = useStill();
   if (still) return <g>{children}</g>;
 
   return (
-    <motion.g variants={nodeSettle} transition={{ delay }} style={{ transformBox: "fill-box", transformOrigin: "center" }}>
+    <motion.g
+      variants={nodeSettle}
+      transition={{ delay }}
+      style={{ transformBox: "fill-box", transformOrigin: "center" }}
+    >
       {children}
     </motion.g>
-  );
-}
-
-/**
- * The deck's one repeated diagram idiom: a horizontal chain of labelled
- * stages joined by a drawn rule, with an optional threshold marking the point
- * where something changes state.
- *
- * Presence carries the meaning, in the same ladder the site's lifecycle
- * colours use — faint ink before a threshold, full ink after it, and the
- * accent on the threshold itself. It reads correctly in greyscale because the
- * ladder is one of prominence, not hue.
- */
-export function Chain({
-  stages,
-  thresholdAfter,
-  className,
-}: {
-  stages: Array<{ label: string; note?: string }>;
-  /** Zero-based index after which the threshold rule is drawn. */
-  thresholdAfter?: number;
-  className?: string;
-}) {
-  return (
-    <Stagger
-      as="ol"
-      className={cn("flex items-stretch", className)}
-    >
-      {stages.map((stage, i) => {
-        const past = thresholdAfter !== undefined && i > thresholdAfter;
-        const isThreshold = thresholdAfter !== undefined && i === thresholdAfter + 1;
-        return (
-          <Item
-            as="li"
-            key={stage.label}
-            className={cn(
-              "relative flex-1 pt-[1.6cqw] pr-[1.6cqw]",
-              // The threshold is a full-height rule in the accent, not a
-              // label — the change of state should be visible before it is
-              // read.
-              isThreshold && "border-l border-accent pl-[1.6cqw]",
-              !isThreshold && "border-t border-rule",
-            )}
-          >
-            {isThreshold ? (
-              <span aria-hidden="true" className="absolute left-0 top-0 h-px w-full bg-rule-strong" />
-            ) : null}
-            <p
-              className={cn(
-                "deck-body font-display",
-                thresholdAfter === undefined || past ? "text-ink" : "text-ink-subtle",
-              )}
-            >
-              {stage.label}
-            </p>
-            {stage.note ? (
-              <p className="deck-body-s mt-[0.7cqw] font-sans text-ink-subtle">{stage.note}</p>
-            ) : null}
-          </Item>
-        );
-      })}
-    </Stagger>
   );
 }

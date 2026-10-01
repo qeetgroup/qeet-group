@@ -1,26 +1,24 @@
-import { Item, Rise, SlideMark, Stagger } from "./primitives";
+import { VISION } from "./canon";
+import { Item, Rise, Rule, Slide, SlideBody, SlideMark, Stagger } from "./primitives";
 import type { SlideProps } from "./types";
 
 /**
- * Slide 14 — the long-term group.
+ * Slide 14 — the long-term Qeet.
  *
- * Ambition and restraint have to arrive in the same breath here, and the
- * ordering of the four declaratives does most of that work: three statements
- * that everything will change, set in faint ink, and then the one that will
- * not, in full ink. Ambition is in the scope of the change; restraint is in
- * only claiming one thing survives it.
+ * Ambition and restraint in the same breath. Three statements that everything
+ * will change, in faint ink, then the one that will not, in full ink —
+ * ambition is in the scope of the change, restraint is in claiming only one
+ * thing survives it.
  *
- * The domains are labelled as domains. Listing "identity, intelligence,
- * infrastructure, security, emerging computing" without that label would read
- * as five product lines, which would be five claims this deck has no basis
- * for. The label is not a disclaimer bolted on — it is the accurate
- * description, and it is set at the same size as the domains rather than
- * shrunk beneath them.
+ * What it is anchored to is the vision, not a list of future markets. An
+ * earlier version listed "possible domains of exploration"; even labelled as
+ * possibilities, five category names on a long-term slide read as five
+ * product lines, and the deck has no basis for any of them. The vision is the
+ * organisation's own statement of direction, and it is the only one used.
  *
- * The self-diminishing version of this slide — "we will not pretend the group
- * is bigger than it is; we are early" — is a true and good sentence that
- * belongs in the speaker's mouth rather than projected at ten times life size.
- * It is in the notes.
+ * The vision is quoted with its opening infinitive dropped — "A future of
+ * limitless possibilities…" rather than "To create a future…" — so it reads
+ * as a destination. Nothing else in it is changed.
  */
 const DECLARATIVES = [
   { text: "The portfolio will change.", strong: false },
@@ -29,55 +27,36 @@ const DECLARATIVES = [
   { text: "The method should remain.", strong: true },
 ];
 
-const DOMAINS = [
-  "Identity",
-  "Intelligence",
-  "Infrastructure",
-  "Security",
-  "Emerging computing",
-];
+const DESTINATION = VISION.replace(/^To create a/, "A");
 
 export function S14LongTerm({ index }: SlideProps) {
   return (
-    <div className="deck-slide justify-between">
-      <SlideMark index={index} label="The long-term Qeet Group" />
+    <Slide>
+      <SlideMark index={index} label="The long-term Qeet" />
 
-      <Stagger as="ul" delay={0.1} className="max-w-[70cqw]">
-        {DECLARATIVES.map((line) => (
-          <Item as="li" key={line.text}>
-            <p
-              className={`deck-heading py-[0.5cqw] font-display ${
-                line.strong ? "text-ink" : "text-ink-subtle"
-              }`}
-            >
-              {line.text}
-            </p>
-          </Item>
-        ))}
-      </Stagger>
-
-      <div>
-        <Rise delay={0.6}>
-          <p className="deck-body-s font-sans text-ink-subtle">
-            Possible domains of exploration. Not committed product lines, and
-            not a roadmap.
-          </p>
-        </Rise>
-        <Stagger as="ul" delay={0.7} className="mt-[1.6cqw] grid grid-cols-5 gap-[2cqw]">
-          {DOMAINS.map((domain) => (
-            <Item as="li" key={domain} className="border-t border-rule pt-[1.2cqw]">
-              <span className="deck-body-s font-display text-ink-muted">{domain}</span>
+      <SlideBody>
+        <Stagger as="ul" delay={0.1}>
+          {DECLARATIVES.map((line) => (
+            <Item as="li" key={line.text}>
+              <p
+                className={`deck-display-s py-[0.35cqw] font-display ${
+                  line.strong ? "text-ink" : "text-ink-subtle"
+                }`}
+              >
+                {line.text}
+              </p>
             </Item>
           ))}
         </Stagger>
-      </div>
 
-      <Rise delay={0.95}>
-        <p className="deck-heading-s max-w-[66cqw] font-display text-ink">
-          The ambition is long-term. The claims remain grounded in what exists
-          today.
-        </p>
-      </Rise>
-    </div>
+        <div className="mt-[3cqw] max-w-[74cqw]">
+          <Rule delay={0.7} className="bg-rule-strong" />
+          <Rise delay={0.85} className="mt-[1.8cqw] flex items-baseline gap-[2.4cqw]">
+            <p className="deck-label shrink-0 font-mono text-accent-text">Vision</p>
+            <p className="deck-heading-s font-display text-ink-muted">{DESTINATION}</p>
+          </Rise>
+        </div>
+      </SlideBody>
+    </Slide>
   );
 }

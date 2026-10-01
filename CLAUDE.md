@@ -16,21 +16,24 @@ Single test: `bunx vitest run src/lib/foo.test.ts`. Tests are `src/**/*.test.ts(
 
 ### Corporate presentation
 
-Two renderings of one deck, both unlisted. `/presentation` is the interactive
-version (keyboard-driven, animated, `N` for speaker notes, Cmd-P for a PDF);
-the `.pptx` is the offline fallback.
+`/presentation` is the unlisted master corporate overview: 15 slides,
+keyboard-driven, `N` for speaker notes, `G` for the safe-area grid, Cmd-P for a
+1600×900 PDF (each slide followed by its notes). Always dark, regardless of the
+site theme. (No `.pptx` pipeline exists in this repo.)
 
-```bash
-python3 -m venv .venv && .venv/bin/pip install python-pptx
-.venv/bin/python scripts/build-presentation-pptx.py   # -> build/Qeet-Group.pptx
-.venv/bin/python scripts/check-presentation-pptx.py   # structure, layout, claims, palette
-```
+- Running order, labels, notes and per-slide cautions: `slides/notes.ts`
+  (`DECKS.master`; audience variants are new sequences — see `slides/index.ts`).
+- Product names, roles and **organisation** statuses (`active` / `development` /
+  `planned` — never the site's "Available"): `portfolio.ts`. Quoted philosophy,
+  vision, mission: `slides/canon.ts`.
+- Every dimension inside a slide is `cqw`; never use the site's viewport-based
+  `grid-editorial`/`col-*` there — use `.deck-grid` and the safe area in `deck.css`.
 
-Speaker notes live once, in `src/app/presentation/slides/notes.ts`; the PowerPoint
-build parses them from there. Slide copy is guarded by
-`src/app/presentation/slides.test.ts` — it fails the build on any claim the
-organisation's records do not support, and on any slide that puts a product name
-beside a maturity stage.
+`src/app/presentation/slides.test.tsx` renders every slide and fails on any claim
+the organisation's records do not support (GA, "available", certifications, product
+totals, business figures, a maturity scale), checks the portfolio against both the
+site's MDX and — when `../qeet-context` is checked out — PRODUCT-PORTFOLIO.md and
+ORGANIZATION.md.
 
 ## Architecture
 
