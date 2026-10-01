@@ -57,13 +57,25 @@ export function Deck({ variant = "master" }: DeckProps) {
    * The deck is a fixed surface over the site chrome, so the document behind
    * it must not scroll: a stray trackpad gesture mid-sentence that reveals the
    * footer underneath is the kind of thing nobody forgets.
+   *
+   * For the same reason the chrome is made `inert`. It is still in the DOM,
+   * underneath, and without this the first Tab press moves focus to a nav
+   * link nobody can see.
    */
   useEffect(() => {
     const root = document.documentElement;
     const previous = root.style.overflow;
     root.style.overflow = "hidden";
+
+    const main = document.querySelector("main");
+    const hidden = Array.from(document.body.children).filter(
+      (el) => el !== main && !el.hasAttribute("inert"),
+    );
+    for (const el of hidden) el.setAttribute("inert", "");
+
     return () => {
       root.style.overflow = previous;
+      for (const el of hidden) el.removeAttribute("inert");
     };
   }, []);
 
